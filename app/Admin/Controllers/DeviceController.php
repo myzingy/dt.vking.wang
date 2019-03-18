@@ -9,6 +9,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\Input;
 
 class DeviceController extends Controller
 {
@@ -158,5 +159,24 @@ class DeviceController extends Controller
         $form->text('install_rate', '安装税率');
 
         return $form;
+    }
+    public function brands(){
+        $res=Device::select('brand')->groupBy('brand')->get();
+        $arr=[];
+        foreach($res as $d){
+            array_push($arr,$d->brand);
+        }
+        return $arr;
+    }
+    public function brandsDetail(){
+        $res=Device::select(['id','brand','brand_set','dload','speedup','hoisting_height'])->where('brand',Input::get('q'))
+            ->get();
+        $arr=[];
+        foreach($res as $d){
+            array_push($arr,
+                ['id'=>$d->id,'text'=>'ID:'.implode('|',json_decode(json_encode($d), true))]
+            );
+        }
+        return $arr;
     }
 }

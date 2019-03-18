@@ -23,8 +23,8 @@ class DeviceFuncController extends Controller
     public function index(Content $content)
     {
         return $content
-            ->header('Index')
-            ->description('description')
+            ->header('电梯功能价')
+            ->description('列表')
             ->body($this->grid());
     }
 
@@ -38,8 +38,8 @@ class DeviceFuncController extends Controller
     public function show($id, Content $content)
     {
         return $content
-            ->header('Detail')
-            ->description('description')
+            ->header('电梯功能价')
+            ->description('详细')
             ->body($this->detail($id));
     }
 
@@ -53,8 +53,8 @@ class DeviceFuncController extends Controller
     public function edit($id, Content $content)
     {
         return $content
-            ->header('Edit')
-            ->description('description')
+            ->header('电梯功能价')
+            ->description('修改')
             ->body($this->form()->edit($id));
     }
 
@@ -67,8 +67,8 @@ class DeviceFuncController extends Controller
     public function create(Content $content)
     {
         return $content
-            ->header('Create')
-            ->description('description')
+            ->header('电梯功能价')
+            ->description('新增')
             ->body($this->form());
     }
 
@@ -82,9 +82,25 @@ class DeviceFuncController extends Controller
         $grid = new Grid(new DeviceFunc);
 
         $grid->id('ID');
-        $grid->created_at('Created at');
-        $grid->updated_at('Updated at');
+        $grid->did('设备ID');
+        $grid->name('功能名称');
+        $grid->price('功能加价');
+        $grid->has_in_base('是否标配/是否在基础价格包含');
+        $grid->unit('功能单位');
+        $grid->desc('功能描述');
 
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            // 在这里添加字段过滤器
+            $filter->like('name', '功能名称');
+        });
+        $grid->tools(function ($tools) {
+            $tools->batch(function ($batch) {
+                $batch->disableDelete();
+            });
+        });
+        $grid->disableExport();
         return $grid;
     }
 
@@ -99,8 +115,12 @@ class DeviceFuncController extends Controller
         $show = new Show(DeviceFunc::findOrFail($id));
 
         $show->id('ID');
-        $show->created_at('Created at');
-        $show->updated_at('Updated at');
+        $show->did('设备ID');
+        $show->name('功能名称');
+        $show->price('功能加价');
+        $show->has_in_base('是否标配/是否在基础价格包含');
+        $show->unit('功能单位');
+        $show->desc('功能描述');
 
         return $show;
     }
@@ -113,11 +133,18 @@ class DeviceFuncController extends Controller
     protected function form()
     {
         $form = new Form(new DeviceFunc);
+        $form->select('_brand','电梯品牌')->options('/admin/device/brands')
+            ->load('did', '/admin/device/brandsDetail');
+        $form->select('did','电梯设备');
+        //$form->text('did','设备ID');
+        $form->text('name','功能名称');
+        $form->text('price','功能加价');
+        $form->text('has_in_base','是否标配/是否在基础价格包含');
+        $form->text('unit','功能单位');
+        $form->text('desc','功能描述');
 
-        $form->display('ID');
-        $form->display('Created at');
-        $form->display('Updated at');
-
+        //忽略字段
+        $form->ignore(['_brand']);
         return $form;
     }
 }

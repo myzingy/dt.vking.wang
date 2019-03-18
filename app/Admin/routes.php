@@ -10,6 +10,10 @@ Route::group([
     'middleware'    => config('admin.route.middleware'),
 ], function (Router $router) {
 
+
+    Route::get('/device/brands', 'DeviceController@brands');
+    Route::get('/device/brandsDetail', 'DeviceController@brandsDetail');
+
     //$router->get('/', 'HomeController@index');
     $router->get('/',function (){
         return Redirect::to("/admin/project");
