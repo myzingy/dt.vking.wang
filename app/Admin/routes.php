@@ -12,7 +12,7 @@ Route::group([
 
     //$router->get('/', 'HomeController@index');
     $router->get('/',function (){
-        return Redirect::to("/admin/object");
+        return Redirect::to("/admin/project");
     });
     $router->resource('/project', ProjectController::CLASS);
     $router->resource('/device', DeviceController::CLASS);
