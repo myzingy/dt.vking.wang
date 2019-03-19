@@ -136,9 +136,14 @@ class DeviceFreightController extends Controller
     {
         $form = new Form(new DeviceFreight);
 
+        $form->display('device','已选电梯设备')->with(function ($value) {
+            return 'ID:'.implode('|',json_decode(json_encode($value), true));
+        });
         $form->select('_brand','电梯品牌')->options('/admin/device/brands')
             ->load('did', '/admin/device/brandsDetail');
         $form->select('did','电梯设备');
+        $form->divide();
+
         $form->text('from','发货地点');
         $form->text('to','到货地点');
         $form->text('price','单台价格');

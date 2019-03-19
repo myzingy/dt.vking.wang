@@ -145,9 +145,14 @@ class DeviceFitmentController extends Controller
     {
         $form = new Form(new DeviceFitment);
 
+        $form->display('device','已选电梯设备')->with(function ($value) {
+            return 'ID:'.implode('|',json_decode(json_encode($value), true));
+        });
         $form->select('_brand','电梯品牌')->options('/admin/device/brands')
             ->load('did', '/admin/device/brandsDetail');
         $form->select('did','电梯设备');
+        $form->divide();
+
         $form->text('name','装饰项目名称');
         $form->text('stuff','材料');
         $form->text('spec','规格编号');

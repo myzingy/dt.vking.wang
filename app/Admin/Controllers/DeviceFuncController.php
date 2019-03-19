@@ -117,7 +117,9 @@ class DeviceFuncController extends Controller
         $show = new Show(DeviceFunc::findOrFail($id));
 
         $show->id('ID');
-        $show->did('设备ID');
+        $show->device('电梯设备')->as(function ($device) {
+            return 'ID:'.implode('|',json_decode(json_encode($device), true));
+        });
         $show->name('功能名称');
         $show->price('功能加价');
         $show->has_in_base('是否标配/是否在基础价格包含');
@@ -135,10 +137,14 @@ class DeviceFuncController extends Controller
     protected function form()
     {
         $form = new Form(new DeviceFunc);
+        $form->display('device','已选电梯设备')->with(function ($value) {
+            return 'ID:'.implode('|',json_decode(json_encode($value), true));
+        });
         $form->select('_brand','电梯品牌')->options('/admin/device/brands')
             ->load('did', '/admin/device/brandsDetail');
         $form->select('did','电梯设备');
-        //$form->text('did','设备ID');
+        $form->divide();
+
         $form->text('name','功能名称');
         $form->text('price','功能加价');
         $form->text('has_in_base','是否标配/是否在基础价格包含');
@@ -147,6 +153,9 @@ class DeviceFuncController extends Controller
 
         //忽略字段
         $form->ignore(['_brand']);
+        $form->saving(function (Form $form){
+            $form->did=$form->did>0?$form->did:$form->model()->did;
+        });
         return $form;
     }
 }

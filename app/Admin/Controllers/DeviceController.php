@@ -85,11 +85,11 @@ class DeviceController extends Controller
         $grid->id('ID');
         $grid->brand('品牌');
         $grid->brand_set('品牌系列');
-        $grid->column('dload','载重');
-        $grid->speedup('提速');
+        $grid->dload('载重(kg)');
+        $grid->speedup('速度(m/s)');
         $grid->floor('楼层');
-        $grid->hoisting_height('标准提升高度');
-        $grid->freeboard('超米费用/单价');
+        $grid->hoisting_height('标准提升高度(m)');
+        $grid->freeboard('超米费用/单价（元/米）');
         $grid->device_price('设备单价');
         $grid->device_rate('设备税率');
         $grid->install_price('安装单价');
@@ -125,11 +125,11 @@ class DeviceController extends Controller
         $show->id('ID');
         $show->brand('品牌');
         $show->brand_set('品牌系列');
-        $show->dload('载重');
-        $show->speedup('提速');
+        $show->dload('载重(kg)');
+        $show->speedup('速度(m/s)');
         $show->floor('楼层');
-        $show->hoisting_height('标准提升高度');
-        $show->freeboard('超米费用/单价');
+        $show->hoisting_height('标准提升高度(m)');
+        $show->freeboard('超米费用/单价（元/米）');
         $show->device_price('设备单价');
         $show->device_rate('设备税率');
         $show->install_price('安装单价');
@@ -148,15 +148,15 @@ class DeviceController extends Controller
         $form = new Form(new Device);
         $form->text('brand', '品牌');
         $form->text('brand_set', '品牌系列');
-        $form->text('dload', '载重');
-        $form->text('speedup', '提速');
-        $form->text('floor', '楼层');
-        $form->text('hoisting_height', '标准提升高度');
-        $form->text('freeboard', '超米费用/单价');
-        $form->text('device_price', '电影标题');
-        $form->text('device_rate', '设备税率');
-        $form->text('install_price', '安装单价');
-        $form->text('install_rate', '安装税率');
+        $form->text('dload', '载重(kg)');
+        $form->number('speedup', '速度(m/s)');
+        $form->number('floor', '楼层');
+        $form->number('hoisting_height', '标准提升高度(m)');
+        $form->number('freeboard', '超米费用/单价（元/米）');
+        $form->number('device_price', '设备单价');
+        $form->number('device_rate', '设备税率');
+        $form->number('install_price', '安装单价');
+        $form->number('install_rate', '安装税率');
 
         return $form;
     }
