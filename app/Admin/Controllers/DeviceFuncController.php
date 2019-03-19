@@ -82,7 +82,9 @@ class DeviceFuncController extends Controller
         $grid = new Grid(new DeviceFunc);
 
         $grid->id('ID');
-        $grid->did('设备ID');
+        $grid->device('电梯设备')->display(function ($device) {
+            return 'ID:'.implode('|',json_decode(json_encode($device), true));
+        });
         $grid->name('功能名称');
         $grid->price('功能加价');
         $grid->has_in_base('是否标配/是否在基础价格包含');

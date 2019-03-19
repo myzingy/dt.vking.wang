@@ -10,4 +10,8 @@ class DeviceFreight extends Model
     use SoftDeletes;
 
     protected $table = 'device_freight';
+    public function device()
+    {
+        return $this->belongsTo(Device::class, 'did');
+    }
 }

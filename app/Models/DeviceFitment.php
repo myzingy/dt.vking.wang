@@ -10,4 +10,8 @@ class DeviceFitment extends Model
     use SoftDeletes;
 
     protected $table = 'device_fitment';
+    public function device()
+    {
+        return $this->belongsTo(Device::class, 'did');
+    }
 }
