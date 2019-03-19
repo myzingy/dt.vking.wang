@@ -12,6 +12,7 @@ class DeviceFitment extends Model
     protected $table = 'device_fitment';
     public function device()
     {
-        return $this->belongsTo(Device::class, 'did');
+        return $this->belongsTo(Device::class, 'did')
+            ->select(['id','brand','brand_set','dload','speedup','hoisting_height']);
     }
 }

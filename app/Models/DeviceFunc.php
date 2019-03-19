@@ -12,6 +12,7 @@ class DeviceFunc extends Model
     protected $table = 'device_func';
     public function device()
     {
-        return $this->belongsTo(Device::class, 'did')->select(['id','brand','brand_set','dload','speedup','hoisting_height']);
+        return $this->belongsTo(Device::class, 'did')
+            ->select(['id','brand','brand_set','dload','speedup','hoisting_height']);
     }
 }

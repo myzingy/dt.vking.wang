@@ -23,8 +23,8 @@ class DeviceFreightController extends Controller
     public function index(Content $content)
     {
         return $content
-            ->header('Index')
-            ->description('description')
+            ->header('电梯运费价')
+            ->description('列表')
             ->body($this->grid());
     }
 
@@ -38,8 +38,8 @@ class DeviceFreightController extends Controller
     public function show($id, Content $content)
     {
         return $content
-            ->header('Detail')
-            ->description('description')
+            ->header('电梯运费价')
+            ->description('详细')
             ->body($this->detail($id));
     }
 
@@ -53,8 +53,8 @@ class DeviceFreightController extends Controller
     public function edit($id, Content $content)
     {
         return $content
-            ->header('Edit')
-            ->description('description')
+            ->header('电梯运费价')
+            ->description('修改')
             ->body($this->form()->edit($id));
     }
 
@@ -67,8 +67,8 @@ class DeviceFreightController extends Controller
     public function create(Content $content)
     {
         return $content
-            ->header('Create')
-            ->description('description')
+            ->header('电梯运费价')
+            ->description('新增')
             ->body($this->form());
     }
 
@@ -82,8 +82,26 @@ class DeviceFreightController extends Controller
         $grid = new Grid(new DeviceFreight);
 
         $grid->id('ID');
-        $grid->created_at('Created at');
-        $grid->updated_at('Updated at');
+        $grid->device('电梯设备')->display(function ($device) {
+            return 'ID:'.implode('|',json_decode(json_encode($device), true));
+        });
+        $grid->from('发货地点');
+        $grid->to('到货地点');
+        $grid->price('单台价格');
+
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            // 在这里添加字段过滤器
+            $filter->like('from', '发货地点');
+            $filter->like('to', '到货地点');
+        });
+        $grid->tools(function ($tools) {
+            $tools->batch(function ($batch) {
+                $batch->disableDelete();
+            });
+        });
+        $grid->disableExport();
 
         return $grid;
     }
@@ -99,8 +117,12 @@ class DeviceFreightController extends Controller
         $show = new Show(DeviceFreight::findOrFail($id));
 
         $show->id('ID');
-        $show->created_at('Created at');
-        $show->updated_at('Updated at');
+        $show->device('电梯设备')->display(function ($device) {
+            return 'ID:'.implode('|',json_decode(json_encode($device), true));
+        });
+        $show->from('发货地点');
+        $show->to('到货地点');
+        $show->price('单台价格');
 
         return $show;
     }
@@ -114,9 +136,12 @@ class DeviceFreightController extends Controller
     {
         $form = new Form(new DeviceFreight);
 
-        $form->display('ID');
-        $form->display('Created at');
-        $form->display('Updated at');
+        $form->select('_brand','电梯品牌')->options('/admin/device/brands')
+            ->load('did', '/admin/device/brandsDetail');
+        $form->select('did','电梯设备');
+        $form->text('from','发货地点');
+        $form->text('to','到货地点');
+        $form->text('price','单台价格');
 
         return $form;
     }
