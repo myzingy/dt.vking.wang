@@ -17,7 +17,8 @@ class Elevator extends Model
     }
     public function device()
     {
-        return $this->hasOne(Device::class, 'did');
+        return $this->belongsTo(Device::class, 'did')
+            ->select(['id','brand','brand_set','dload','speedup','hoisting_height']);
     }
     public function func()
     {

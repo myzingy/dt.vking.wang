@@ -77,7 +77,7 @@ class ElevatorController extends Controller
      *
      * @return Grid
      */
-    public function grid()
+    protected function grid()
     {
         $grid = new Grid(new Elevator);
 

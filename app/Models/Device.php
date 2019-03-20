@@ -22,4 +22,8 @@ class Device extends Model
     {
         return $this->hasOne(DeviceFreight::class, 'did');
     }
+    public function getName($value)
+    {
+        return $this->brand;
+    }
 }
