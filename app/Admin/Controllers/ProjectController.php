@@ -74,7 +74,7 @@ class ProjectController extends Controller
 $js=<<<END
 <script>
 $(function(){
-    $('.table td').on('click','.icheckbox_minimal-blue',function(){
+    $('.table td').on('.icheckbox_minimal-blue','click',function(){
         alert(1);
     })
 })
