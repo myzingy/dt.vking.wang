@@ -10,4 +10,9 @@ class Project extends Model
     use SoftDeletes;
 
     protected $table = 'project';
+
+    public function elevator()
+    {
+        return $this->hasMore(Elevator::class, 'pid');
+    }
 }

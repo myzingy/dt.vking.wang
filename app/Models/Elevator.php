@@ -19,12 +19,12 @@ class Elevator extends Model
     {
         return $this->hasOne(Device::class, 'did');
     }
-    public function funcs()
+    public function func()
     {
-        return $this->hasMore(ElevatorFunc::class, 'did');
+        return $this->belongsToMany(DeviceFunc::class, 'elevator_func','eid','fid');
     }
-    public function fitments()
+    public function fitment()
     {
-        return $this->hasMore(ElevatorFitment::class, 'did');
+        return $this->belongsToMany(DeviceFitment::class, 'elevator_fitment','eid','fid');
     }
 }
