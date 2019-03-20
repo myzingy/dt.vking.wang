@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9fbb21d91ccd06c24121d66789497dee",
+    "content-hash": "ff48128be0daaa482608e24c91f45dbf",
     "packages": [
         {
             "name": "caouecs/laravel-lang",
@@ -882,6 +882,65 @@
             ],
             "description": "Highlight PHP code in terminal",
             "time": "2018-09-29T18:48:56+00:00"
+        },
+        {
+            "name": "laravel-admin-ext/china-distpicker",
+            "version": "v1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-admin-extensions/china-distpicker.git",
+                "reference": "7cb0799b578bf2f023dd91f36acd3038952e86aa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-admin-extensions/china-distpicker/zipball/7cb0799b578bf2f023dd91f36acd3038952e86aa",
+                "reference": "7cb0799b578bf2f023dd91f36acd3038952e86aa",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://dl.laravel-china.org/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "encore/laravel-admin": "~1.6",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Encore\\ChinaDistpicker\\ChinaDistpickerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Encore\\ChinaDistpicker\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "song",
+                    "email": "zosong@126.com"
+                }
+            ],
+            "description": "Distpicker extension for laravel-admin",
+            "homepage": "https://github.com/laravel-admin-ext/china-distpicker",
+            "keywords": [
+                "distpicker",
+                "extension",
+                "laravel-admin"
+            ],
+            "time": "2018-11-20T03:21:43+00:00"
         },
         {
             "name": "laravel-admin-ext/helpers",

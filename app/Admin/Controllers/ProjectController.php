@@ -23,8 +23,8 @@ class ProjectController extends Controller
     public function index(Content $content)
     {
         return $content
-            ->header('Index')
-            ->description('description')
+            ->header('项目管理')
+            ->description('列表')
             ->body($this->grid());
     }
 
@@ -38,8 +38,8 @@ class ProjectController extends Controller
     public function show($id, Content $content)
     {
         return $content
-            ->header('Detail')
-            ->description('description')
+            ->header('项目管理')
+            ->description('详情')
             ->body($this->detail($id));
     }
 
@@ -53,8 +53,8 @@ class ProjectController extends Controller
     public function edit($id, Content $content)
     {
         return $content
-            ->header('Edit')
-            ->description('description')
+            ->header('项目管理')
+            ->description('修改')
             ->body($this->form()->edit($id));
     }
 
@@ -67,8 +67,8 @@ class ProjectController extends Controller
     public function create(Content $content)
     {
         return $content
-            ->header('Create')
-            ->description('description')
+            ->header('项目管理')
+            ->description('新增')
             ->body($this->form());
     }
 
@@ -80,10 +80,42 @@ class ProjectController extends Controller
     protected function grid()
     {
         $grid = new Grid(new Project);
-
         $grid->id('ID');
-        $grid->created_at('Created at');
-        $grid->updated_at('Updated at');
+        $grid->name('项目名称');
+        $grid->addr('详细地址')->display(function($addr){
+            return $this->province_id.$this->city_id.$this->district_id.$addr;
+        });
+        $grid->first_party('甲方名称');
+        $grid->artisan_man('技术负责人');
+        $grid->price_man('成本负责人');
+        $grid->desc('项目简介');
+        $grid->orientation('项目定位')->display(function($c){
+            return implode(',',$c);
+        });
+        $grid->status('状态');
+
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            // 在这里添加字段过滤器
+            $filter->like('name', '项目名称');
+            $filter->where(function ($query) {
+                $query->where('addr', 'like', "%{$this->input}%")
+                    ->orWhere('province_id', 'like', "%{$this->input}%")
+                    ->orWhere('city_id', 'like', "%{$this->input}%")
+                    ->orWhere('district_id', 'like', "%{$this->input}%");
+            }, '地址');
+            $filter->like('first_party', '甲方名称');
+            $filter->like('artisan_man', '技术负责人');
+            $filter->like('price_man', '成本负责人');
+            $filter->in('orientation', '项目定位')->checkbox(Project::GABC);
+        });
+        $grid->tools(function ($tools) {
+            $tools->batch(function ($batch) {
+                $batch->disableDelete();
+            });
+        });
+        $grid->disableExport();
 
         return $grid;
     }
@@ -99,6 +131,18 @@ class ProjectController extends Controller
         $show = new Show(Project::findOrFail($id));
 
         $show->id('ID');
+        $show->name('项目名称');
+        $show->addr('详细地址')->as(function($addr){
+            return $this->province_id.$this->city_id.$this->district_id.$addr;
+        });
+        $show->first_party('甲方名称');
+        $show->artisan_man('技术负责人');
+        $show->price_man('成本负责人');
+        $show->desc('项目简介');
+        $show->orientation('项目定位')->as(function($c){
+            return implode(',',$c);
+        });
+        $show->status('状态');
         $show->created_at('Created at');
         $show->updated_at('Updated at');
 
@@ -114,9 +158,14 @@ class ProjectController extends Controller
     {
         $form = new Form(new Project);
 
-        $form->display('ID');
-        $form->display('Created at');
-        $form->display('Updated at');
+        $form->text('name','项目名称');
+        $form->distpicker(['province_id', 'city_id', 'district_id'], '请选择区域');
+        $form->text('addr','详细地址');
+        $form->text('first_party','甲方名称');
+        $form->text('artisan_man','技术负责人');
+        $form->text('price_man','成本负责人');
+        $form->text('desc','项目简介');
+        $form->checkbox('orientation','项目定位')->options(Project::GABC);
 
         return $form;
     }
