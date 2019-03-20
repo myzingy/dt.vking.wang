@@ -66,10 +66,12 @@ class ProjectController extends Controller
      */
     public function create(Content $content)
     {
+        $ele=new ElevatorController();
         return $content
             ->header('项目管理')
             ->description('新增')
-            ->body($this->form());
+            ->body($this->form())
+            ->body($ele->grid());
     }
 
     /**
