@@ -55,7 +55,7 @@ class DeviceFreightController extends Controller
         return $content
             ->header('电梯运费价')
             ->description('修改')
-            ->body($this->form()->edit($id));
+            ->body($this->form(true)->edit($id));
     }
 
     /**
@@ -69,7 +69,7 @@ class DeviceFreightController extends Controller
         return $content
             ->header('电梯运费价')
             ->description('新增')
-            ->body($this->form());
+            ->body($this->form(false));
     }
 
     /**
@@ -132,13 +132,15 @@ class DeviceFreightController extends Controller
      *
      * @return Form
      */
-    protected function form()
+    protected function form($hasEdit=false)
     {
         $form = new Form(new DeviceFreight);
 
-        $form->display('device','已选电梯设备')->with(function ($value) {
-            return 'ID:'.implode('|',json_decode(json_encode($value), true));
-        });
+        if($hasEdit){
+            $form->display('device','已选电梯设备')->with(function ($value) {
+                return 'ID:'.implode('|',json_decode(json_encode($value), true));
+            });
+        }
         $form->select('_brand','电梯品牌')->options('/admin/device/brands')
             ->load('did', '/admin/device/brandsDetail');
         $form->select('did','电梯设备');
