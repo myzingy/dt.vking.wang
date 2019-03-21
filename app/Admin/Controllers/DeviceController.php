@@ -89,7 +89,8 @@ class DeviceController extends Controller
         $grid->speedup('速度(m/s)');
         $grid->floor('楼层');
         $grid->hoisting_height('标准提升高度(m)');
-        $grid->freeboard('超米费用/单价（元/米）');
+        $grid->freeboard_dev('设备超米费（元/米）');
+        $grid->freeboard_ins('安装超米费（元/米）');
         $grid->device_price('设备单价');
         $grid->device_rate('设备税率');
         $grid->install_price('安装单价');
@@ -129,7 +130,8 @@ class DeviceController extends Controller
         $show->speedup('速度(m/s)');
         $show->floor('楼层');
         $show->hoisting_height('标准提升高度(m)');
-        $show->freeboard('超米费用/单价（元/米）');
+        $show->freeboard_dev('设备超米费（元/米）');
+        $show->freeboard_ins('安装超米费（元/米）');
         $show->device_price('设备单价');
         $show->device_rate('设备税率');
         $show->install_price('安装单价');
@@ -152,7 +154,8 @@ class DeviceController extends Controller
         $form->number('speedup', '速度(m/s)');
         $form->number('floor', '楼层');
         $form->number('hoisting_height', '标准提升高度(m)');
-        $form->number('freeboard', '超米费用/单价（元/米）');
+        $form->number('freeboard_dev', '设备超米费（元/米）');
+        $form->number('freeboard_ins', '安装超米费（元/米）');
         $form->number('device_price', '设备单价');
         $form->number('device_rate', '设备税率');
         $form->number('install_price', '安装单价');
@@ -169,7 +172,7 @@ class DeviceController extends Controller
         return $arr;
     }
     public function brandsDetail(){
-        $res=Device::select(['id','brand','brand_set','dload','speedup','hoisting_height'])->where('brand',Input::get('q'))
+        $res=Device::select(['id','brand','brand_set','dload','floor'])->where('brand',Input::get('q'))
             ->get();
         $arr=[];
         foreach($res as $d){
