@@ -19,6 +19,7 @@ Route::group([
         return Redirect::to("/admin/project");
     });
     $router->resource('/project', ProjectController::CLASS);
+    $router->resource('/projectElevator', ProjectElevatorController::CLASS);
     $router->resource('/elevator', ElevatorController::CLASS);
     $router->resource('/device', DeviceController::CLASS);
     $router->resource('/deviceFunc', DeviceFuncController::CLASS);

@@ -16,9 +16,9 @@ class Project extends Model
 
     protected $table = 'project';
 
-    public function elevator()
+    public function elevators()
     {
-        return $this->hasMore(Elevator::class, 'pid');
+        return $this->belongsToMany(Elevator::class,'project_elevator','pid','eid')->select('elevator.*','project_elevator.num');
     }
     public static function getGABCStr($state){
         return self::GABC[$state]||'';

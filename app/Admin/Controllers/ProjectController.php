@@ -39,10 +39,24 @@ class ProjectController extends Controller
      */
     public function show($id, Content $content)
     {
-        return $content
+        $content
             ->header('项目管理')
             ->description('详情')
             ->body($this->detail($id));
+
+        $js=<<<END
+<script>
+$(function(){
+    $('.table td').on('.icheckbox_minimal-blue','click',function(){
+        alert(1);
+    })
+})
+</script>
+END;
+        $content->body($js);
+        $content->row('<h3>请从下方选择电梯添加到项目</h3>');
+        $content->row($this->eleGrid());
+        return $content;
     }
 
     /**
@@ -71,20 +85,7 @@ class ProjectController extends Controller
         $content
             ->header('项目管理')
             ->description('新增');
-$js=<<<END
-<script>
-$(function(){
-    $('.table td').on('.icheckbox_minimal-blue','click',function(){
-        alert(1);
-    })
-})
-</script>
-END;
-        $content->body($js);
-        $content->row(function(Row $row){
-            $row->column(4, $this->form());
-            $row->column(8, $this->eleGrid());
-        });
+        $content->body($this->form());
         return $content;
     }
     private function eleGrid(){
@@ -202,8 +203,33 @@ END;
             return implode(',',$c);
         });
         $show->status('状态');
-        $show->created_at('Created at');
-        $show->updated_at('Updated at');
+        $show->elevators('已选择电梯', function ($grid) {
+            $grid->resource('/admin/projectElevator');
+            $grid->id('ID');
+            $grid->eid('电梯设备')->display(function(){
+                return 'ID:'.implode('|',json_decode(json_encode($this->device), true));
+            });
+            $grid->layer_number('层/站/门数');
+            $grid->pit_depth('底坑深度mm');
+            $grid->top_height('顶层高度mm');
+            $grid->hall_width('厅门尺寸（mm）');
+            $grid->car_width('轿厢尺寸（mm）');
+            $grid->desc('电梯说明');
+            $grid->column('num','数量')->editable('select', [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+            //$grid->elevator()->limit(50);
+            $grid->disableActions();
+            $grid->disablePagination();
+            $grid->disableCreateButton();
+            $grid->disableFilter();
+            $grid->disableRowSelector();
+            $grid->disableTools();
+            $grid->disableExport();
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
+                $actions->disableView();
+                $actions->disableEdit();
+                $actions->disableDelete();
+            });
+        });
 
         return $show;
     }
