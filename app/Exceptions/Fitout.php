@@ -32,7 +32,7 @@ $('.paylog-refund').unbind('click').click(function() {
             ajax=false;
             $.ajax({
                 method: 'post',
-                url: '{$this->getResource()}/' + id+'/edit?act=refund',
+                url: '{$this->getResource()}/' + id,
                 data: {
                     _method:'get',
                     _token:LA.token,

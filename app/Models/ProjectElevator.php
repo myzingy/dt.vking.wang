@@ -8,6 +8,7 @@ class ProjectElevator extends Model
 {
     protected $table = 'project_elevator';
     public $timestamps = false;
+    protected $fillable = ['pid','eid','num'];
 
 //    public function elevator()
 //    {

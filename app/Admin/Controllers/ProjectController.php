@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Models\Elevator;
 use App\Models\Project;
 use App\Http\Controllers\Controller;
+use App\Models\ProjectElevator;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -224,7 +225,7 @@ class ProjectController extends Controller
             $grid->hall_width('厅门尺寸（mm）');
             $grid->car_width('轿厢尺寸（mm）');
             $grid->desc('电梯说明');
-            $grid->column('num','数量')->editable('select', [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+            $grid->column('num','数量')->editable('select', [1=>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
             //$grid->elevator()->limit(50);
             //$grid->disableActions();
             $grid->disablePagination();
@@ -264,13 +265,18 @@ class ProjectController extends Controller
 
         return $form;
     }
-    public function elevator($id, Content $content){
+    public function elevator($pid, Content $content){
         $content
             ->header('项目管理')
             ->description('详情')
-            ->body($this->detail_sm($id));
+            ->body($this->detail_sm($pid));
         $content->row('<h3>请从下方选择电梯添加到项目</h3>');
         $content->row($this->eleGrid());
         return $content;
+    }
+    public function elevatorBind($pid,$eid,Content $content){
+        $data=['pid'=>$pid,'eid'=>$eid];
+        $pe=ProjectElevator::firstOrCreate($data);
+        return $data;
     }
 }
