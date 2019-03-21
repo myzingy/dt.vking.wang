@@ -217,7 +217,7 @@ END;
             $grid->desc('电梯说明');
             $grid->column('num','数量')->editable('select', [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
             //$grid->elevator()->limit(50);
-            $grid->disableActions();
+            //$grid->disableActions();
             $grid->disablePagination();
             $grid->disableCreateButton();
             $grid->disableFilter();
@@ -227,7 +227,7 @@ END;
             $grid->actions(function (Grid\Displayers\Actions $actions) {
                 $actions->disableView();
                 $actions->disableEdit();
-                $actions->disableDelete();
+                //$actions->disableDelete();
             });
         });
 
