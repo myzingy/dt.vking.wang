@@ -27,7 +27,7 @@ class DeviceFunc extends Model
     public function device()
     {
         $device=$this->belongsTo(Device::class, 'did')
-            ->select(['id','brand','brand_set','dload','speedup','hoisting_height']);
+            ->select(['id','brand','brand_set','dload','floor']);
         return $device;
     }
     public static function getUnitStr($state=self::UNIT_BU){
