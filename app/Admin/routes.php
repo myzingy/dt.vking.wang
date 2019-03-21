@@ -25,4 +25,6 @@ Route::group([
     $router->resource('/deviceFunc', DeviceFuncController::CLASS);
     $router->resource('/deviceFreight', DeviceFreightController::CLASS);
     $router->resource('/deviceFitment', DeviceFitmentController::CLASS);
+
+    Route::get('/project/{id}/elevator', 'ProjectController@elevator');
 });

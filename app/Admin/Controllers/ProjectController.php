@@ -43,17 +43,6 @@ class ProjectController extends Controller
             ->header('项目管理')
             ->description('详情')
             ->body($this->detail($id));
-
-        $js=<<<END
-<script>
-$(function(){
-    $('.table td').on('.icheckbox_minimal-blue','click',function(){
-        alert(1);
-    })
-})
-</script>
-END;
-        $content->body($js);
         $content->row('<h3>请从下方选择电梯添加到项目</h3>');
         $content->row($this->eleGrid());
         return $content;
@@ -90,6 +79,7 @@ END;
     }
     private function eleGrid(){
         $grid = new Grid(new Elevator);
+        $grid->model()->orderBy('id','desc');
         $grid->id('ID');
         $grid->device('电梯设备')->display(function ($device) {
             return 'ID:'.implode('|',json_decode(json_encode($device), true));
@@ -100,6 +90,7 @@ END;
         $grid->hall_width('厅门尺寸（mm）');
         $grid->car_width('轿厢尺寸（mm）');
         $grid->desc('电梯说明');
+        $grid->column('id_x','配备到项目')->fitout();
 
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
@@ -153,6 +144,9 @@ END;
             return implode(',',$c);
         });
         $grid->status('状态');
+        $grid->status1('电梯')->display(function(){
+            return '<a href="/admin/project/'.$this->id.'/elevator">配备</a>';
+        });
 
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
@@ -203,7 +197,22 @@ END;
             return implode(',',$c);
         });
         $show->status('状态');
-        $show->elevators('已选择电梯', function ($grid) {
+
+        return $show;
+    }
+    protected function detail_sm($id)
+    {
+        $show = new Show(Project::findOrFail($id));
+        $show->desc('描述');
+        $model=$show->getModel();
+        $show->panel()
+            ->title($model->name.'，'.$model->province_id.$model->city_id.$model->district_id.$model->addr)
+            ->tools(function ($tools) {
+                $tools->disableEdit();
+                $tools->disableList();
+                $tools->disableDelete();
+            });;
+        $show->elevators('已配备电梯', function ($grid) {
             $grid->resource('/admin/projectElevator');
             $grid->id('ID');
             $grid->eid('电梯设备')->display(function(){
@@ -229,6 +238,7 @@ END;
                 $actions->disableEdit();
                 //$actions->disableDelete();
             });
+            $grid->paginate(100);
         });
 
         return $show;
@@ -253,5 +263,14 @@ END;
         $form->checkbox('orientation','项目定位')->options(Project::GABC);
 
         return $form;
+    }
+    public function elevator($id, Content $content){
+        $content
+            ->header('项目管理')
+            ->description('详情')
+            ->body($this->detail_sm($id));
+        $content->row('<h3>请从下方选择电梯添加到项目</h3>');
+        $content->row($this->eleGrid());
+        return $content;
     }
 }

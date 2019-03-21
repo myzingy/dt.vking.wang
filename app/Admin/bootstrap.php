@@ -17,5 +17,7 @@
  * Admin::js('/packages/prettydocs/js/main.js');
  *
  */
-
+use \Encore\Admin\Grid\Column;
+use \App\Exceptions\Fitout;
 Encore\Admin\Form::forget(['map', 'editor']);
+Column::extend('fitout', Fitout::class);
