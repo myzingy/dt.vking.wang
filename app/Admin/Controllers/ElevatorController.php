@@ -87,6 +87,7 @@ class ElevatorController extends Controller
         $grid = new Grid(new Elevator);
 
         $grid->id('ID');
+        $grid->column('project.name','项目名称');
         $grid->eid('电梯设备')->display(function(){
             return 'ID:'.implode('|',json_decode(json_encode($this->device), true));
         });
@@ -101,7 +102,7 @@ class ElevatorController extends Controller
         });
         $grid->desc('电梯说明');
         $grid->status1('功能/装修')->display(function(){
-            return '<a href="/admin/elevator/'.$this->id.'/funfit">配备</a>';
+            return '<a href="/admin/elevator/'.$this->id.'/funfit">查看&配置</a>';
         });
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
@@ -164,11 +165,11 @@ class ElevatorController extends Controller
         $form->number('pit_depth','底坑深度mm');
         $form->number('top_height','顶层高度mm');
 
-        $form->number('hall_width','厅门尺寸（mm）长');
         $form->number('hall_width','厅门尺寸（mm）宽');
+        $form->number('hall_height','厅门尺寸（mm）高');
 
-        $form->number('car_width','轿厢尺寸（mm）长');
-        $form->number('car_height','轿厢尺寸（mm）宽');
+        $form->number('car_width','轿厢尺寸（mm）宽');
+        $form->number('car_height','轿厢尺寸（mm）高');
         $form->number('car_depth','轿厢尺寸（mm）深');
 
         $form->text('desc','电梯说明');
