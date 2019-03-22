@@ -21,9 +21,10 @@ class Fitout extends AbstractDisplayer
         $script = <<<SCRIPT
 $('.paylog-refund').unbind('click').click(function() {
     var id = $(this).data('id');
+    var type = $(this).data('type');
     var ajax=true;
     swal({
-          title: "配备到项目",
+          title: "请确认是否需要配备？",
           type: "warning",
           showCancelButton: true,
           confirmButtonColor: "#DD6B55",
@@ -35,7 +36,7 @@ $('.paylog-refund').unbind('click').click(function() {
             ajax=false;
             $.ajax({
                 method: 'post',
-                url: '{$this->getResource()}/' + id+'?type={$type}',
+                url: '{$this->getResource()}/' + id+'?type='+type,
                 data: {
                     _method:'get',
                     _token:LA.token,
@@ -57,7 +58,7 @@ SCRIPT;
         return <<<EOT
 <button type="button"
     class="btn btn-danger paylog-refund"
-    title="点击配备到项目" data-id="{$this->getKey()}">
+    title="点击配备到项目" data-id="{$this->getKey()}" data-type="{$type}">
     配备
 </button>
 EOT;

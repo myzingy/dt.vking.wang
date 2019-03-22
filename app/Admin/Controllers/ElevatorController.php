@@ -202,7 +202,7 @@ class ElevatorController extends Controller
                 $tools->disableDelete();
             });
         $show->func('已配备功能', function ($grid) use($eid) {
-            $grid->resource('/admin/deviceFunc');
+            $grid->resource('/admin/elevatorFunc');
             $grid->id('ID');
             $grid->name('功能名称');
             $grid->unit('功能单位');
@@ -223,10 +223,12 @@ class ElevatorController extends Controller
             $grid->paginate(100);
         });
         $show->fitment('已配备装修', function ($grid) use($eid) {
-            $grid->resource('/admin/deviceFitment');
-            $grid->model()->where('eid','=',$eid);
+            $grid->resource('/admin/elevatorFitment');
             $grid->id('ID');
-
+            $grid->name('装饰项目名称');
+            $grid->stuff('材料');
+            $grid->spec('规格编号');
+            $grid->desc('描述');
             //$grid->elevator()->limit(50);
             //$grid->disableActions();
             $grid->disablePagination();
@@ -283,7 +285,7 @@ class ElevatorController extends Controller
         $grid->stuff('材料');
         $grid->spec('规格编号');
         $grid->desc('描述');
-        $grid->xxxx('操作')->fitout('fit');
+        $grid->yyyy('操作')->fitout('fit');
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
