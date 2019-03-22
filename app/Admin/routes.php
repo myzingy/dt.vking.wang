@@ -27,5 +27,6 @@ Route::group([
     Route::get('/project/{pid}/elevator', 'ProjectController@elevator');
     Route::get('/project/{pid}/elevator/{eid}', 'ProjectController@elevatorBind');
 
-    Route::get('/elevator/{eid}/funfit', 'ElevatorController@funfit');
+    Route::get('/elevator/{eid}/funfit', 'ElevatorController@funfit');//配置功能装修
+    Route::get('/elevator/{eid}/funfit/{fid}', 'ElevatorController@fitout');//绑定功能装修动作
 });

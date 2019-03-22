@@ -7,6 +7,8 @@
  */
 namespace App\Exceptions;
 use Encore\Admin\Admin;
+use Encore\Admin\Grid;
+use Encore\Admin\Grid\Column;
 use Encore\Admin\Grid\Displayers\AbstractDisplayer;
 class Fitout extends AbstractDisplayer
 {
@@ -15,6 +17,7 @@ class Fitout extends AbstractDisplayer
      */
     public function display()
     {
+        $type=func_get_arg(0);
         $script = <<<SCRIPT
 $('.paylog-refund').unbind('click').click(function() {
     var id = $(this).data('id');
@@ -32,7 +35,7 @@ $('.paylog-refund').unbind('click').click(function() {
             ajax=false;
             $.ajax({
                 method: 'post',
-                url: '{$this->getResource()}/' + id,
+                url: '{$this->getResource()}/' + id+'?type={$type}',
                 data: {
                     _method:'get',
                     _token:LA.token,

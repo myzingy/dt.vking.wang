@@ -6,6 +6,8 @@ use App\Models\DeviceFitment;
 use App\Models\DeviceFunc;
 use App\Models\Elevator;
 use App\Http\Controllers\Controller;
+use App\Models\ElevatorFitment;
+use App\Models\ElevatorFunc;
 use App\Models\Project;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -14,6 +16,7 @@ use Encore\Admin\Layout\Content;
 use Encore\Admin\Layout\Row;
 use Encore\Admin\Show;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Input;
 
 class ElevatorController extends Controller
 {
@@ -108,6 +111,10 @@ class ElevatorController extends Controller
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
             // 在这里添加字段过滤器
+            $pj=Project::where('status','=',0)->get();
+            $arr=Arr::pluck($pj, 'name','id');
+            //var_dump($pj,$arr);
+            $filter->equal('pid','项目')->select($arr);
             $filter->like('desc', '电梯说明');
         });
         $grid->tools(function ($tools) {
@@ -182,7 +189,7 @@ class ElevatorController extends Controller
 
         return $form;
     }
-    protected function detail_sm($eid)
+    protected function detail_sm($eid,$content)
     {
         $show = new Show(Elevator::findOrFail($eid));
         $show->desc('描述');
@@ -193,7 +200,7 @@ class ElevatorController extends Controller
                 $tools->disableEdit();
                 $tools->disableList();
                 $tools->disableDelete();
-            });;
+            });
         $show->func('已配备功能', function ($grid) use($eid) {
             $grid->resource('/admin/deviceFunc');
             $grid->id('ID');
@@ -245,7 +252,7 @@ class ElevatorController extends Controller
         $grid->name('功能名称');
         $grid->unit('功能单位');
         $grid->desc('功能描述');
-
+        $grid->xxxx('操作')->fitout('fun');
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
@@ -260,11 +267,10 @@ class ElevatorController extends Controller
         $grid->disableExport();
         $grid->disableCreateButton();
 
-        $grid->actions(function (Grid\Displayers\Actions $actions) {
-            $actions->disableView();
-            $actions->disableEdit();
-            $actions->disableDelete();
-        });
+        $grid->disableActions();
+        $grid->disablePagination();
+        $grid->disableTools();
+        $grid->paginate(100);
         return $grid;
     }
     protected function fitGrid($did)
@@ -276,9 +282,8 @@ class ElevatorController extends Controller
         $grid->name('装饰项目名称');
         $grid->stuff('材料');
         $grid->spec('规格编号');
-        $grid->unit('单位');
         $grid->desc('描述');
-
+        $grid->xxxx('操作')->fitout('fit');
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
@@ -296,22 +301,34 @@ class ElevatorController extends Controller
         $grid->disableExport();
         $grid->disableCreateButton();
 
-        $grid->actions(function (Grid\Displayers\Actions $actions) {
-            $actions->disableView();
-            $actions->disableEdit();
-            $actions->disableDelete();
-        });
+        $grid->disableActions();
+        $grid->disablePagination();
+        $grid->disableTools();
+        $grid->paginate(100);
         return $grid;
     }
     public function funfit($eid, Content $content){
         $content
             ->header('电梯管理')
             ->description('选功能、选装修')
-            ->body($this->detail_sm($eid));
-        $ele=Elevator::findOrFail($eid);
+            ->body($this->detail_sm($eid,$content));
         $content->row('<h3>请从下方选择功能和装修</h3>');
-        $content->row($this->funGrid($ele->did));
-        $content->row($this->fitGrid($ele->did));
+        $content->row(function(Row $row) use($eid) {
+            $ele=Elevator::findOrFail($eid);
+            $row->column(6, $this->funGrid($ele->did));
+            $row->column(6, $this->fitGrid($ele->did));
+        });
         return $content;
+    }
+    public function fitout($eid,$fid){
+        $type=Input::get('type');
+        $data=['fid'=>$fid,'eid'=>$eid];
+        if($type=='fun'){
+            ElevatorFunc::create($data);
+        }
+        if($type=='fit'){
+            ElevatorFitment::create($data);
+        }
+        return $data;
     }
 }

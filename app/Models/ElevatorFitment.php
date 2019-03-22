@@ -9,5 +9,6 @@ class ElevatorFitment extends Model
     protected $table = 'elevator_fitment';
 
     public $timestamps = false;
+    protected $fillable = ['fid','eid'];
 
 }
