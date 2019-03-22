@@ -145,8 +145,13 @@ class ProjectController extends Controller
             return implode(',',$c);
         });
         $grid->status('状态');
-        $grid->status1('电梯')->display(function(){
-            return '<a href="/admin/project/'.$this->id.'/elevator">配备</a>';
+        $grid->elevator('电梯')->display(function($elevators){
+            $html='';
+            foreach ($this->elevator as $ele ){
+                $device='ID:'.implode('|',json_decode(json_encode($ele->device), true));
+                $html.="<p>({$device}){$ele->desc} X {$ele->num}台</p>";
+            }
+            return $html;
         });
 
         $grid->filter(function($filter){
