@@ -6,12 +6,14 @@ use App\Models\DeviceFitment;
 use App\Models\DeviceFunc;
 use App\Models\Elevator;
 use App\Http\Controllers\Controller;
+use App\Models\Project;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Layout\Row;
 use Encore\Admin\Show;
+use Illuminate\Support\Arr;
 
 class ElevatorController extends Controller
 {
@@ -143,6 +145,11 @@ class ElevatorController extends Controller
     {
         $form = new Form(new Elevator);
 
+        $pj=Project::where('status','=',0)->get();
+        $arr=Arr::pluck($pj, 'name','id');
+        //var_dump($pj,$arr);
+        $form->select('pid','项目')->options($arr);
+        $form->divide();
         if($hasEdit){
             $form->display('device','已选电梯设备')->with(function ($value) {
                 return 'ID:'.implode('|',json_decode(json_encode($value), true));

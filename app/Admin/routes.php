@@ -9,8 +9,6 @@ Route::group([
     'namespace'     => config('admin.route.namespace'),
     'middleware'    => config('admin.route.middleware'),
 ], function (Router $router) {
-
-
     Route::get('/device/brands', 'DeviceController@brands');
     Route::get('/device/brandsDetail', 'DeviceController@brandsDetail');
 

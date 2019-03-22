@@ -44,8 +44,6 @@ class ProjectController extends Controller
             ->header('项目管理')
             ->description('详情')
             ->body($this->detail($id));
-        $content->row('<h3>请从下方选择电梯添加到项目</h3>');
-        $content->row($this->eleGrid());
         return $content;
     }
 
