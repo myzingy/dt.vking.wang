@@ -28,4 +28,6 @@ Route::group([
 
     Route::get('/project/{pid}/elevator', 'ProjectController@elevator');
     Route::get('/project/{pid}/elevator/{eid}', 'ProjectController@elevatorBind');
+
+    Route::get('/elevator/{eid}/funfit', 'ElevatorController@funfit');
 });

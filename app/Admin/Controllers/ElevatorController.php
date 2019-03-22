@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\DeviceFitment;
+use App\Models\DeviceFunc;
 use App\Models\Elevator;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
@@ -96,7 +98,9 @@ class ElevatorController extends Controller
             return "{$this->car_width}X{$this->car_height}X{$this->car_depth}";
         });
         $grid->desc('电梯说明');
-
+        $grid->status1('功能/装修')->display(function(){
+            return '<a href="/admin/elevator/'.$this->id.'/funfit">配备</a>';
+        });
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
@@ -169,5 +173,137 @@ class ElevatorController extends Controller
         });
 
         return $form;
+    }
+    protected function detail_sm($eid)
+    {
+        $show = new Show(Elevator::findOrFail($eid));
+        $show->desc('描述');
+        $model=$show->getModel();
+        $show->panel()
+            ->title('ID:'.implode('|',json_decode(json_encode($model->device), true)))
+            ->tools(function ($tools) {
+                $tools->disableEdit();
+                $tools->disableList();
+                $tools->disableDelete();
+            });;
+        $show->func('已配备功能', function ($grid) use($eid) {
+            $grid->resource('/admin/deviceFunc');
+            $grid->id('ID');
+            $grid->name('功能名称');
+            $grid->unit('功能单位');
+            $grid->desc('功能描述');
+            //$grid->elevator()->limit(50);
+            //$grid->disableActions();
+            $grid->disablePagination();
+            $grid->disableCreateButton();
+            $grid->disableFilter();
+            $grid->disableRowSelector();
+            $grid->disableTools();
+            $grid->disableExport();
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
+                $actions->disableView();
+                $actions->disableEdit();
+                //$actions->disableDelete();
+            });
+            $grid->paginate(100);
+        });
+        $show->fitment('已配备装修', function ($grid) use($eid) {
+            $grid->resource('/admin/deviceFitment');
+            $grid->model()->where('eid','=',$eid);
+            $grid->id('ID');
+
+            //$grid->elevator()->limit(50);
+            //$grid->disableActions();
+            $grid->disablePagination();
+            $grid->disableCreateButton();
+            $grid->disableFilter();
+            $grid->disableRowSelector();
+            $grid->disableTools();
+            $grid->disableExport();
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
+                $actions->disableView();
+                $actions->disableEdit();
+                //$actions->disableDelete();
+            });
+            $grid->paginate(100);
+        });
+        return $show;
+    }
+    protected function funGrid($did)
+    {
+        $grid = new Grid(new DeviceFunc);
+        $grid->model()->where('did','=',$did);
+        $grid->id('ID');
+        $grid->name('功能名称');
+        $grid->unit('功能单位');
+        $grid->desc('功能描述');
+
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            // 在这里添加字段过滤器
+            $filter->like('name', '功能名称');
+        });
+        $grid->tools(function ($tools) {
+            $tools->batch(function ($batch) {
+                $batch->disableDelete();
+            });
+        });
+        $grid->disableExport();
+        $grid->disableCreateButton();
+
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->disableView();
+            $actions->disableEdit();
+            $actions->disableDelete();
+        });
+        return $grid;
+    }
+    protected function fitGrid($did)
+    {
+        $grid = new Grid(new DeviceFitment);
+        $grid->model()->where('did','=',$did);
+
+        $grid->id('ID');
+        $grid->name('装饰项目名称');
+        $grid->stuff('材料');
+        $grid->spec('规格编号');
+        $grid->unit('单位');
+        $grid->desc('描述');
+
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            // 在这里添加字段过滤器
+            $filter->like('name', '装饰项目名称');
+            $filter->like('stuff', '材料');
+            $filter->like('spec', '规格编号');
+        });
+
+        $grid->tools(function ($tools) {
+            $tools->batch(function ($batch) {
+                $batch->disableDelete();
+            });
+        });
+        $grid->disableExport();
+        $grid->disableCreateButton();
+
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->disableView();
+            $actions->disableEdit();
+            $actions->disableDelete();
+        });
+        return $grid;
+    }
+    public function funfit($eid, Content $content){
+        $content
+            ->header('电梯管理')
+            ->description('选功能、选装修')
+            ->body($this->detail_sm($eid));
+        $ele=Elevator::findOrFail($eid);
+        $content->row('<h3>请从下方选择功能和装修</h3>');
+        $content->row($this->funGrid($ele->did));
+        $content->row($this->fitGrid($ele->did));
+        return $content;
     }
 }

@@ -22,7 +22,7 @@ class Elevator extends Model
     }
     public function func()
     {
-        return $this->belongsToMany(DeviceFunc::class, 'elevator_func','eid','fid');
+        return $this->belongsToMany(DeviceFunc::class, 'elevator_func','fid','eid');
     }
     public function fitment()
     {
