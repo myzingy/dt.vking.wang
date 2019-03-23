@@ -85,9 +85,21 @@ class DeviceFreightController extends Controller
         $grid->device('电梯设备')->display(function ($device) {
             return 'ID:'.implode('|',json_decode(json_encode($device), true));
         });
-        $grid->from('发货地点');
-        $grid->to('到货地点');
-        $grid->price('单台价格');
+        $grid->from('发货地点')->display(function(){
+            $arr=[$this->from_province,$this->from_city];
+            if($this->from_district){
+                array_push($arr,$this->from_district);
+            }
+            return implode('/',$arr);
+        });
+        $grid->to('到货地点')->display(function(){
+            $arr=[$this->to_province,$this->to_city];
+            if($this->to_district){
+                array_push($arr,$this->to_district);
+            }
+            return implode('/',$arr);
+        });
+        $grid->price('单台价格')->money();
 
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
@@ -146,10 +158,15 @@ class DeviceFreightController extends Controller
         $form->select('did','电梯设备');
         $form->divide();
 
-        $form->text('from','发货地点');
-        $form->text('to','到货地点');
-        $form->text('price','单台价格');
-
+        //$form->text('from','发货地点');
+        $form->distpicker(['from_province', 'from_city','from_district'], '发货城市')->autoselect(2);
+        $form->distpicker(['to_province', 'to_city','to_district'], '收货城市')->autoselect(2);
+        $form->currency('price','单台价格')->symbol('￥');
+        //忽略字段
+        $form->ignore(['_brand']);
+        $form->saving(function (Form $form){
+            $form->did=$form->did>0?$form->did:$form->model()->did;
+        });
         return $form;
     }
 }

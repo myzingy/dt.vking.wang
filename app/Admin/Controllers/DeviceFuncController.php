@@ -86,9 +86,12 @@ class DeviceFuncController extends Controller
             return 'ID:'.implode('|',json_decode(json_encode($device), true));
         });
         $grid->name('功能名称');
-        $grid->price('功能加价');
-        $grid->has_in_base('是否标配/是否在基础价格包含');
-        $grid->unit('功能单位');
+        $grid->price('功能加价')->display(function($price){
+            return number_format($price,2).' 元/'.$this->unit;
+        });
+        $grid->has_in_base('是否标配/是否在基础价格包含')->display(function($has_in_base){
+            return $has_in_base==1?'已包含':'未包含';
+        });
         $grid->desc('功能描述');
 
         $grid->filter(function($filter){
@@ -103,6 +106,9 @@ class DeviceFuncController extends Controller
             });
         });
         $grid->disableExport();
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->disableView();
+        });
         return $grid;
     }
 
@@ -148,9 +154,13 @@ class DeviceFuncController extends Controller
         $form->divide();
 
         $form->text('name','功能名称');
-        $form->text('price','功能加价');
-        $form->text('has_in_base','是否标配/是否在基础价格包含');
-        $form->text('unit','功能单位');
+        $form->currency('price','功能加价')->symbol('￥');
+        $states = [
+            'on'  => ['value' => 1, 'text' => '包含', 'color' => 'success'],
+            'off' => ['value' => 0, 'text' => '不包含', 'color' => 'danger'],
+        ];
+        $form->switch('has_in_base','是否标配/是否在基础价格包含')->states($states);
+        $form->radio('unit','功能单位')->options(DeviceFunc::UNIT);
         $form->text('desc','功能描述');
 
         //忽略字段
