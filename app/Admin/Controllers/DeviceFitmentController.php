@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\DeviceFitment;
 use App\Http\Controllers\Controller;
+use App\Models\DeviceFunc;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -88,10 +89,13 @@ class DeviceFitmentController extends Controller
         $grid->name('装饰项目名称');
         $grid->stuff('材料');
         $grid->spec('规格编号');
-        $grid->unit('单位');
-        $grid->price('单价');
+        $grid->price('装修单价')->display(function($price){
+            return number_format($price,2).' 元/'.$this->unit;
+        });
         $grid->desc('描述');
-        $grid->has_in_base('是否标配/是否在基础价格包含');
+        $grid->has_in_base('是否标配/是否在基础价格包含')->display(function($has_in_base){
+            return $has_in_base==1?'已包含':'未包含';
+        });
 
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
@@ -107,7 +111,9 @@ class DeviceFitmentController extends Controller
             });
         });
         $grid->disableExport();
-
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->disableView();
+        });
         return $grid;
     }
 
@@ -158,11 +164,20 @@ class DeviceFitmentController extends Controller
         $form->text('name','装饰项目名称');
         $form->text('stuff','材料');
         $form->text('spec','规格编号');
-        $form->text('unit','单位');
-        $form->text('price','单价');
-        $form->text('has_in_base','是否标配/是否在基础价格包含');
+        $form->radio('unit','装修单位')->options(DeviceFunc::UNIT);
+        $form->currency('price','单价')->symbol('￥');
+        $states = [
+            'on'  => ['value' => 1, 'text' => '包含', 'color' => 'success'],
+            'off' => ['value' => 0, 'text' => '不包含', 'color' => 'danger'],
+        ];
+        $form->switch('has_in_base','是否标配/是否在基础价格包含')->states($states);
         $form->text('desc','描述');
 
+        //忽略字段
+        $form->ignore(['_brand']);
+        $form->saving(function (Form $form){
+            $form->did=$form->did>0?$form->did:$form->model()->did;
+        });
         return $form;
     }
 }
