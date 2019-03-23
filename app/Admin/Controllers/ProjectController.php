@@ -147,7 +147,7 @@ class ProjectController extends Controller
             $html='';
             foreach ($this->elevator as $ele ){
                 $device='ID:'.implode('|',json_decode(json_encode($ele->device), true));
-                $html.="<p>({$device}){$ele->desc} X {$ele->num}台</p>";
+                $html.="<p>({$device}){$ele->desc} X <font color='red'>（{$ele->num}部）</font></p>";
             }
             return $html;
         });

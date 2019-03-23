@@ -91,9 +91,9 @@ class DeviceController extends Controller
         $grid->hoisting_height('标准提升高度(m)');
         $grid->freeboard_dev('设备超米费（元/米）');
         $grid->freeboard_ins('安装超米费（元/米）');
-        $grid->device_price('设备单价');
+        $grid->device_price('设备单价')->money();
         $grid->device_rate('设备税率');
-        $grid->install_price('安装单价');
+        $grid->install_price('安装单价')->money();
         $grid->install_rate('安装税率');
 
         $grid->filter(function($filter){
@@ -154,12 +154,12 @@ class DeviceController extends Controller
         $form->number('speedup', '速度(m/s)');
         $form->number('floor', '楼层');
         $form->number('hoisting_height', '标准提升高度(m)');
-        $form->number('freeboard_dev', '设备超米费（元/米）');
-        $form->number('freeboard_ins', '安装超米费（元/米）');
-        $form->number('device_price', '设备单价');
-        $form->number('device_rate', '设备税率');
-        $form->number('install_price', '安装单价');
-        $form->number('install_rate', '安装税率');
+        $form->currency('freeboard_dev', '设备超米费（元/米）')->symbol('￥');
+        $form->currency('freeboard_ins', '安装超米费（元/米）')->symbol('￥');
+        $form->currency('device_price', '设备单价')->symbol('￥');
+        $form->currency('install_price', '安装单价')->symbol('￥');
+        $form->slider('device_rate', '设备税率')->options(['max' => 0.17, 'min' => 0, 'step' => 0.01]);
+        $form->slider('install_rate', '安装税率')->options(['max' => 0.11, 'min' => 0, 'step' => 0.01]);
 
         return $form;
     }

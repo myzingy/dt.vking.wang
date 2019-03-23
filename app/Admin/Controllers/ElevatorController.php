@@ -94,6 +94,7 @@ class ElevatorController extends Controller
         $grid->eid('电梯设备')->display(function(){
             return 'ID:'.implode('|',json_decode(json_encode($this->device), true));
         });
+        $grid->num('电梯数量')->editable();
         $grid->layer_number('层/站/门数');
         $grid->pit_depth('底坑深度mm');
         $grid->top_height('顶层高度mm');
@@ -123,7 +124,9 @@ class ElevatorController extends Controller
             });
         });
         $grid->disableExport();
-
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->disableView();
+        });
         return $grid;
     }
 
@@ -156,18 +159,23 @@ class ElevatorController extends Controller
         $pj=Project::where('status','=',0)->get();
         $arr=Arr::pluck($pj, 'name','id');
         //var_dump($pj,$arr);
-        $form->select('pid','项目')->options($arr);
+        $form->select('pid','项目')->options($arr)->required();
         $form->divide();
         if($hasEdit){
             $form->display('device','已选电梯设备')->with(function ($value) {
                 return 'ID:'.implode('|',json_decode(json_encode($value), true));
             });
+            $form->select('_brand','电梯品牌')->options('/admin/device/brands')
+                ->load('did', '/admin/device/brandsDetail');
+            $form->select('did','电梯设备');
+        }else{
+            $form->select('_brand','电梯品牌')->options('/admin/device/brands')
+                ->load('did', '/admin/device/brandsDetail');
+            $form->select('did','电梯设备')->required();
         }
-        $form->select('_brand','电梯品牌')->options('/admin/device/brands')
-            ->load('did', '/admin/device/brandsDetail');
-        $form->select('did','电梯设备');
         $form->divide();
 
+        $form->number('num','电梯数量')->min(1);
         $form->text('layer_number','层/站/门数');
         $form->number('pit_depth','底坑深度mm');
         $form->number('top_height','顶层高度mm');
