@@ -99,7 +99,7 @@
             <!--//电梯设备价START-->
             <tr>
                 <td></td>
-                <td>设备价</td>
+                <td><span class="label label-primary">设备价</span></td>
                 <td colspan="100">
                     <table class="table table-bordered table-condensed">
                         <thead>
@@ -145,7 +145,7 @@
             <!--//电梯功能价START-->
             <tr>
                 <td></td>
-                <td>功能价</td>
+                <td><span class="label label-primary">功能价</span></td>
                 <td colspan="100">
                     <table class="table table-bordered table-condensed">
                         <thead>
@@ -176,7 +176,7 @@
             <!--//电梯装修价START-->
             <tr>
                 <td></td>
-                <td>装修价</td>
+                <td><span class="label label-primary">装修价</span></td>
                 <td colspan="100">
                     <table class="table table-bordered table-condensed">
                         <thead>
@@ -218,7 +218,7 @@
             ?>
             <tr>
                 <td></td>
-                <td>运费价</td>
+                <td><span class="label label-primary">运费价</span></td>
                 <td colspan="100">
                     <?php if($freight):?>
                     <div class="row">
@@ -242,7 +242,7 @@
                         </div>
                     </div>
                     <?php else:?>
-                        <address>缺少运费价</address>
+                        <div class="alert alert-danger" role="alert">缺少运费价</div>
                     <?php endif;?>
                 </td>
             </tr>
