@@ -42,8 +42,9 @@ class ProjectController extends Controller
     {
         $content
             ->header('项目管理')
-            ->description('详情')
-            ->body($this->detail($id));
+            ->description('详情');
+        $content->body($this->projectDetail($id,$content));
+        //$content->body($this->projectElevatorDetail($id));
         return $content;
     }
 
@@ -281,5 +282,11 @@ class ProjectController extends Controller
         $data=['pid'=>$pid,'eid'=>$eid];
         $pe=ProjectElevator::firstOrCreate($data);
         return $data;
+    }
+
+    function projectDetail($pid){
+        $pj=Project::findOrFail($pid);
+        $view=view('projectDetail',['pj'=>$pj]);
+        return $view;
     }
 }

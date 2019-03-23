@@ -20,6 +20,10 @@ class Elevator extends Model
         return $this->belongsTo(Device::class, 'did')
             ->select(['id','brand','brand_set','dload','floor']);
     }
+    public function deviceAll()
+    {
+        return $this->belongsTo(Device::class, 'did');
+    }
     public function func()
     {
         return $this->belongsToMany(DeviceFunc::class, 'elevator_func','fid','eid');
