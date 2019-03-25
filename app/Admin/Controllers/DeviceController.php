@@ -110,6 +110,9 @@ class DeviceController extends Controller
             });
         });
         $grid->disableExport();
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->disableView();
+        });
         return $grid;
     }
 
