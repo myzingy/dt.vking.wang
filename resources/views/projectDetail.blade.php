@@ -152,6 +152,9 @@ $priceArr=[];
                         <?php
                         $priceArr[$i]['device_price']=$device->device_price*$ele->num;
                         $priceArr[$i]['install_price']=$device->install_price*$ele->num;
+                        $priceArr[$i]['super_meter']=($ele->height*$device->floor-$device->floor*$device->hoisting_height)*$ele->num;
+                        $priceArr[$i]['super_meter_device']=$priceArr[$i]['super_meter']*$device->freeboard_dev;
+                        $priceArr[$i]['super_meter_install']=$priceArr[$i]['super_meter']*$device->freeboard_ins;
                         ?>
                         <tr class="success">
                             <td class="text-right">计：</td>
@@ -161,6 +164,18 @@ $priceArr=[];
                                 <span class="label label-default">安装价：￥<?php print number_format($priceArr[$i]['install_price'],2);?>元</span>
                                 <span class="glyphicon glyphicon-pause rote90" aria-hidden="true"></span>
                                 <span class="label label-info">￥<?php print number_format($priceArr[$i]['device_price']+$priceArr[$i]['install_price'],2);?>元</span>
+                            </td>
+                        </tr>
+                        <tr class="success">
+                            <td class="text-right"></td>
+                            <td>
+                                <span class="label label-default">超米数：<?php print number_format($priceArr[$i]['super_meter'],2);?>米</span>
+                                <span class="glyphicon glyphicon-random" aria-hidden="true"></span>
+                                <span class="label label-default">设备超米价：￥<?php print number_format($priceArr[$i]['super_meter_device'],2);?>元</span>
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                <span class="label label-default">安装超米价：￥<?php print number_format($priceArr[$i]['super_meter_install'],2);?>元</span>
+                                <span class="glyphicon glyphicon-pause rote90" aria-hidden="true"></span>
+                                <span class="label label-info">￥<?php print number_format($priceArr[$i]['super_meter_device']+$priceArr[$i]['super_meter_install'],2);?>元</span>
                             </td>
                         </tr>
                     </table>
@@ -215,6 +230,14 @@ $priceArr=[];
                             <td class="text-right">计：</td>
                             <td>
                                 <span class="label label-default">功能价：￥<?php print number_format($priceArr[$i]['func'],2);?>元</span>
+                            </td>
+                        </tr>
+                        <tr class="success">
+                            <td class="text-right"></td>
+                            <td>
+                                <span class="label label-default">超米数：<?php print number_format($priceArr[$i]['super_meter'],2);?>米</span>
+                                <span class="glyphicon glyphicon-random" aria-hidden="true"></span>
+                                <span class="label label-default">功能超米价：￥元</span>
                             </td>
                         </tr>
                     </table>
@@ -273,6 +296,14 @@ $priceArr=[];
                             <td class="text-right">计：</td>
                             <td>
                                 <span class="label label-default">功能价：￥<?php print number_format($priceArr[$i]['fitment'],2);?>元</span>
+                            </td>
+                        </tr>
+                        <tr class="success">
+                            <td class="text-right"></td>
+                            <td>
+                                <span class="label label-default">超米数：<?php print number_format($priceArr[$i]['super_meter'],2);?>米</span>
+                                <span class="glyphicon glyphicon-random" aria-hidden="true"></span>
+                                <span class="label label-default">装修超米价：￥元</span>
                             </td>
                         </tr>
                     </table>
