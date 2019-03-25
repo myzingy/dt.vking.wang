@@ -95,6 +95,7 @@ class ElevatorController extends Controller
             return 'ID:'.implode('|',json_decode(json_encode($this->device), true));
         });
         $grid->num('电梯数量')->editable();
+        $grid->height('提升高度');
         $grid->layer_number('层/站/门数');
         $grid->pit_depth('底坑深度mm');
         $grid->top_height('顶层高度mm');
@@ -175,7 +176,8 @@ class ElevatorController extends Controller
         }
         $form->divide();
 
-        $form->number('num','电梯数量')->min(1);
+        $form->number('num','电梯数量')->min(1)->required();
+        $form->number('height','提升高度')->min(1)->required();
         $form->text('layer_number','层/站/门数');
         $form->number('pit_depth','底坑深度mm');
         $form->number('top_height','顶层高度mm');
