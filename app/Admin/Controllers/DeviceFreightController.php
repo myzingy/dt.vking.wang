@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Device;
 use App\Models\DeviceFreight;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
@@ -9,6 +10,8 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class DeviceFreightController extends Controller
 {
@@ -82,9 +85,6 @@ class DeviceFreightController extends Controller
         $grid = new Grid(new DeviceFreight);
 
         $grid->id('ID');
-        $grid->device('电梯设备')->display(function ($device) {
-            return 'ID:'.implode('|',json_decode(json_encode($device), true));
-        });
         $grid->from('发货地点')->display(function(){
             $arr=[$this->from_province,$this->from_city];
             if($this->from_district){
@@ -100,7 +100,18 @@ class DeviceFreightController extends Controller
             return implode('/',$arr);
         });
         $grid->price('单台价格')->money();
-
+        $grid->querystr('设备条件')->display(function ($querystr) {
+            if(!$querystr) return;
+            $html='';
+            foreach($querystr as $row){
+                foreach($row as $label){
+                    if($label){
+                        $html.='<span class="label label-default">'.$label.'</span> ';
+                    }
+                }
+            }
+            return $html;
+        });
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
@@ -150,24 +161,61 @@ class DeviceFreightController extends Controller
     {
         $form = new Form(new DeviceFreight);
 
-        if($hasEdit){
-            $form->display('device','已选电梯设备')->with(function ($value) {
-                return 'ID:'.implode('|',json_decode(json_encode($value), true));
-            });
-        }
-        $form->select('_brand','电梯品牌')->options('/admin/device/brands')
-            ->load('did', '/admin/device/brandsDetail');
-        $form->select('did','电梯设备');
-        $form->divide();
-
         //$form->text('from','发货地点');
         $form->distpicker(['from_province', 'from_city','from_district'], '发货城市')->autoselect(2);
         $form->distpicker(['to_province', 'to_city','to_district'], '收货城市')->autoselect(2);
         $form->currency('price','单台价格')->symbol('￥');
+
+        $form->divide();
+
+        $dsArr=[];
+        foreach(Device::groupBy('brand','brand_set')->get() as $d){
+            $dsArr[$d->brand.'/'.$d->brand_set]=$d->brand.'/'.$d->brand_set;
+        }
+        $form->checkbox('querystr.brand_set','品牌系列')->options($dsArr)->required();
+        $dsArr=[];
+        foreach(Device::groupBy('dload')->get() as $d){
+            $dsArr[$d->dload]=$d->dload;
+        }
+        $form->checkbox('querystr.dload','载重')->options($dsArr);
+        $dsArr=[];
+        foreach(Device::groupBy('floor')->get() as $d){
+            $dsArr[$d->floor]=$d->floor;
+        }
+        $form->checkbox('querystr.floor','层数')->options($dsArr);
+
         //忽略字段
         $form->ignore(['_brand']);
         $form->saving(function (Form $form){
-            $form->did=$form->did>0?$form->did:$form->model()->did;
+            $form->model()->querystr=$form->querystr;
+        });
+        $form->saved(function (Form $form){
+            if($fid=$form->model()->id){
+                DB::table('device_freight_rela')->where(['fid'=>$fid])->delete();
+            }
+            $querystr=$form->querystr;
+            foreach($querystr as &$row){
+                $row=Arr::where($row, function ($value, $key) {
+                    return !is_null($value);
+                });
+            }
+            $ds=Device::whereIn(DB::raw("CONCAT(brand,'/',brand_set)"),$querystr['brand_set']);
+            if($querystr['dload']){
+                $ds->whereIn('dload',$querystr['dload']);
+            }
+            if($querystr['floor']){
+                $ds->whereIn('floor',$querystr['floor']);
+            }
+            $real=[];
+            foreach($ds->get() as $d){
+                array_push($real,[
+                    'fid'=>$fid,
+                    'did'=>$d->id
+                ]);
+            };
+            if($real){
+                DB::table('device_freight_rela')->insert($real);
+            }
         });
         return $form;
     }
