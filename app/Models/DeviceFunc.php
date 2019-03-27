@@ -9,14 +9,16 @@ class DeviceFunc extends Model
 {
     use SoftDeletes;
     const UNIT=[
-        '门'=>'门',
+        '台'=>'台',
         '层'=>'层',
-        '站'=>'站',
-        '部'=>'部',
-        '米'=>'米',
+        '樘'=>'樘',
         '个'=>'个',
+        '项目'=>'项目',
     ];
     protected $table = 'device_func';
+    protected $casts = [
+        'querystr' => 'array',
+    ];
     public function device()
     {
         $device=$this->belongsTo(Device::class, 'did')
