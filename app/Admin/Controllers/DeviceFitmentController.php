@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Device;
 use App\Models\DeviceFitment;
 use App\Http\Controllers\Controller;
 use App\Models\DeviceFunc;
@@ -10,6 +11,8 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class DeviceFitmentController extends Controller
 {
@@ -83,9 +86,6 @@ class DeviceFitmentController extends Controller
         $grid = new Grid(new DeviceFitment);
 
         $grid->id('ID');
-        $grid->device('电梯设备')->display(function ($device) {
-            return 'ID:'.implode('|',json_decode(json_encode($device), true));
-        });
         $grid->name('装饰项目名称');
         $grid->stuff('材料');
         $grid->spec('规格编号');
@@ -96,7 +96,18 @@ class DeviceFitmentController extends Controller
         $grid->has_in_base('是否标配/是否在基础价格包含')->display(function($has_in_base){
             return $has_in_base==1?'已包含':'未包含';
         });
-
+        $grid->querystr('设备条件')->display(function ($querystr) {
+            if(!$querystr) return;
+            $html='';
+            foreach($querystr as $row){
+                foreach($row as $label){
+                    if($label){
+                        $html.='<span class="label label-default">'.$label.'</span> ';
+                    }
+                }
+            }
+            return $html;
+        });
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
@@ -151,20 +162,10 @@ class DeviceFitmentController extends Controller
     {
         $form = new Form(new DeviceFitment);
 
-        if($hasEdit){
-            $form->display('device','已选电梯设备')->with(function ($value) {
-                return 'ID:'.implode('|',json_decode(json_encode($value), true));
-            });
-        }
-        $form->select('_brand','电梯品牌')->options('/admin/device/brands')
-            ->load('did', '/admin/device/brandsDetail');
-        $form->select('did','电梯设备');
-        $form->divide();
-
-        $form->text('name','装饰项目名称');
+        $form->text('name','装饰项目名称')->required();
         $form->text('stuff','材料');
         $form->text('spec','规格编号');
-        $form->radio('unit','装修单位')->options(DeviceFunc::UNIT);
+        $form->radio('unit','装修单位')->options(DeviceFunc::UNIT)->required();
         $form->currency('price','单价')->symbol('￥');
         $states = [
             'on'  => ['value' => 1, 'text' => '包含', 'color' => 'success'],
@@ -172,11 +173,40 @@ class DeviceFitmentController extends Controller
         ];
         $form->switch('has_in_base','是否标配/是否在基础价格包含')->states($states);
         $form->text('desc','描述');
+        $form->divide();
+
+        $dsArr=[];
+        foreach(Device::groupBy('brand')->get() as $d){
+            $dsArr[$d->brand]=$d->brand;
+        }
+        $form->checkbox('querystr.brand','品牌')->options($dsArr)->required();
 
         //忽略字段
         $form->ignore(['_brand']);
         $form->saving(function (Form $form){
-            $form->did=$form->did>0?$form->did:$form->model()->did;
+            $form->model()->querystr=$form->querystr;
+        });
+        $form->saved(function (Form $form){
+            if($fid=$form->model()->id){
+                DB::table('device_fitment_rela')->where(['fid'=>$fid])->delete();
+            }
+            $querystr=$form->querystr;
+            foreach($querystr as &$row){
+                $row=Arr::where($row, function ($value, $key) {
+                    return !is_null($value);
+                });
+            }
+            $ds=Device::whereIn('brand',$querystr['brand']);
+            $real=[];
+            foreach($ds->get() as $d){
+                array_push($real,[
+                    'fid'=>$fid,
+                    'did'=>$d->id
+                ]);
+            };
+            if($real){
+                DB::table('device_fitment_rela')->insert($real);
+            }
         });
         return $form;
     }

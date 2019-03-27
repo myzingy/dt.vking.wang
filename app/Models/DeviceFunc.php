@@ -25,10 +25,4 @@ class DeviceFunc extends Model
             ->select(['id','brand','brand_set','dload','floor']);
         return $device;
     }
-    public static function getUnitStr($state=self::UNIT_BU){
-        if(empty(self::UNIT[$state])){
-            return self::UNIT[self::UNIT_BU];
-        }
-        return self::UNIT[$state];
-    }
 }
