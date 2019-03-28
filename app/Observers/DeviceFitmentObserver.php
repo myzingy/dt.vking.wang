@@ -37,7 +37,7 @@ class DeviceFitmentObserver
     public function deleted(DeviceFitment $deviceFitment)
     {
         //
-        DB::table('device_fitment_rela')->where('fid',$deviceFitment->id);
+        DB::table('device_fitment_rela')->where('fid',$deviceFitment->id)->delete();
     }
 
     /**

@@ -38,7 +38,7 @@ class DeviceFuncObserver
     public function deleted(DeviceFunc $deviceFunc)
     {
         //
-        DB::table('device_func_rela')->where('fid',$deviceFunc->id);
+        DB::table('device_func_rela')->where('fid',$deviceFunc->id)->delete();
     }
 
     /**

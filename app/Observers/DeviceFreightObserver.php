@@ -37,7 +37,7 @@ class DeviceFreightObserver
     public function deleted(DeviceFreight $deviceFreight)
     {
         //
-        DB::table('device_freight_rela')->where('fid',$deviceFreight->id);
+        DB::table('device_freight_rela')->where('fid',$deviceFreight->id)->delete();
     }
 
     /**
