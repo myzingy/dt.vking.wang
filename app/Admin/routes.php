@@ -20,6 +20,7 @@ Route::group([
     $router->resource('/projectElevator', ProjectElevatorController::CLASS);
 
     $router->resource('/elevator', ElevatorController::CLASS);
+    $router->resource('/elevatorSuper', ElevatorSuperController::CLASS);
     $router->resource('/elevatorFunc', ElevatorFuncController::CLASS);
     $router->resource('/elevatorFitment', ElevatorFitmentController::CLASS);
 

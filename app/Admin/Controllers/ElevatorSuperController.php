@@ -20,7 +20,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 
-class ElevatorController extends Controller
+class ElevatorSuperController extends Controller
 {
     use HasResourceActions;
 
@@ -33,7 +33,7 @@ class ElevatorController extends Controller
     public function index(Content $content)
     {
         return $content
-            ->header('电梯报备')
+            ->header('电梯审批')
             ->description('列表')
             ->body($this->grid());
     }
@@ -48,7 +48,7 @@ class ElevatorController extends Controller
     public function show($id, Content $content)
     {
         return $content
-            ->header('电梯报备')
+            ->header('电梯审批')
             ->description('详情')
             ->body($this->detail($id));
     }
@@ -63,7 +63,7 @@ class ElevatorController extends Controller
     public function edit($id, Content $content)
     {
         return $content
-            ->header('电梯报备')
+            ->header('电梯审批')
             ->description('修改')
             ->body($this->form(true)->edit($id));
     }
@@ -77,7 +77,7 @@ class ElevatorController extends Controller
     public function create(Content $content)
     {
         return $content
-            ->header('电梯报备')
+            ->header('电梯审批')
             ->description('新增')
             ->body($this->form(false));
     }
@@ -335,7 +335,7 @@ class ElevatorController extends Controller
     }
     public function funfit($eid, Content $content){
         $content
-            ->header('电梯报备')
+            ->header('电梯审批')
             ->description('选功能、选装修')
             ->body($this->detail_sm($eid,$content));
         $content->row('<h3>请从下方选择功能和装修</h3>');
