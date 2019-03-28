@@ -119,8 +119,7 @@ class ElevatorFitmentController extends Controller
     protected function form($hasEdit=false)
     {
         $form = new Form(new ElevatorFitment);
-
-
+        $form->number('num');
 
         return $form;
     }

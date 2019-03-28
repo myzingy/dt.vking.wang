@@ -26,10 +26,10 @@ class Elevator extends Model
     }
     public function func()
     {
-        return $this->belongsToMany(DeviceFunc::class, 'elevator_func','fid','eid');
+        return $this->belongsToMany(DeviceFunc::class, 'elevator_func','eid','fid')->withPivot('num');
     }
     public function fitment()
     {
-        return $this->belongsToMany(DeviceFitment::class, 'elevator_fitment','eid','fid');
+        return $this->belongsToMany(DeviceFitment::class, 'elevator_fitment','fid','eid');
     }
 }

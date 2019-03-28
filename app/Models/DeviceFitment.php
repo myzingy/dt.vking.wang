@@ -21,9 +21,9 @@ class DeviceFitment extends Model
     protected $casts = [
         'querystr' => 'array',
     ];
-    public function device()
-    {
-        return $this->belongsTo(Device::class, 'did')
-            ->select(['id','brand','brand_set','dload','floor']);
-    }
+//    public function device()
+//    {
+//        return $this->belongsTo(Device::class, 'did')
+//            ->select(['id','brand','brand_set','dload','floor']);
+//    }
 }

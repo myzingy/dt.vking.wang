@@ -120,7 +120,7 @@ class ElevatorFuncController extends Controller
     {
         $form = new Form(new ElevatorFunc);
 
-
+        $form->number('num');
 
         return $form;
     }

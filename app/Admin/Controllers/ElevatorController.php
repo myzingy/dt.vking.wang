@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Device;
 use App\Models\DeviceFitment;
 use App\Models\DeviceFunc;
 use App\Models\Elevator;
@@ -16,6 +17,7 @@ use Encore\Admin\Layout\Content;
 use Encore\Admin\Layout\Row;
 use Encore\Admin\Show;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 
 class ElevatorController extends Controller
@@ -109,6 +111,7 @@ class ElevatorController extends Controller
         $grid->status1('功能/装修')->display(function(){
             return '<a href="/admin/elevator/'.$this->id.'/funfit">查看&配置</a>';
         });
+        $grid->status('状态');
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
@@ -217,6 +220,7 @@ class ElevatorController extends Controller
             $grid->name('功能名称');
             $grid->unit('功能单位');
             $grid->desc('功能描述');
+            $grid->num('数量')->editable();
             //$grid->elevator()->limit(50);
             //$grid->disableActions();
             $grid->disablePagination();
@@ -239,6 +243,7 @@ class ElevatorController extends Controller
             $grid->stuff('材料');
             $grid->spec('规格编号');
             $grid->desc('描述');
+            $grid->num('数量')->editable();
             //$grid->elevator()->limit(50);
             //$grid->disableActions();
             $grid->disablePagination();
@@ -259,7 +264,12 @@ class ElevatorController extends Controller
     protected function funGrid($did)
     {
         $grid = new Grid(new DeviceFunc);
-        $grid->model()->where('did','=',$did);
+        $fids=[];
+        $dfr=DB::table('device_func_rela')->where('did',$did)->get();
+        foreach($dfr as $d){
+            array_push($fids,$d->fid);
+        }
+        $grid->model()->whereIn('id',$fids);
         $grid->id('ID');
         $grid->name('功能名称');
         $grid->unit('功能单位');
@@ -288,8 +298,12 @@ class ElevatorController extends Controller
     protected function fitGrid($did)
     {
         $grid = new Grid(new DeviceFitment);
-        $grid->model()->where('did','=',$did);
-
+        $fids=[];
+        $dfr=DB::table('device_fitment_rela')->where('did',$did)->get();
+        foreach($dfr as $d){
+            array_push($fids,$d->fid);
+        }
+        $grid->model()->whereIn('id',$fids);
         $grid->id('ID');
         $grid->name('装饰项目名称');
         $grid->stuff('材料');
