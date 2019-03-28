@@ -97,10 +97,12 @@ class ElevatorController extends Controller
             return 'ID:'.implode('|',json_decode(json_encode($this->device), true));
         });
         $grid->num('电梯数量')->editable();
-        $grid->height('提升高度');
-        $grid->layer_number('层/站/门数');
-        $grid->pit_depth('底坑深度mm');
-        $grid->top_height('顶层高度mm');
+        $grid->height('提升高度(m)');
+        $grid->layer_numbers('层/站/门')->display(function($layer_number){
+            return "{$this->layer_number}/{$this->layer_number_site}/{$this->layer_number_door}";
+        });
+        $grid->pit_depth('底坑深度(mm)');
+        $grid->top_height('顶层高度(mm)');
         $grid->hall_width('厅门尺寸（mm）')->display(function($hall){
             return "{$this->hall_width}X{$this->hall_height}";
         });
@@ -180,10 +182,12 @@ class ElevatorController extends Controller
         $form->divide();
 
         $form->number('num','电梯数量')->min(1)->required();
-        $form->number('height','提升高度')->min(1)->required();
-        $form->text('layer_number','层/站/门数');
-        $form->number('pit_depth','底坑深度mm');
-        $form->number('top_height','顶层高度mm');
+        $form->number('height','提升高度（m）')->min(1)->required()->help('总爬升高度');
+        $form->number('layer_number','层数')->min(1)->required();
+        $form->number('layer_number_site','站数')->min(1)->required();
+        $form->number('layer_number_door','门数')->min(1)->required();
+        $form->number('pit_depth','底坑深度（mm）');
+        $form->number('top_height','顶层高度（mm）');
 
         $form->number('hall_width','厅门尺寸（mm）宽');
         $form->number('hall_height','厅门尺寸（mm）高');
@@ -192,6 +196,11 @@ class ElevatorController extends Controller
         $form->number('car_height','轿厢尺寸（mm）高');
         $form->number('car_depth','轿厢尺寸（mm）深');
 
+        $states = [
+            'on'  => ['value' => 1, 'text' => '有', 'color' => 'success'],
+            'off' => ['value' => 0, 'text' => '没有', 'color' => 'danger'],
+        ];
+        $form->switch('has_through_door','是否有贯通门')->states($states);
         $form->text('desc','电梯说明');
 
         //忽略字段
