@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\DeviceFitment;
+use App\Models\DeviceFreight;
+use App\Models\DeviceFunc;
+use App\Observers\DeviceFitmentObserver;
+use App\Observers\DeviceFreightObserver;
+use App\Observers\DeviceFuncObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 
@@ -26,5 +32,8 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Schema::defaultStringLength(191);
+        DeviceFunc::observe(DeviceFuncObserver::class);
+        DeviceFitment::observe(DeviceFitmentObserver::class);
+        DeviceFreight::observe(DeviceFreightObserver::class);
     }
 }
