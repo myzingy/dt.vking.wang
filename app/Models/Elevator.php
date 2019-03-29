@@ -7,6 +7,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Elevator extends Model
 {
+    const STATUS_NEW=0;    //未提交
+    const STATUS_YTJ=1;    //已提交
+    const STATUS_SBS=2;    //设备已审
+    const STATUS_ANS=3;    //安装已审
+    const STATUS=[
+        self::STATUS_NEW=>'未提交',
+        self::STATUS_YTJ=>'已提交',
+        self::STATUS_SBS=>'设备已审',
+        self::STATUS_ANS=>'安装已审',
+    ];
+
     use SoftDeletes;
 
     protected $table = 'elevator';
@@ -29,5 +40,11 @@ class Elevator extends Model
     }
     public function expe(){
         return $this->hasOne(ElevatorPrice::class,'eid');
+    }
+    public static function getStatusStr($state=self::STATUS_NEW){
+        if(empty(self::STATUS[$state])){
+            return self::STATUS[self::STATUS_NEW];
+        }
+        return self::STATUS[$state];
     }
 }

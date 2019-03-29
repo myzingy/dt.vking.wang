@@ -20,9 +20,7 @@ class ElevatorPrice extends Model
     function runExpe(){//重新计算填入
         $ele=$this->elevator;
         $ep=$ele->expe;
-        if(!$ep){
-            return;
-        }
+
         $pj=$ele->project;
         $dev=$ele->device;
         $chaomi=$ele->height-$dev->hoisting_height*$dev->floor;
@@ -68,7 +66,7 @@ class ElevatorPrice extends Model
             }
         }
         //设备税率计算
-        if($ep->设备税率>0){
+        if($ep && $ep->设备税率>0){
             $expe['设备税率计算']=((
                 $expe['设备基价']+$expe['设备超米费']
                 +$expe['设备功能加价']
@@ -79,6 +77,11 @@ class ElevatorPrice extends Model
             )/(1+$dev->device_rate))*(1+$this->设备税率);
             $expe['设备税率计算']=round($expe['设备税率计算'],0);
         }
-        $ep->update($expe);
+        if($ep){
+            $ep->update($expe);
+        }else{
+            self::insert($expe);
+        }
+
     }
 }
