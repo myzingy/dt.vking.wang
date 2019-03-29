@@ -12,7 +12,7 @@ class ElevatorPrice extends Model
 
     protected $table = 'elevator_price';
     protected $fillable=['eid',
-        '设备基价','设备超米费','设备运输费','设备功能加价','设备装修选项', '设备税率','设备税率计算',
+        '设备基价','设备超米费','设备运输费','设备功能加价','设备装修选项', '设备税率','设备税率计算','功能按项目计价',
         '安装基价','安装超米费','政府验收费','贯通门增加安装价','安装临时用梯费','安装税率','安装税率计算',
         'desc',
         ];
@@ -33,6 +33,7 @@ class ElevatorPrice extends Model
             '设备运输费'=>0,
             '设备功能加价'=>0,
             '设备装修选项'=>0,
+            '功能按项目计价'=>0,
 
             '安装基价'=>$dev->install_price,
             '安装超米费'=>0,
@@ -59,6 +60,9 @@ class ElevatorPrice extends Model
         foreach ($ele->func as $func){
             if($func->has_in_base!=1){
                 $expe['设备功能加价']+=$func->price*$func->num;
+                if($func->unit=='项目'){
+                    $expe['功能按项目计价']+=$func->price*$func->num;
+                }
             }
         }
         //计算装修
