@@ -93,24 +93,39 @@ class ElevatorSuperController extends Controller
 
         $grid->id('ID');
         $grid->column('project.name','项目名称');
+        $grid->column('project.city_id','区域');
         $grid->eid('电梯设备')->display(function(){
             return 'ID:'.implode('|',json_decode(json_encode($this->device), true));
         });
         $grid->num('电梯数量')->editable();
         $grid->height('提升高度');
-        $grid->layer_number('层/站/门数');
-        $grid->pit_depth('底坑深度mm');
-        $grid->top_height('顶层高度mm');
-        $grid->hall_width('厅门尺寸（mm）')->display(function($hall){
-            return "{$this->hall_width}X{$this->hall_height}";
-        });
-        $grid->car_width('轿厢尺寸（mm）')->display(function($car){
-            return "{$this->car_width}X{$this->car_height}X{$this->car_depth}";
-        });
-        $grid->desc('电梯说明');
-        $grid->status1('功能/装修')->display(function(){
-            return '<a href="/admin/elevator/'.$this->id.'/funfit">查看&配置</a>';
-        });
+
+
+        $grid->height('设备基价');
+        $grid->height('功能加价');
+        $grid->height('装修选项');
+        $grid->height('运输费');
+        $grid->height('设备超米费');
+        $grid->height('非标单价');
+        $grid->height('临时用梯设备费');
+        $grid->height('设备税率');
+        $grid->height('税率');
+        $grid->height('非标单价');
+        $grid->height('临时用梯费');
+
+
+        $grid->height('安装基价');
+        $grid->height('政府验收费');
+        $grid->height('安装超米费');
+        $grid->height('贯通门增加安装价');
+        $grid->height('非标单价');
+        $grid->height('二次验收费用');
+        $grid->height('临时用梯安装费');
+        $grid->height('安装税率');
+        $grid->height('税率');
+
+        $grid->height('备注');
+
         $grid->status('状态');
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
@@ -128,8 +143,11 @@ class ElevatorSuperController extends Controller
             });
         });
         $grid->disableExport();
+        $grid->disableCreateButton();
         $grid->actions(function (Grid\Displayers\Actions $actions) {
-            $actions->disableView();
+            //$actions->disableView();
+            $actions->disableEdit();
+            $actions->disableDelete();
         });
         return $grid;
     }
