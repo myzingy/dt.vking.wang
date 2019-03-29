@@ -94,7 +94,6 @@ class ElevatorPrice extends Model
                     )/(1+$dev->install_rate))*(1+$this->安装税率);
             $expe['设备税率计算']=round($expe['设备税率计算'],0);
         }
-var_dump($expe);
         if($ep){
             $ep->update($expe);
         }else{
