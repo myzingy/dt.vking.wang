@@ -11,8 +11,10 @@ class ElevatorPrice extends Model
     use SoftDeletes;
 
     protected $table = 'elevator_price';
-    protected $fillable=['eid','设备基价','设备超米费','设备运输费','设备功能加价','设备装修选项','安装超米费',
-        '设备税率','设备税率计算'
+    protected $fillable=['eid',
+        '设备基价','设备超米费','设备运输费','设备功能加价','设备装修选项', '设备税率','设备税率计算',
+        '安装基价','安装超米费','政府验收费','贯通门增加安装价','安装临时用梯费','安装税率','安装税率计算',
+        'desc',
         ];
     public function elevator(){
         return $this->belongsTo(Elevator::class, 'eid');
@@ -32,6 +34,7 @@ class ElevatorPrice extends Model
             '设备功能加价'=>0,
             '设备装修选项'=>0,
 
+            '安装基价'=>$dev->install_price,
             '安装超米费'=>0,
         ];
         if($chaomi>0){
@@ -77,6 +80,17 @@ class ElevatorPrice extends Model
             )/(1+$dev->device_rate))*(1+$this->设备税率);
             $expe['设备税率计算']=round($expe['设备税率计算'],0);
         }
+        //安装税率计算
+        if($ep && $ep->安装税率>0){
+            $expe['安装税率计算']=((
+                        $expe['安装基价']+$expe['安装超米费']
+                        +$ep->政府验收费
+                        +$ep->贯通门增加安装价
+                        +$ep->安装临时用梯费
+                    )/(1+$dev->install_rate))*(1+$this->安装税率);
+            $expe['设备税率计算']=round($expe['设备税率计算'],0);
+        }
+var_dump($expe);
         if($ep){
             $ep->update($expe);
         }else{
