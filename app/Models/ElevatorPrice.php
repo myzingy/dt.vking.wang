@@ -19,10 +19,13 @@ class ElevatorPrice extends Model
     public function elevator(){
         return $this->belongsTo(Elevator::class, 'eid');
     }
-    function runExpe(){//重新计算填入
+    function runExpe($fouce=false){//重新计算填入
         $ele=$this->elevator;
         $ep=$ele->expe;
-
+        if($ele->status==Elevator::STATUS_ANS && !$fouce){
+            //已审非强制计算直接返回
+            return;
+        }
         $pj=$ele->project;
         $dev=$ele->device;
         $chaomi=$ele->height-$dev->hoisting_height*$dev->floor;
