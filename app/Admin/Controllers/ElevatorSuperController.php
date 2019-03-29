@@ -47,10 +47,11 @@ class ElevatorSuperController extends Controller
      */
     public function show($id, Content $content)
     {
-        return $content
+        $content
             ->header('电梯审批')
-            ->description('详情')
-            ->body($this->detail($id));
+            ->description('详情');
+        $content->body($this->elevatorDetail($id,$content));
+        return $content;
     }
 
     /**
@@ -220,159 +221,9 @@ class ElevatorSuperController extends Controller
 
         return $form;
     }
-    protected function detail_sm($eid,$content)
-    {
-        $show = new Show(Elevator::findOrFail($eid));
-        $show->desc('描述');
-        $model=$show->getModel();
-        $show->panel()
-            ->title('ID:'.implode('|',json_decode(json_encode($model->device), true)))
-            ->tools(function ($tools) {
-                $tools->disableEdit();
-                $tools->disableList();
-                $tools->disableDelete();
-            });
-        $show->func('已配备功能', function ($grid) use($eid) {
-            $grid->resource('/admin/elevatorFunc');
-            $grid->id('ID');
-            $grid->name('功能名称');
-            $grid->unit('功能单位');
-            $grid->desc('功能描述');
-            $grid->num('数量')->editable();
-            //$grid->elevator()->limit(50);
-            //$grid->disableActions();
-            $grid->disablePagination();
-            $grid->disableCreateButton();
-            $grid->disableFilter();
-            $grid->disableRowSelector();
-            $grid->disableTools();
-            $grid->disableExport();
-            $grid->actions(function (Grid\Displayers\Actions $actions) {
-                $actions->disableView();
-                $actions->disableEdit();
-                //$actions->disableDelete();
-            });
-            $grid->paginate(100);
-        });
-        $show->fitment('已配备装修', function ($grid) use($eid) {
-            $grid->resource('/admin/elevatorFitment');
-            $grid->id('ID');
-            $grid->name('装饰项目名称');
-            $grid->stuff('材料');
-            $grid->spec('规格编号');
-            $grid->desc('描述');
-            $grid->num('数量')->editable();
-            //$grid->elevator()->limit(50);
-            //$grid->disableActions();
-            $grid->disablePagination();
-            $grid->disableCreateButton();
-            $grid->disableFilter();
-            $grid->disableRowSelector();
-            $grid->disableTools();
-            $grid->disableExport();
-            $grid->actions(function (Grid\Displayers\Actions $actions) {
-                $actions->disableView();
-                $actions->disableEdit();
-                //$actions->disableDelete();
-            });
-            $grid->paginate(100);
-        });
-        return $show;
-    }
-    protected function funGrid($did)
-    {
-        $grid = new Grid(new DeviceFunc);
-        $fids=[];
-        $dfr=DB::table('device_func_rela')->where('did',$did)->get();
-        foreach($dfr as $d){
-            array_push($fids,$d->fid);
-        }
-        $grid->model()->whereIn('id',$fids);
-        $grid->id('ID');
-        $grid->name('功能名称');
-        $grid->unit('功能单位');
-        $grid->desc('功能描述');
-        $grid->xxxx('操作')->fitout('fun');
-        $grid->filter(function($filter){
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
-            // 在这里添加字段过滤器
-            $filter->like('name', '功能名称');
-        });
-        $grid->tools(function ($tools) {
-            $tools->batch(function ($batch) {
-                $batch->disableDelete();
-            });
-        });
-        $grid->disableExport();
-        $grid->disableCreateButton();
-
-        $grid->disableActions();
-        $grid->disablePagination();
-        $grid->disableTools();
-        $grid->paginate(100);
-        return $grid;
-    }
-    protected function fitGrid($did)
-    {
-        $grid = new Grid(new DeviceFitment);
-        $fids=[];
-        $dfr=DB::table('device_fitment_rela')->where('did',$did)->get();
-        foreach($dfr as $d){
-            array_push($fids,$d->fid);
-        }
-        $grid->model()->whereIn('id',$fids);
-        $grid->id('ID');
-        $grid->name('装饰项目名称');
-        $grid->stuff('材料');
-        $grid->spec('规格编号');
-        $grid->desc('描述');
-        $grid->yyyy('操作')->fitout('fit');
-        $grid->filter(function($filter){
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
-            // 在这里添加字段过滤器
-            $filter->like('name', '装饰项目名称');
-            $filter->like('stuff', '材料');
-            $filter->like('spec', '规格编号');
-        });
-
-        $grid->tools(function ($tools) {
-            $tools->batch(function ($batch) {
-                $batch->disableDelete();
-            });
-        });
-        $grid->disableExport();
-        $grid->disableCreateButton();
-
-        $grid->disableActions();
-        $grid->disablePagination();
-        $grid->disableTools();
-        $grid->paginate(100);
-        return $grid;
-    }
-    public function funfit($eid, Content $content){
-        $content
-            ->header('电梯审批')
-            ->description('选功能、选装修')
-            ->body($this->detail_sm($eid,$content));
-        $content->row('<h3>请从下方选择功能和装修</h3>');
-        $content->row(function(Row $row) use($eid) {
-            $ele=Elevator::findOrFail($eid);
-            $row->column(6, $this->funGrid($ele->did));
-            $row->column(6, $this->fitGrid($ele->did));
-        });
-        return $content;
-    }
-    public function fitout($eid,$fid){
-        $type=Input::get('type');
-        $data=['fid'=>$fid,'eid'=>$eid];
-        if($type=='fun'){
-            ElevatorFunc::create($data);
-        }
-        if($type=='fit'){
-            ElevatorFitment::create($data);
-        }
-        return $data;
+    public function elevatorDetail($eid){
+        $ele=Elevator::findOrFail($eid);
+        $view=view('elevatorDetail',['ele'=>$ele]);
+        return $view;
     }
 }
