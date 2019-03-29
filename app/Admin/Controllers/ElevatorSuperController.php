@@ -229,4 +229,7 @@ class ElevatorSuperController extends Controller
         $view=view('elevatorDetail',['ele'=>$ele]);
         return $view;
     }
+    public function setPrice(){
+        die('ewrwer');
+    }
 }

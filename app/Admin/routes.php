@@ -11,7 +11,7 @@ Route::group([
 ], function (Router $router) {
     Route::get('/device/brands', 'DeviceController@brands');
     Route::get('/device/brandsDetail', 'DeviceController@brandsDetail');
-
+    Route::post('/elevatorSuper/{eid}/{act}', 'ElevatorSuperController@setPrice');//审核动作
     //$router->get('/', 'HomeController@index');
     $router->get('/',function (){
         return Redirect::to("/admin/project");
@@ -34,4 +34,6 @@ Route::group([
 
     Route::get('/elevator/{eid}/funfit', 'ElevatorController@funfit');//配置功能装修
     Route::get('/elevator/{eid}/funfit/{fid}', 'ElevatorController@fitout');//绑定功能装修动作
+
+
 });

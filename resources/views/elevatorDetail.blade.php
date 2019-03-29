@@ -59,9 +59,8 @@ $i=0;
     <table class="table table-bordered table-condensed">
         <thead>
             <tr>
-                <th>No.</th>
-                <th>数量</th>
-                <th>提升高度</th>
+                <th>电梯数量</th>
+                <th>提升高度(m)</th>
                 <th>层/站/门数</th>
                 <th>停站标记</th>
                 <th>基站楼层</th>
@@ -83,10 +82,9 @@ $i=0;
         <tbody>
 
             <tr class="warning">
-                <td>No.{{$ele->id}}</td>
                 <td>{{$ele->num}}部</td>
                 <td>{{$ele->height}}</td>
-                <td>{{$ele->layer_number}}</td>
+                <td>{{$ele->layer_number}}层{{$ele->layer_number_site}}站{{$ele->layer_number_door}}门</td>
                 <td>{{$ele->stop_sign}}</td>
                 <td>{{$ele->base_floor}}</td>
                 <td>{{$ele->standard}}</td>
@@ -111,12 +109,11 @@ $i=0;
     <!--//电梯设备价START-->
     <table class="table table-bordered table-condensed">
         <tr>
-            <td width="100"><span class="label label-primary">设备价</span></td>
             <td>
                 <table class="table table-bordered table-condensed">
                     <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>设备ID</th>
                         <th>品牌</th>
                         <th>载重</th>
                         <th>速度</th>
@@ -125,9 +122,9 @@ $i=0;
                         <th>品牌系列</th>
                         <th>设备超米费</th>
                         <th>安装超米费</th>
+                        <th>设备单价</th>
                         <th>设备税率</th>
                         <th>安装单价</th>
-                        <th>设备单价</th>
                         <th>安装税率</th>
                     </tr>
                     </thead>
@@ -143,42 +140,13 @@ $i=0;
                         <td>{{$device->brand_set}}</td>
                         <td>{{$device->freeboard_dev}}</td>
                         <td>{{$device->freeboard_ins}}</td>
+                        <td>{{$device->device_price}}</td>
                         <td>{{$device->device_rate}}</td>
                         <td>{{$device->install_price}}</td>
-                        <td>{{$device->device_price}}</td>
                         <td>{{$device->install_rate}}</td>
                     </tr>
                     </tbody>
                 </table>
-            </td>
-        </tr>
-        <?php
-        $priceArr[$i]['device_price']=$device->device_price*$ele->num;
-        $priceArr[$i]['install_price']=$device->install_price*$ele->num;
-        $priceArr[$i]['super_meter']=($ele->height*$device->floor-$device->floor*$device->hoisting_height)*$ele->num;
-        $priceArr[$i]['super_meter_device']=$priceArr[$i]['super_meter']*$device->freeboard_dev;
-        $priceArr[$i]['super_meter_install']=$priceArr[$i]['super_meter']*$device->freeboard_ins;
-        ?>
-        <tr class="success">
-            <td class="text-right">计：</td>
-            <td>
-                <span class="label label-default">设备价：￥<?php print number_format($priceArr[$i]['device_price'],2);?>元</span>
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                <span class="label label-default">安装价：￥<?php print number_format($priceArr[$i]['install_price'],2);?>元</span>
-                <span class="glyphicon glyphicon-pause rote90" aria-hidden="true"></span>
-                <span class="label label-info">￥<?php print number_format($priceArr[$i]['device_price']+$priceArr[$i]['install_price'],2);?>元</span>
-            </td>
-        </tr>
-        <tr class="success">
-            <td class="text-right"></td>
-            <td>
-                <span class="label label-default">超米数：<?php print number_format($priceArr[$i]['super_meter'],2);?>米</span>
-                <span class="glyphicon glyphicon-random" aria-hidden="true"></span>
-                <span class="label label-default">设备超米价：￥<?php print number_format($priceArr[$i]['super_meter_device'],2);?>元</span>
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                <span class="label label-default">安装超米价：￥<?php print number_format($priceArr[$i]['super_meter_install'],2);?>元</span>
-                <span class="glyphicon glyphicon-pause rote90" aria-hidden="true"></span>
-                <span class="label label-info">￥<?php print number_format($priceArr[$i]['super_meter_device']+$priceArr[$i]['super_meter_install'],2);?>元</span>
             </td>
         </tr>
     </table>
@@ -187,7 +155,7 @@ $i=0;
     <!--//电梯功能价START-->
     <table class="table table-bordered table-condensed">
         <tr>
-            <td width="100"><span class="label label-primary">功能价</span></td>
+            <td width="60"><span class="label label-primary">功能</span></td>
             <td>
                 <table class="table table-bordered table-condensed">
                     <thead>
@@ -221,30 +189,13 @@ $i=0;
                 </table>
             </td>
         </tr>
-        <?php
-        $priceArr[$i]['func']=$priceArr[$i]['func']*$ele->num;
-        ?>
-        <tr class="success">
-            <td class="text-right">计：</td>
-            <td>
-                <span class="label label-default">功能价：￥<?php print number_format($priceArr[$i]['func'],2);?>元</span>
-            </td>
-        </tr>
-        <tr class="success">
-            <td class="text-right"></td>
-            <td>
-                <span class="label label-default">超米数：<?php print number_format($priceArr[$i]['super_meter'],2);?>米</span>
-                <span class="glyphicon glyphicon-random" aria-hidden="true"></span>
-                <span class="label label-default">功能超米价：￥元</span>
-            </td>
-        </tr>
     </table>
     <!--//电梯功能价END-->
 
     <!--//电梯装修价START-->
     <table class="table table-bordered table-condensed">
         <tr>
-            <td width="100"><span class="label label-primary">装修价</span></td>
+            <td width="60"><span class="label label-primary">装修</span></td>
             <td>
                 <table class="table table-bordered table-condensed">
                     <thead>
@@ -282,23 +233,6 @@ $i=0;
                 </table>
             </td>
         </tr>
-        <?php
-        $priceArr[$i]['fitment']=$priceArr[$i]['fitment']*$ele->num;
-        ?>
-        <tr class="success">
-            <td class="text-right">计：</td>
-            <td>
-                <span class="label label-default">功能价：￥<?php print number_format($priceArr[$i]['fitment'],2);?>元</span>
-            </td>
-        </tr>
-        <tr class="success">
-            <td class="text-right"></td>
-            <td>
-                <span class="label label-default">超米数：<?php print number_format($priceArr[$i]['super_meter'],2);?>米</span>
-                <span class="glyphicon glyphicon-random" aria-hidden="true"></span>
-                <span class="label label-default">装修超米价：￥元</span>
-            </td>
-        </tr>
     </table>
     <!--//电梯装修价END-->
 
@@ -319,7 +253,7 @@ $i=0;
     ?>
     <table class="table table-bordered table-condensed">
         <tr>
-            <td width="100"><span class="label label-primary">运费价</span></td>
+            <td width="60"><span class="label label-primary">运费</span></td>
             <td>
                 <?php if($freight):
                 $priceArr[$i]['freight']=$freight->price*$ele->num;
@@ -353,78 +287,123 @@ $i=0;
         <tr class="success">
             <td class="text-right">计：</td>
             <td>
-                <span class="label label-default">功能价：￥<?php print number_format($priceArr[$i]['freight'],2);?>元</span>
+                <span class="label label-default">功能：￥<?php print number_format($priceArr[$i]['freight'],2);?>元</span>
             </td>
         </tr>
         <?php endif;?>
     </table>
     <!--//电梯运费价END-->
-
-    <table class="table table-bordered table-condensed">
+    <table class="table table-bordered">
         <tr class="success">
-            <td></td>
-            <td colspan="100">
-                <span class="glyphicon glyphicon-yen" aria-hidden="true"></span>
-                <span class="label label-default">设备价：￥<?php print number_format($priceArr[$i]['device_price'],2);?>元</span>
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                <span class="label label-default">安装价：￥<?php print number_format($priceArr[$i]['install_price'],2);?>元</span>
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                <span class="label label-default">功能价：￥<?php print number_format($priceArr[$i]['func'],2);?>元</span>
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                <span class="label label-default">装修价：￥<?php print number_format($priceArr[$i]['fitment'],2);?>元</span>
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                <span class="label label-default">运费价：￥<?php print number_format($priceArr[$i]['freight'],2);?>元</span>
-                <span class="glyphicon glyphicon-pause rote90" aria-hidden="true"></span>
-                <span class="label label-info">￥
-                    <?php
-                    print number_format($priceArr[$i]['device_price']
-                        +$priceArr[$i]['install_price']
-                        +$priceArr[$i]['func']
-                        +$priceArr[$i]['fitment']
-                        +$priceArr[$i]['freight']
+            <td>
+                <table class="table table-bordered table-condensed">
+                    <tr>
+                        <th>设备基价</th>
+                        <th width="100">功能加价</th>
+                        <th width="100">装修选项</th>
+                        <th width="100">运输费</th>
+                        <th width="150">设备超米费</th>
+                        <th width="100">非标单价</th>
+                        <th width="120">临时用梯设备费</th>
+                        <th width="100">税率</th>
+                        <th width="100">设备单价</th>
+                        <th width="100">设备合计</th>
+                    </tr>
+                    <tr>
+                        <td><?php print number_format($ele->expe->设备基价,2);?></td>
+                        <td><?php print number_format($ele->expe->设备功能加价,2);?></td>
+                        <td><?php print number_format($ele->expe->设备装修选项,2);?></td>
+                        <td><?php print number_format($ele->expe->设备运输费,2);?></td>
+                        <td><?php print number_format($ele->expe->设备超米费,2);?></td>
+                        <td><?php print number_format($ele->expe->设备非标单价,2);?></td>
+                        <td><?php print number_format($ele->expe->设备临时用梯费,2);?></td>
+                        <td><?php print number_format($ele->expe->设备税率,2);?></td>
+                        <td><?php print number_format($ele->expe->设备税率计算,2);?></td>
+                        <td><?php print number_format($ele->expe->设备税率计算*$ele->num,2);?></td>
+                    </tr>
+                </table>
+            </td>
+            <td width="100">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    审核设备
+                </button>
 
-                        ,2);
-                    ?>
-                    元
-                    </span>
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-horizontal" action="<?php print $ele->id?>/device" method="POST">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-sm-2 control-label">税率</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" name="设备税率" class="form-control" id="inputEmail3" placeholder="0.17">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword3" class="col-sm-2 control-label">非标单价</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" name="设备非标单价" class="form-control" id="inputPassword3" placeholder="" value="0">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword3" class="col-sm-2 control-label">临时用梯费</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" name="设备临时用梯费" class="form-control" id="inputPassword3" placeholder="" value="0">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default btn-close" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary btn-submit" data-action="device">审核通过</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </td>
         </tr>
-        <?php
-        $priceCount=[];
-        foreach($priceArr as $rp){
-            foreach($rp as $key=>$price){
-                if(empty($priceCount[$key])){
-                    $priceCount[$key]=0;
-                }
-                $priceCount[$key]+=$price;
-            }
-        }
-        ?>
-        <tr class="danger">
-            <td><span class="glyphicon glyphicon-yen" aria-hidden="true"></span></td>
-            <td colspan="100" class="text-right">
-                <span class="label label-default">设备价：￥<?php print number_format($priceCount['device_price'],2);?>元</span>
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                <span class="label label-default">安装价：￥<?php print number_format($priceCount['install_price'],2);?>元</span>
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                <span class="label label-default">功能价：￥<?php print number_format($priceCount['func'],2);?>元</span>
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                <span class="label label-default">装修价：￥<?php print number_format($priceCount['fitment'],2);?>元</span>
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                <span class="label label-default">运费价：￥<?php print number_format($priceCount['freight'],2);?>元</span>
-                <span class="glyphicon glyphicon-pause rote90" aria-hidden="true"></span>
-                <span class="label label-info">￥
-                    <?php
-                    print number_format($priceCount['device_price']
-                        +$priceCount['install_price']
-                        +$priceCount['func']
-                        +$priceCount['fitment']
-                        +$priceCount['freight']
-                        ,2);
-                    ?>
-                    元
-                    </span>
+        <tr class="success">
+            <td>
+                <table class="table table-bordered table-condensed">
+                    <tr>
+                        <th>安装基价</th>
+                        <th width="100">政府验收费</th>
+                        <th width="100">安装超米费</th>
+                        <th width="150">贯通门增加安装价</th>
+                        <th width="100">非标单价</th>
+                        <th width="120">临时用梯设备费</th>
+                        <th width="100">税率</th>
+                        <th width="100">安装单价</th>
+                        <th width="100">安装合计</th>
+                    </tr>
+                    <tr>
+                        <td><?php print number_format($ele->expe->安装基价,2);?></td>
+                        <td><?php print number_format($ele->expe->政府验收费,2);?></td>
+                        <td><?php print number_format($ele->expe->安装超米费,2);?></td>
+                        <td><?php print number_format($ele->expe->贯通门增加安装价,2);?></td>
+                        <td><?php print number_format($ele->expe->安装非标单价,2);?></td>
+                        <td><?php print number_format($ele->expe->安装临时用梯费,2);?></td>
+                        <td><?php print number_format($ele->expe->安装税率,2);?></td>
+                        <td><?php print number_format($ele->expe->安装税率计算,2);?></td>
+                        <td><?php print number_format($ele->expe->安装税率计算*$ele->num,2);?></td>
+                    </tr>
+                </table>
             </td>
+            <td width="100"></td>
         </tr>
     </table>
 </div>
+<script>
+    $(function(){
+        $('.btn-submit').click(function(){
+            var action=$(this).attr('data-action');
+            var $form=$(this).parents('.modal-footer').prev().find('form');
+            $form.trigger('submit');
+        })
+    })
+</script>

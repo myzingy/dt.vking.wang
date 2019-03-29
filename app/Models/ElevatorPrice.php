@@ -19,6 +19,11 @@ class ElevatorPrice extends Model
     public function elevator(){
         return $this->belongsTo(Elevator::class, 'eid');
     }
+    public function sumDevicePrice(){
+        return $this->设备基价
+        +$this->设备超米费+$this->设备功能加价+$this->设备装修选项
+            +$this->设备运输费+$this->设备非标单价+$this->设备临时用梯费;
+    }
     function runExpe($fouce=false){//重新计算填入
         $ele=$this->elevator;
         $ep=$ele->expe;
