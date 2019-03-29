@@ -9,6 +9,7 @@ use App\Models\Elevator;
 use App\Http\Controllers\Controller;
 use App\Models\ElevatorFitment;
 use App\Models\ElevatorFunc;
+use App\Models\ElevatorPrice;
 use App\Models\Project;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -223,6 +224,8 @@ class ElevatorSuperController extends Controller
     }
     public function elevatorDetail($eid){
         $ele=Elevator::findOrFail($eid);
+        $expe=new ElevatorPrice(['eid'=>$eid]);
+        $expe->runExpe();
         $view=view('elevatorDetail',['ele'=>$ele]);
         return $view;
     }

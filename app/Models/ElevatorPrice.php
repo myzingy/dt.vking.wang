@@ -4,17 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class ElevatorPrice extends Model
 {
     use SoftDeletes;
 
     protected $table = 'elevator_price';
+    protected $fillable=['eid','设备基价','设备超米费','设备运输费','设备功能加价','设备装修选项','安装超米费',
+        '设备税率','设备税率计算'
+        ];
     public function elevator(){
         return $this->belongsTo(Elevator::class, 'eid');
     }
-    function reExpe(){//重新计算填入
+    function runExpe(){//重新计算填入
         $ele=$this->elevator;
+        $ep=$ele->expe;
+        if(!$ep){
+            return;
+        }
         $pj=$ele->project;
         $dev=$ele->device;
         $chaomi=$ele->height-$dev->hoisting_height*$dev->floor;
@@ -60,15 +68,17 @@ class ElevatorPrice extends Model
             }
         }
         //设备税率计算
-        if($this->设备税率>0){
+        if($ep->设备税率>0){
             $expe['设备税率计算']=((
                 $expe['设备基价']+$expe['设备超米费']
                 +$expe['设备功能加价']
                 +$expe['设备装修选项']
                 +$expe['设备运输费']
-                +$expe['设备非标单价']
-                +$expe['设备临时用梯费']
+                +$ep->设备非标单价
+                +$ep->设备临时用梯费
             )/(1+$dev->device_rate))*(1+$this->设备税率);
+            $expe['设备税率计算']=round($expe['设备税率计算'],0);
         }
+        $ep->update($expe);
     }
 }

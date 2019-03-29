@@ -132,7 +132,7 @@ $i=0;
                     </tr>
                     </thead>
                     <tbody>
-                    <?php $device=$ele->deviceAll;?>
+                    <?php $device=$ele->device;?>
                     <tr>
                         <td>{{$device->id}}</td>
                         <td>{{$device->brand}}</td>
