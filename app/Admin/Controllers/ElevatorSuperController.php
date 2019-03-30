@@ -100,7 +100,6 @@ class ElevatorSuperController extends Controller
 //        $grid->eid('电梯设备')->display(function(){
 //            return 'ID:'.implode('|',json_decode(json_encode($this->device), true));
 //        });
-        $grid->num('电梯数量')->style('min-width:50px');
         $grid->height('提升高度')->style('min-width:50px');
 
         $devicebg='background:#eee;';
@@ -111,7 +110,7 @@ class ElevatorSuperController extends Controller
         $grid->column('expe.设备超米费','设备超米费')->style("min-width:60px;$devicebg");
         $grid->column('expe.设备非标单价','非标单价')->style("min-width:50px;$devicebg");
         $grid->column('expe.设备临时用梯费','临时用梯费')->style("min-width:60px;$devicebg");
-        $grid->column('expe.设备税率计算','设备单价')->style("min-width:50px;$devicebg");
+        $grid->column('expe.设备税率计算','设备单价')->style("min-width:50px;$devicebg;font-weight:bold;");
 
         $devicebg='background:#3e3;';
         $grid->column('expe.安装基价','安装基价')->style("min-width:50px;$devicebg");
@@ -121,11 +120,33 @@ class ElevatorSuperController extends Controller
         $grid->column('expe.安装非标单价','非标单价')->style("min-width:50px;$devicebg");
         $grid->column('expe.二次验收费用','二次验收费用')->style("min-width:60px;$devicebg");
         $grid->column('expe.安装临时用梯费','临时用梯费')->style("min-width:60px;$devicebg");
-        $grid->column('expe.安装税率计算','安装单价')->style("min-width:50px;$devicebg");
+        $grid->column('expe.安装税率计算','安装单价')->style("min-width:50px;$devicebg;font-weight:bold;");
 
-        $grid->column('expe.desc','备注')->style("min-width:50px;");
+        $grid->column('expe.小计','小计')
+            ->display(function(){
+                return $this->expe->设备税率计算+$this->expe->安装税率计算;
+            })
+            ->style("min-width:50px;");
+        $grid->num('台数')->style('min-width:50px');
+        $grid->dc('设备合计')
+            ->display(function(){
+                return $this->expe->设备税率计算*$this->num;
+            })
+            ->style('min-width:50px');
+        $grid->ic('安装合计')
+            ->display(function(){
+                return $this->expe->安装税率计算*$this->num;
+            })
+            ->style('min-width:50px');
+        $grid->zj('总计')
+            ->display(function(){
+                return ($this->expe->设备税率计算+$this->expe->安装税率计算)*$this->num;
+            })
+            ->style('min-width:50px');
 
         $grid->status('状态')->using(Elevator::STATUS)->style("min-width:50px;");
+        $grid->column('expe.desc','备注')->style("min-width:50px;");
+
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
