@@ -95,41 +95,37 @@ class ElevatorSuperController extends Controller
         $grid = new Grid(new Elevator);
 
         $grid->id('ID');
-        $grid->column('project.name','项目名称');
-        $grid->column('project.city_id','区域');
-        $grid->eid('电梯设备')->display(function(){
-            return 'ID:'.implode('|',json_decode(json_encode($this->device), true));
-        });
-        $grid->num('电梯数量')->editable();
-        $grid->height('提升高度');
+        $grid->column('project.name','项目名称')->style('min-width:100px');
+        $grid->column('project.city_id','区域')->style('min-width:60px');
+//        $grid->eid('电梯设备')->display(function(){
+//            return 'ID:'.implode('|',json_decode(json_encode($this->device), true));
+//        });
+        $grid->num('电梯数量')->style('min-width:50px');
+        $grid->height('提升高度')->style('min-width:50px');
 
+        $devicebg='background:#eee;';
+        $grid->column('expe.设备基价','设备基价')->style("min-width:50px;$devicebg");
+        $grid->column('expe.设备功能加价','功能加价')->style("min-width:50px;$devicebg");
+        $grid->column('expe.设备装修选项','装修选项')->style("min-width:50px;$devicebg");
+        $grid->column('expe.设备运输费','运输费')->style("min-width:50px;$devicebg");
+        $grid->column('expe.设备超米费','设备超米费')->style("min-width:60px;$devicebg");
+        $grid->column('expe.设备非标单价','非标单价')->style("min-width:50px;$devicebg");
+        $grid->column('expe.设备临时用梯费','临时用梯费')->style("min-width:60px;$devicebg");
+        $grid->column('expe.设备税率计算','设备单价')->style("min-width:50px;$devicebg");
 
-        $grid->height('设备基价');
-        $grid->height('功能加价');
-        $grid->height('装修选项');
-        $grid->height('运输费');
-        $grid->height('设备超米费');
-        $grid->height('非标单价');
-        $grid->height('临时用梯设备费');
-        $grid->height('设备税率');
-        $grid->height('税率');
-        $grid->height('非标单价');
-        $grid->height('临时用梯费');
+        $devicebg='background:#3e3;';
+        $grid->column('expe.安装基价','安装基价')->style("min-width:50px;$devicebg");
+        $grid->column('expe.政府验收费','政府验收费')->style("min-width:60px;$devicebg");
+        $grid->column('expe.安装超米费','安装超米费')->style("min-width:60px;$devicebg");
+        $grid->column('expe.贯通门增加安装价','贯通门增加安装价')->style("min-width:60px;$devicebg");
+        $grid->column('expe.安装非标单价','非标单价')->style("min-width:50px;$devicebg");
+        $grid->column('expe.二次验收费用','二次验收费用')->style("min-width:60px;$devicebg");
+        $grid->column('expe.安装临时用梯费','临时用梯费')->style("min-width:60px;$devicebg");
+        $grid->column('expe.安装税率计算','安装单价')->style("min-width:50px;$devicebg");
 
+        $grid->column('expe.desc','备注')->style("min-width:50px;");
 
-        $grid->height('安装基价');
-        $grid->height('政府验收费');
-        $grid->height('安装超米费');
-        $grid->height('贯通门增加安装价');
-        $grid->height('非标单价');
-        $grid->height('二次验收费用');
-        $grid->height('临时用梯安装费');
-        $grid->height('安装税率');
-        $grid->height('税率');
-
-        $grid->height('备注');
-
-        $grid->status('状态');
+        $grid->status('状态')->using(Elevator::STATUS)->style("min-width:50px;");
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();

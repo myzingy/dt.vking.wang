@@ -160,11 +160,11 @@ $i=0;
                 <table class="table table-bordered table-condensed">
                     <thead>
                     <tr>
-                        <th>功能ID</th>
-                        <th>功能名称</th>
-                        <th>功能加价</th>
-                        <th>功能数量</th>
-                        <th>是否标配/是否在基础价格包含</th>
+                        <th width="100">功能ID</th>
+                        <th width="100">功能名称</th>
+                        <th width="100">功能加价</th>
+                        <th width="100">功能数量</th>
+                        <th >是否标配/是否在基础价格包含</th>
                         <th>功能描述</th>
                     </tr>
                     </thead>
@@ -176,7 +176,7 @@ $i=0;
                         <td>{{$func->id}}</td>
                         <td>{{$func->name}}</td>
                         <td>{{$func->price}} 元/{{$func->unit}}</td>
-                        <td>{{$func->num}}{{$func->unit}}</td>
+                        <td>{{$func->pivot->num}}{{$func->unit}}</td>
                         <td>{{$func->has_in_base}}</td>
                         <td>{{$func->desc}}</td>
                     </tr>
@@ -196,33 +196,27 @@ $i=0;
                 <table class="table table-bordered table-condensed">
                     <thead>
                     <tr>
-                        <th>装修ID</th>
-                        <th>装修名称</th>
-                        <th>装修材料</th>
-                        <th>规格编号</th>
-                        <th>装修加价</th>
-                        <th>装修数量</th>
+                        <th width="100">装修ID</th>
+                        <th width="100">装修名称</th>
+                        <th width="100">装修加价</th>
+                        <th width="100">装修数量</th>
+                        <th width="100">装修材料</th>
+                        <th width="100">规格编号</th>
                         <th>是否标配/是否在基础价格包含</th>
                         <th>装修描述</th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php
-                    if(empty($priceArr[$i]['fitment'])){
-                        $priceArr[$i]['fitment']=0;
-                    }
                     foreach($ele->fitment as $fitment):
-                    if($fitment->has_in_base!=1){
-                        $priceArr[$i]['fitment']+=$fitment->price;
-                    }
                     ?>
                     <tr>
                         <td>{{$fitment->id}}</td>
                         <td>{{$fitment->name}}</td>
+                        <td>{{$fitment->price}} 元/{{$fitment->unit}}</td>
+                        <td>{{$fitment->pivot->num}}{{$fitment->unit}}</td>
                         <td>{{$fitment->stuff}}</td>
                         <td>{{$fitment->spec}}</td>
-                        <td>{{$fitment->price}} 元/{{$fitment->unit}}</td>
-                        <td>{{$fitment->num}}{{$fitment->unit}}</td>
                         <td>{{$fitment->has_in_base}}</td>
                         <td>{{$fitment->desc}}</td>
                     </tr>
@@ -235,44 +229,16 @@ $i=0;
     <!--//电梯装修价END-->
 
     <!--//电梯运费价START-->
-    <?php
-    $fids=[];
-    $dfr=DB::table('device_freight_rela')->where('did',$ele->did)->get();
-    foreach($dfr as $d){
-        array_push($fids,$d->fid);
-    }
-    $freight=\App\Models\DeviceFreight::where([
-        'to_province'=>$pj->province_id,
-        'to_city'=>$pj->city_id,
-    ])->whereIn('id',$fids)->first();
-    if(empty($priceArr[$i]['freight'])){
-        $priceArr[$i]['freight']=0;
-    }
-    ?>
     <table class="table table-bordered table-condensed">
         <tr>
             <td width="60"><span class="label label-primary">运费</span></td>
             <td>
-                <?php if($freight):
-                $priceArr[$i]['freight']=$freight->price*$ele->num;
-                ?>
+                <?php if($ele->expe->设备运输费>0):?>
                 <div class="row">
                     <div class="col-xs-12 col-sm-4">
                         <address>
-                            <strong>发货地</strong><br>
-                            {{$freight->from_province}}/{{$freight->from_city}}
-                        </address>
-                    </div>
-                    <div class="col-xs-12 col-sm-4">
-                        <address>
-                            <strong>收获地</strong><br>
-                            {{$freight->to_province}}/{{$freight->to_city}}
-                        </address>
-                    </div>
-                    <div class="col-xs-12 col-sm-4">
-                        <address>
                             <strong>运费单价</strong><br>
-                            {{$freight->price}}
+                            {{$ele->expe->设备运输费}}
                         </address>
                     </div>
                 </div>
@@ -281,14 +247,6 @@ $i=0;
                 <?php endif;?>
             </td>
         </tr>
-        <?php if($freight):?>
-        <tr class="success">
-            <td class="text-right">计：</td>
-            <td>
-                <span class="label label-default">功能：￥<?php print number_format($priceArr[$i]['freight'],2);?>元</span>
-            </td>
-        </tr>
-        <?php endif;?>
     </table>
     <!--//电梯运费价END-->
     <table class="table table-bordered">
