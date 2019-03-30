@@ -20,6 +20,7 @@ use Encore\Admin\Show;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
 
 class ElevatorSuperController extends Controller
 {
@@ -229,7 +230,25 @@ class ElevatorSuperController extends Controller
         $view=view('elevatorDetail',['ele'=>$ele]);
         return $view;
     }
-    public function setPrice(){
-        die('ewrwer');
+    public function setPrice($eid){
+        $ele=Elevator::findOrFail($eid);
+        if(!$ele){
+            return Redirect::to("/admin/elevatorSuper");
+        }
+        $data=Input::get();
+        $act=$data['_act'];
+        $data=Arr::except($data,['_token','_act']);
+
+        $ep=ElevatorPrice::where('eid',$eid);
+        if($act=='device' && $ele->status<Elevator::STATUS_SBS){
+            $ele->status=Elevator::STATUS_SBS;
+        }
+        if($act=='install'&& $ele->status<Elevator::STATUS_ANS){
+            $ele->status=Elevator::STATUS_ANS;
+        }
+        $ele->save();
+        $ep->update($data);
+        //return Redirect::back(302);
+        return Redirect::refresh(302);
     }
 }

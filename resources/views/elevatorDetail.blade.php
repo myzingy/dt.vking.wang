@@ -163,24 +163,20 @@ $i=0;
                         <th>功能ID</th>
                         <th>功能名称</th>
                         <th>功能加价</th>
+                        <th>功能数量</th>
                         <th>是否标配/是否在基础价格包含</th>
                         <th>功能描述</th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php
-                    if(empty($priceArr[$i]['func'])){
-                        $priceArr[$i]['func']=0;
-                    }
                     foreach($ele->func as $func):
-                    if($func->has_in_base!=1){
-                        $priceArr[$i]['func']+=$func->price;
-                    }
                     ?>
                     <tr>
                         <td>{{$func->id}}</td>
                         <td>{{$func->name}}</td>
                         <td>{{$func->price}} 元/{{$func->unit}}</td>
+                        <td>{{$func->num}}{{$func->unit}}</td>
                         <td>{{$func->has_in_base}}</td>
                         <td>{{$func->desc}}</td>
                     </tr>
@@ -205,6 +201,7 @@ $i=0;
                         <th>装修材料</th>
                         <th>规格编号</th>
                         <th>装修加价</th>
+                        <th>装修数量</th>
                         <th>是否标配/是否在基础价格包含</th>
                         <th>装修描述</th>
                     </tr>
@@ -225,6 +222,7 @@ $i=0;
                         <td>{{$fitment->stuff}}</td>
                         <td>{{$fitment->spec}}</td>
                         <td>{{$fitment->price}} 元/{{$fitment->unit}}</td>
+                        <td>{{$fitment->num}}{{$fitment->unit}}</td>
                         <td>{{$fitment->has_in_base}}</td>
                         <td>{{$fitment->desc}}</td>
                     </tr>
@@ -302,7 +300,7 @@ $i=0;
                         <th width="100">功能加价</th>
                         <th width="100">装修选项</th>
                         <th width="100">运输费</th>
-                        <th width="150">设备超米费</th>
+                        <th width="100">设备超米费</th>
                         <th width="100">非标单价</th>
                         <th width="120">临时用梯设备费</th>
                         <th width="100">税率</th>
@@ -323,11 +321,10 @@ $i=0;
                     </tr>
                 </table>
             </td>
-            <td width="100">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                    审核设备
+            <td width="120">
+                <button type="button" class="btn <?php print $ele->status<2?'btn-primary':'btn-link'?>" data-toggle="modal" data-target="#exampleModal">
+                    <?php print $ele->status<2?'审核设备':'修改审核设备'?>
                 </button>
-
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -336,24 +333,25 @@ $i=0;
                                 <h4 class="modal-title" id="exampleModalLabel">New message</h4>
                             </div>
                             <div class="modal-body">
-                                <form class="form-horizontal" action="<?php print $ele->id?>/device" method="POST">
+                                <form class="form-horizontal" action="" method="POST">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                    <input type="hidden" name="_act" value="device" />
                                     <div class="form-group">
                                         <label for="inputEmail3" class="col-sm-2 control-label">税率</label>
                                         <div class="col-sm-10">
-                                            <input type="number" name="设备税率" class="form-control" id="inputEmail3" placeholder="0.17">
+                                            <input type="number" name="设备税率" class="form-control" id="inputEmail3" placeholder="0 到 0.17 之间的数字" value="<?php print $device->device_rate?>">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="inputPassword3" class="col-sm-2 control-label">非标单价</label>
                                         <div class="col-sm-10">
-                                            <input type="number" name="设备非标单价" class="form-control" id="inputPassword3" placeholder="" value="0">
+                                            <input type="number" name="设备非标单价" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->设备非标单价?>">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="inputPassword3" class="col-sm-2 control-label">临时用梯费</label>
                                         <div class="col-sm-10">
-                                            <input type="number" name="设备临时用梯费" class="form-control" id="inputPassword3" placeholder="" value="0">
+                                            <input type="number" name="设备临时用梯费" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->设备临时用梯费?>">
                                         </div>
                                     </div>
                                 </form>
@@ -373,8 +371,9 @@ $i=0;
                     <tr>
                         <th>安装基价</th>
                         <th width="100">政府验收费</th>
+                        <th width="100">贯通门增加安装价</th>
+                        <th width="100">二次验收费用</th>
                         <th width="100">安装超米费</th>
-                        <th width="150">贯通门增加安装价</th>
                         <th width="100">非标单价</th>
                         <th width="120">临时用梯设备费</th>
                         <th width="100">税率</th>
@@ -384,8 +383,9 @@ $i=0;
                     <tr>
                         <td><?php print number_format($ele->expe->安装基价,2);?></td>
                         <td><?php print number_format($ele->expe->政府验收费,2);?></td>
-                        <td><?php print number_format($ele->expe->安装超米费,2);?></td>
                         <td><?php print number_format($ele->expe->贯通门增加安装价,2);?></td>
+                        <td><?php print number_format($ele->expe->二次验收费用,2);?></td>
+                        <td><?php print number_format($ele->expe->安装超米费,2);?></td>
                         <td><?php print number_format($ele->expe->安装非标单价,2);?></td>
                         <td><?php print number_format($ele->expe->安装临时用梯费,2);?></td>
                         <td><?php print number_format($ele->expe->安装税率,2);?></td>
@@ -394,7 +394,103 @@ $i=0;
                     </tr>
                 </table>
             </td>
-            <td width="100"></td>
+            <?php if($ele->status<2):?>
+            <td width="100">
+                请先审核设备
+            </td>
+            <?php else:?>
+            <td width="100">
+                <button type="button" class="btn <?php print $ele->status<3?'btn-primary':'btn-link'?>" data-toggle="modal" data-target="#exampleModalInstall">
+                    <?php print $ele->status<3?'审核安装':'修改审核安装'?>
+                </button>
+                <div class="modal fade" id="exampleModalInstall" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-horizontal" action="" method="POST">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                    <input type="hidden" name="_act" value="install" />
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-sm-2 control-label">税率</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" name="安装税率" class="form-control" id="inputEmail3" placeholder="0 到 0.17 之间的数字" value="<?php print $device->install_rate?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword3" class="col-sm-2 control-label">非标单价</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" name="安装非标单价" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->安装非标单价?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword3" class="col-sm-2 control-label">临时用梯费</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" name="安装临时用梯费" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->安装临时用梯费?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword3" class="col-sm-2 control-label">贯通门增加安装价</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" name="贯通门增加安装价" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->贯通门增加安装价?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword3" class="col-sm-2 control-label">二次验收费用</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" name="二次验收费用" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->二次验收费用?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword3" class="col-sm-2 control-label">政府验收费</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" name="政府验收费" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->政府验收费?>">
+                                            <span id="helpBlock2" class="help-block">政府验收费.........</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword3" class="col-sm-2 control-label">备注</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" name="desc" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->desc?>">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default btn-close" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary btn-submit" data-action="device">审核通过</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <?php endif;?>
+        </tr>
+        <tr class="success">
+            <td>
+                <table class="table table-bordered table-condensed">
+                    <tr>
+                        <th>备注</th>
+                        <th width="100">合计</th>
+                    </tr>
+                    <tr>
+                        <td><?php print $ele->expe->desc;?></td>
+                        <td><?php
+                            print number_format(
+                                    $ele->expe->设备税率计算*$ele->num
+                                    +$ele->expe->安装税率计算*$ele->num
+                                    ,2);
+                            ?>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td width="120">
+
+            </td>
         </tr>
     </table>
 </div>
