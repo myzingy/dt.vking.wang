@@ -258,7 +258,7 @@ class ElevatorSuperController extends Controller
         }
         $data=Input::get();
         $act=$data['_act'];
-        $data=Arr::except($data,['_token','_act']);
+        $data=Arr::except($data,['_token','_act','_url']);
 
         $ep=ElevatorPrice::where('eid',$eid);
         if($act=='device' && $ele->status<Elevator::STATUS_SBS){
