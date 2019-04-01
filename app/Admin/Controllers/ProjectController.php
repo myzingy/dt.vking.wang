@@ -147,8 +147,8 @@ class ProjectController extends Controller
         $grid->elevator('电梯')->display(function($elevators){
             $html='';
             foreach ($this->elevator as $ele ){
-                $device='ID:'.implode('|',json_decode(json_encode($ele->device), true));
-                $html.="<p>({$device}){$ele->desc} X <font color='red'>（{$ele->num}部）</font></p>";
+                $device=$ele->device->brand.$ele->device->brand_set;
+                $html.="<p>({$device}){$ele->desc}<font color='red'>（{$ele->num}部）</font></p>";
             }
             return $html;
         });
@@ -176,6 +176,9 @@ class ProjectController extends Controller
         });
         $grid->disableExport();
 
+        $grid->actions(function($action){
+            $action->disableView();
+        });
         return $grid;
     }
 

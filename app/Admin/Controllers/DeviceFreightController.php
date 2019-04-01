@@ -172,7 +172,7 @@ class DeviceFreightController extends Controller
         foreach(Device::groupBy('brand','brand_set')->get() as $d){
             $dsArr[$d->brand.'/'.$d->brand_set]=$d->brand.'/'.$d->brand_set;
         }
-        $form->checkbox('querystr.brand_set','品牌系列')->options($dsArr)->required();
+        $form->checkbox('querystr.brand_set','品牌系列')->options($dsArr);
         $dsArr=[];
         foreach(Device::groupBy('dload')->get() as $d){
             $dsArr[$d->dload]=$d->dload;

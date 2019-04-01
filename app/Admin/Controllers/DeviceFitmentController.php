@@ -179,7 +179,7 @@ class DeviceFitmentController extends Controller
         foreach(Device::groupBy('brand')->get() as $d){
             $dsArr[$d->brand]=$d->brand;
         }
-        $form->checkbox('querystr.brand','品牌')->options($dsArr)->required();
+        $form->checkbox('querystr.brand','品牌')->options($dsArr);
 
         //忽略字段
         $form->ignore(['_brand']);
