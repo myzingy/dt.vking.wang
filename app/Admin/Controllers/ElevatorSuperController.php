@@ -96,10 +96,10 @@ class ElevatorSuperController extends Controller
 
         $grid->id('ID');
         $grid->column('project.name','项目名称')->style('min-width:100px');
-        $grid->column('project.city_id','区域')->style('min-width:60px');
-//        $grid->eid('电梯设备')->display(function(){
-//            return 'ID:'.implode('|',json_decode(json_encode($this->device), true));
-//        });
+        $grid->region('区域')->style('min-width:60px');
+        $grid->eid('电梯设备')->display(function(){
+            return $this->device->brand.$this->device->brand_set;
+        })->style('min-width:80px');
         $grid->height('提升高度')->style('min-width:50px');
 
         $devicebg='background:#eee;';
@@ -124,22 +124,26 @@ class ElevatorSuperController extends Controller
 
         $grid->column('expe.小计','小计')
             ->display(function(){
+                if(!$this->expe) return 0;
                 return $this->expe->设备税率计算+$this->expe->安装税率计算;
             })
             ->style("min-width:50px;");
         $grid->num('台数')->style('min-width:50px');
         $grid->dc('设备合计')
             ->display(function(){
+                if(!$this->expe) return 0;
                 return $this->expe->设备税率计算*$this->num;
             })
             ->style('min-width:50px');
         $grid->ic('安装合计')
             ->display(function(){
+                if(!$this->expe) return 0;
                 return $this->expe->安装税率计算*$this->num;
             })
             ->style('min-width:50px');
         $grid->zj('总计')
             ->display(function(){
+                if(!$this->expe) return 0;
                 return ($this->expe->设备税率计算+$this->expe->安装税率计算)*$this->num;
             })
             ->style('min-width:50px');
@@ -265,6 +269,8 @@ class ElevatorSuperController extends Controller
         }
         $ele->save();
         $ep->update($data);
+        $expe=new ElevatorPrice(['eid'=>$eid]);
+        $expe->runExpe(true);
         //return Redirect::back(302);
         return Redirect::refresh(302);
     }

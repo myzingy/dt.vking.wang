@@ -93,8 +93,9 @@ class ElevatorController extends Controller
 
         $grid->id('ID');
         $grid->column('project.name','项目名称');
+        $grid->region('区域');
         $grid->eid('电梯设备')->display(function(){
-            return 'ID:'.implode('|',json_decode(json_encode($this->device), true));
+            return $this->device->brand.$this->device->brand_set;
         });
         $grid->num('电梯数量')->editable();
         $grid->height('提升高度(m)');
@@ -166,6 +167,7 @@ class ElevatorController extends Controller
         $arr=Arr::pluck($pj, 'name','id');
         //var_dump($pj,$arr);
         $form->select('pid','项目')->options($arr)->required();
+        $form->text('region','区域');
         $form->divide();
         if($hasEdit){
             $form->display('device','已选电梯设备')->with(function ($value) {

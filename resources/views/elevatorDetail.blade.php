@@ -297,7 +297,7 @@ $i=0;
                                     <div class="form-group">
                                         <label for="inputEmail3" class="col-sm-2 control-label">税率</label>
                                         <div class="col-sm-10">
-                                            <input type="number" name="设备税率" class="form-control" id="inputEmail3" placeholder="0 到 0.17 之间的数字" value="<?php print $device->device_rate?>">
+                                            <input type="number" name="设备税率" class="form-control" id="inputEmail3" placeholder="0 到 0.17 之间的数字" value="<?php print $ele->expe->设备税率?$ele->expe->设备税率:$device->device_rate?>">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -375,7 +375,7 @@ $i=0;
                                     <div class="form-group">
                                         <label for="inputEmail3" class="col-sm-2 control-label">税率</label>
                                         <div class="col-sm-10">
-                                            <input type="number" name="安装税率" class="form-control" id="inputEmail3" placeholder="0 到 0.17 之间的数字" value="<?php print $device->install_rate?>">
+                                            <input type="number" name="安装税率" class="form-control" id="inputEmail3" placeholder="0 到 0.17 之间的数字" value="<?php print $ele->expe->安装税率?$ele->expe->安装税率:$device->install_rate?>">
                                         </div>
                                     </div>
                                     <div class="form-group">

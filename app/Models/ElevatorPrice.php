@@ -30,7 +30,7 @@ class ElevatorPrice extends Model
         $ep=$ele->expe;
         if($ele->status==Elevator::STATUS_ANS && !$fouce){
             //已审非强制计算直接返回
-            //return;
+            return;
         }
         $pj=$ele->project;
         $dev=$ele->device;
@@ -90,7 +90,7 @@ class ElevatorPrice extends Model
                 +$expe['设备运输费']
                 +$ep->设备非标单价
                 +$ep->设备临时用梯费
-            )/(1+$dev->device_rate))*(1+$this->设备税率);
+            )/(1+$dev->device_rate))*(1+$ep->设备税率);
             $expe['设备税率计算']=round($expe['设备税率计算'],0);
         }
         //安装税率计算
@@ -102,7 +102,7 @@ class ElevatorPrice extends Model
                         +$ep->安装临时用梯费
                         +$ep->安装非标单价
                         +$ep->二次验收费用
-                    )/(1+$dev->install_rate))*(1+$this->安装税率);
+                    )/(1+$dev->install_rate))*(1+$ep->安装税率);
             $expe['设备税率计算']=round($expe['设备税率计算'],0);
         }
         if($ep){
