@@ -21,6 +21,7 @@ use \Encore\Admin\Grid\Column;
 use \App\Exceptions\Fitout;
 Encore\Admin\Form::forget(['map', 'editor']);
 Column::extend('fitout', Fitout::class);
+Column::extend('eleStatus', \App\Exceptions\ElevatorStatus::class);
 Column::extend('money', function ($value) {
     return number_format($value,2);
 });

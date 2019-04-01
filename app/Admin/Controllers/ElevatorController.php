@@ -114,7 +114,7 @@ class ElevatorController extends Controller
         $grid->status1('功能/装修')->display(function(){
             return '<a href="/admin/elevator/'.$this->id.'/funfit">查看&配置</a>';
         });
-        $grid->status('状态');
+        $grid->status('状态')->eleStatus();
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
@@ -145,13 +145,10 @@ class ElevatorController extends Controller
      */
     protected function detail($id)
     {
-        $show = new Show(Elevator::findOrFail($id));
-
-        $show->id('ID');
-        $show->created_at('Created at');
-        $show->updated_at('Updated at');
-
-        return $show;
+        $ele=Elevator::findOrFail($id);
+        $ele->status=Elevator::STATUS_YTJ;
+        $ele->save();
+        return "200";
     }
 
     /**
@@ -210,7 +207,10 @@ class ElevatorController extends Controller
         $form->saving(function (Form $form){
             $form->did=$form->did>0?$form->did:$form->model()->did;
         });
-
+        $form->disableViewCheck();
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableView();
+        });
         return $form;
     }
     protected function detail_sm($eid,$content)

@@ -279,6 +279,11 @@ $i=0;
                     </tr>
                 </table>
             </td>
+            <?php if($ele->status<1):?>
+            <td width="100">
+                未提审，请等待提审
+            </td>
+            <?php else:?>
             <td width="120">
                 <button type="button" class="btn <?php print $ele->status<2?'btn-primary':'btn-link'?>" data-toggle="modal" data-target="#exampleModal">
                     <?php print $ele->status<2?'审核设备':'修改审核设备'?>
@@ -322,6 +327,7 @@ $i=0;
                     </div>
                 </div>
             </td>
+            <?php endif;?>
         </tr>
         <tr class="success">
             <td>
