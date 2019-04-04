@@ -275,7 +275,16 @@ $i=0;
                         <td><?php print number_format($ele->expe->设备临时用梯费,2);?></td>
                         <td><?php print number_format($ele->expe->设备税率,2);?></td>
                         <td><?php print number_format($ele->expe->设备税率计算,2);?></td>
-                        <td><?php print number_format($ele->expe->设备税率计算*$ele->num,2);?></td>
+                        <td>
+                            <?php
+                                $cmoney=$ele->expe->设备税率计算*$ele->num;
+                                if($ele->expe->功能按项目计价>0 && $ele->num>1){
+                                    $dy_money=$ele->expe->功能按项目计价*($ele->num-1);
+                                    $cmoney=$cmoney-((($dy_money)/(1+$device->device_rate))*(1+$ele->expe->设备税率));
+                                }
+                                print number_format($cmoney,2);
+                            ?>
+                        </td>
                     </tr>
                 </table>
             </td>
