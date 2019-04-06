@@ -412,7 +412,19 @@ $i=0;
                                         <label for="inputPassword3" class="col-sm-2 control-label">政府验收费</label>
                                         <div class="col-sm-10">
                                             <input type="number" name="政府验收费" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->政府验收费?>">
-                                            <span id="helpBlock2" class="help-block">政府验收费.........</span>
+                                            <span id="helpBlock2" class="help-block">
+                                                <?php
+                                                $zf=\App\Models\DeviceYearly::where([
+                                                    'brand'=>$device->brand,
+                                                    'city_id'=>$pj->city_id
+                                                ])->first();
+                                                    if($zf){
+                                                        print "<textarea disabled rows=5 style='width:100%;'>{$pj->city_id}:\n\n{$zf->explain}\n\n{$zf->desc}</textarea>";
+                                                    }else{
+                                                        print '未查到 政府验收费';
+                                                    }
+                                                ?>
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="form-group">
