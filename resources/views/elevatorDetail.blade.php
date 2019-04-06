@@ -275,7 +275,7 @@ $i=0;
                         <td><?php print number_format($ele->expe->设备临时用梯费,2);?></td>
                         <td><?php print number_format($ele->expe->设备税率,2);?></td>
                         <td><?php print number_format($ele->expe->设备税率计算,2);?></td>
-                        <td><?php print number_format($ele->expe->设备税率计算*$ele->num,2);?></td>
+                        <td><?php print number_format($ele->expe->设备合计,2);?></td>
                     </tr>
                 </table>
             </td>
@@ -354,7 +354,7 @@ $i=0;
                         <td><?php print number_format($ele->expe->安装临时用梯费,2);?></td>
                         <td><?php print number_format($ele->expe->安装税率,2);?></td>
                         <td><?php print number_format($ele->expe->安装税率计算,2);?></td>
-                        <td><?php print number_format($ele->expe->安装税率计算*$ele->num,2);?></td>
+                        <td><?php print number_format($ele->expe->安装合计,2);?></td>
                     </tr>
                 </table>
             </td>
@@ -444,8 +444,8 @@ $i=0;
                         <td><?php print $ele->expe->desc;?></td>
                         <td><?php
                             print number_format(
-                                    $ele->expe->设备税率计算*$ele->num
-                                    +$ele->expe->安装税率计算*$ele->num
+                                    $ele->expe->设备合计
+                                    +$ele->expe->安装合计
                                     ,2);
                             ?>
                         </td>

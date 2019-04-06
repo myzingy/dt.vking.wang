@@ -13,8 +13,9 @@ class ElevatorPrice extends Model
     protected $table = 'elevator_price';
     protected $fillable=['eid',
         '设备基价','设备超米费','设备运输费','设备功能加价','设备装修选项', '设备税率','设备税率计算','功能按项目计价',
-        '设备非标单价','设备临时用梯费',
+        '设备非标单价','设备临时用梯费','设备合计',
         '安装基价','安装超米费','政府验收费','贯通门增加安装价','安装非标单价','安装临时用梯费','安装税率','安装税率计算',
+        '二次验收费用','安装合计',
         'desc',
         ];
     public function elevator(){
@@ -93,6 +94,15 @@ class ElevatorPrice extends Model
             )/(1+$dev->device_rate))*(1+$ep->设备税率);
             $expe['设备税率计算']=round($expe['设备税率计算'],0);
         }
+        //设备合计 设备税率计算*设备数
+        if($ep && $ep->设备税率>0){
+            $expe['设备合计']=$expe['设备税率计算']*$ele->num;
+            if($ele->num>1 && $expe['功能按项目计价']>0){
+                $dy_money=$expe['功能按项目计价']*($ele->num-1);
+                $expe['设备合计']=$expe['设备合计']-((($dy_money)/(1+$dev->device_rate))*(1+$ep->设备税率));
+            }
+            $expe['设备合计']=round($expe['设备合计'],0);
+        }
         //安装税率计算
         if($ep && $ep->安装税率>0){
             $expe['安装税率计算']=((
@@ -104,6 +114,11 @@ class ElevatorPrice extends Model
                         +$ep->二次验收费用
                     )/(1+$dev->install_rate))*(1+$ep->安装税率);
             $expe['设备税率计算']=round($expe['设备税率计算'],0);
+        }
+        //安装合计 安装税率计算*设备数
+        if($ep && $ep->安装税率>0){
+            $expe['安装合计']=$expe['安装税率计算']*$ele->num;
+            $expe['安装合计']=round($expe['安装合计'],0);
         }
         if($ep){
             $ep->update($expe);
