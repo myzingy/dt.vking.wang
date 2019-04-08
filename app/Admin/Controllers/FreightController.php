@@ -158,8 +158,8 @@ class FreightController extends Controller
     {
         $form = new Form(new Freight);
 
-        $form->distpicker(['_province1', 'from','_district1'], '发货城市')->autoselect(2);
-        $form->distpicker(['_province2', 'to','_district2'], '收货城市')->autoselect(2);
+        $form->distpicker(['_province1', 'from','_district1'], '发货城市');
+        $form->distpicker(['_province2', 'to','_district2'], '收货城市');
         $form->currency('price','单台价格')->symbol('￥');
 
         $form->divide();
