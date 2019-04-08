@@ -1,0 +1,4 @@
+#导入运费
+insert into `freight` (`from`,`to`,`price`,`brand`,dload,`floor`,brand_set)
+    select fahuo,daohuo,yunfei,pinpai,replace(zaizhong,'，',','),replace(cengshu,'，',','),concat(pinpai,'/',xilie)
+    from `temp_diantiyunfei`

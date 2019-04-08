@@ -26,6 +26,7 @@ Route::group([
 
     $router->resource('/device', DeviceController::CLASS);
     $router->resource('/deviceFunc', DeviceFuncController::CLASS);
+    $router->resource('/freight', FreightController::CLASS);
     $router->resource('/deviceFreight', DeviceFreightController::CLASS);
     $router->resource('/deviceFitment', DeviceFitmentController::CLASS);
     $router->resource('/deviceYearly', DeviceYearlyController::CLASS);
