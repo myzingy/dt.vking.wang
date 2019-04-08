@@ -53,15 +53,12 @@ class ElevatorPrice extends Model
             $expe['安装超米费']=$chaomi*$dev->freeboard_ins;
         }
         //设备运输费
-        $fids=[];
-        $dfr=DB::table('device_freight_rela')->where('did',$ele->did)->get();
-        foreach($dfr as $d){
-            array_push($fids,$d->fid);
-        }
-        $freight=\App\Models\DeviceFreight::where([
-            'to_province'=>$pj->province_id,
-            'to_city'=>$pj->city_id,
-        ])->whereIn('id',$fids)->first();
+        $freight=Freight::where(function($query) use ($dev,$pj){
+            $query->where('to',$pj->city_id);
+            $query->whereRaw("find_in_set('{$dev->brand}/{$dev->brand_set}',`brand_set`)");
+            $query->whereRaw("find_in_set('{$dev->dload}',`dload`)");
+            $query->whereRaw("find_in_set('{$dev->floor}',`floor`)");
+        })->first();
         if($freight){
             $expe['设备运输费']=$freight->price;
         }
