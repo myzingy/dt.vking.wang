@@ -25,6 +25,7 @@ Route::group([
     $router->resource('/elevatorFitment', ElevatorFitmentController::CLASS);
 
     $router->resource('/device', DeviceController::CLASS);
+    $router->resource('/funtion', FuntionController::CLASS);
     $router->resource('/deviceFunc', DeviceFuncController::CLASS);
     $router->resource('/freight', FreightController::CLASS);
     $router->resource('/deviceFreight', DeviceFreightController::CLASS);
