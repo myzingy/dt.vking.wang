@@ -171,12 +171,6 @@ class FitmentController extends Controller
         $form->switch('has_in_base','是否标配/是否在基础价格包含')->states($states);
         $form->text('desc','描述');
 
-        //忽略字段
-        $form->ignore([]);
-
-        $form->saving(function (Form $form){
-            $form->brand=implode(',',$form->brand);
-        });
         return $form;
     }
 }

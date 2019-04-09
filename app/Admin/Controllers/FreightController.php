@@ -168,18 +168,18 @@ class FreightController extends Controller
         foreach(Device::groupBy('brand','brand_set')->get() as $d){
             $dsArr[$d->brand.'/'.$d->brand_set]=$d->brand.'/'.$d->brand_set;
         }
-        $form->multipleSelect('brand_set','品牌系列')->options($dsArr);
+        $form->multipleSelect('brand_set','品牌系列')->options($dsArr)->required();
 
         $dsArr=[];
         foreach(Device::groupBy('dload')->get() as $d){
             $dsArr[$d->dload]=$d->dload;
         }
-        $form->multipleSelect('dload','载重')->options($dsArr);
+        $form->multipleSelect('dload','载重')->options($dsArr)->required();
         $dsArr=[];
         foreach(Device::groupBy('floor')->get() as $d){
             $dsArr[$d->floor]=$d->floor;
         }
-        $form->multipleSelect('floor','层数')->options($dsArr);
+        $form->multipleSelect('floor','层数')->options($dsArr)->required();
 
         //忽略字段
         $form->ignore(['_province1','_district1','_province2','_district2']);
@@ -195,11 +195,6 @@ class FreightController extends Controller
                 }
             }
             if($brand) $form->model()->brand=implode(',',$brand);
-            //if($brand_set) $form->brand_set=$brand_set;
-
-            $form->dload=implode(',',$form->dload);
-            $form->floor=implode(',',$form->floor);
-
         });
         return $form;
     }
