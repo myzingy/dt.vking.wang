@@ -9,6 +9,7 @@ use App\Models\Elevator;
 use App\Http\Controllers\Controller;
 use App\Models\ElevatorFitment;
 use App\Models\ElevatorFunc;
+use App\Models\Fitment;
 use App\Models\Project;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -306,15 +307,10 @@ class ElevatorController extends Controller
         $grid->paginate(100);
         return $grid;
     }
-    protected function fitGrid($did)
+    protected function fitGrid($device)
     {
-        $grid = new Grid(new DeviceFitment);
-        $fids=[];
-        $dfr=DB::table('device_fitment_rela')->where('did',$did)->get();
-        foreach($dfr as $d){
-            array_push($fids,$d->fid);
-        }
-        $grid->model()->whereIn('id',$fids);
+        $grid = new Grid(new Fitment);
+        $grid->model()->where('brand',$device->brand);
         $grid->id('ID');
         $grid->name('装饰项目名称');
         $grid->stuff('材料');
@@ -353,7 +349,7 @@ class ElevatorController extends Controller
         $content->row(function(Row $row) use($eid) {
             $ele=Elevator::findOrFail($eid);
             $row->column(6, $this->funGrid($ele->did));
-            $row->column(6, $this->fitGrid($ele->did));
+            $row->column(6, $this->fitGrid($ele->device));
         });
         return $content;
     }
