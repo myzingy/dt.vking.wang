@@ -19,6 +19,7 @@ use Encore\Admin\Show;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
 
 class ElevatorController extends Controller
 {
