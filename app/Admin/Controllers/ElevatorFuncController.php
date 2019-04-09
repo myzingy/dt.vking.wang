@@ -2,8 +2,6 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\DeviceFitment;
-use App\Models\DeviceFunc;
 use App\Models\Elevator;
 use App\Http\Controllers\Controller;
 use App\Models\ElevatorFitment;
