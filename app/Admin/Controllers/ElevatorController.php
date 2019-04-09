@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ElevatorFitment;
 use App\Models\ElevatorFunc;
 use App\Models\Fitment;
+use App\Models\Funtion;
 use App\Models\Project;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -273,15 +274,15 @@ class ElevatorController extends Controller
         });
         return $show;
     }
-    protected function funGrid($did)
+    protected function funGrid($device)
     {
-        $grid = new Grid(new DeviceFunc);
-        $fids=[];
-        $dfr=DB::table('device_func_rela')->where('did',$did)->get();
-        foreach($dfr as $d){
-            array_push($fids,$d->fid);
-        }
-        $grid->model()->whereIn('id',$fids);
+        $grid = new Grid(new Funtion);
+        $grid->model()->where(function ($query) use($device){
+            $query->where("brand",$device->brand);
+            $query->whereRaw("find_in_set('{$device->brand}/{$device->brand_set}',`brand_set`)");
+            $query->whereRaw("find_in_set('{$device->dload}',`dload`)");
+            $query->whereRaw("find_in_set('{$device->speedup}',`speedup`)");
+        });
         $grid->id('ID');
         $grid->name('功能名称');
         $grid->unit('功能单位');
@@ -348,7 +349,7 @@ class ElevatorController extends Controller
         $content->row('<h3>请从下方选择功能和装修</h3>');
         $content->row(function(Row $row) use($eid) {
             $ele=Elevator::findOrFail($eid);
-            $row->column(6, $this->funGrid($ele->did));
+            $row->column(6, $this->funGrid($ele->device));
             $row->column(6, $this->fitGrid($ele->device));
         });
         return $content;
