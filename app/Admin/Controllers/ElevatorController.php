@@ -11,6 +11,7 @@ use App\Models\Fitment;
 use App\Models\Funtion;
 use App\Models\Project;
 use Encore\Admin\Controllers\HasResourceActions;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
@@ -98,7 +99,7 @@ class ElevatorController extends Controller
         $grid->eid('电梯设备')->display(function(){
             return $this->device->brand.$this->device->brand_set;
         });
-        $grid->num('电梯数量')->editable();
+        $grid->num('电梯数量');
         $grid->height('提升高度(m)');
         $grid->layer_numbers('层/站/门')->display(function($layer_number){
             return "{$this->layer_number}/{$this->layer_number_site}/{$this->layer_number_door}";
@@ -112,7 +113,11 @@ class ElevatorController extends Controller
             return "{$this->car_width}X{$this->car_height}X{$this->car_depth}";
         });
         $grid->desc('电梯说明');
+
         $grid->status1('功能/装修')->display(function(){
+            if(Admin::user()->isRole('localcom') && $this->status>Elevator::STATUS_YTJ){
+                return Elevator::getStatusStr($this->status);
+            }
             return '<a href="/admin/elevator/'.$this->id.'/funfit">查看&配置</a>';
         });
         $grid->status('状态')->eleStatus();
@@ -134,6 +139,10 @@ class ElevatorController extends Controller
         $grid->disableExport();
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableView();
+            if(Admin::user()->isRole('localcom') && $actions->row->status>Elevator::STATUS_YTJ){
+                $actions->disableDelete();
+                $actions->disableEdit();
+            }
         });
         return $grid;
     }
