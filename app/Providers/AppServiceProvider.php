@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Elevator;
+use App\Observers\ElevatorObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 
@@ -26,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Schema::defaultStringLength(191);
+        Elevator::observe(ElevatorObserver::class);
     }
 }
