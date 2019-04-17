@@ -256,6 +256,21 @@ class ElevatorController extends Controller
                 //$actions->disableDelete();
             });
             $grid->paginate(100);
+            $grid->footer(function ($query) {
+                $js=<<<JSEND
+<a class='tbf-func'></a>
+<script>
+$(function(){
+  var tf=$('.tbf-func').parents('.box-footer');
+  var tb=tf.prev();
+  tb.css({height:'300px'});
+  tf.remove();
+})
+</script>
+JSEND;
+
+                return $js;
+            });
         });
         $show->fitment('已配备装修', function ($grid) use($eid) {
             $grid->resource('/admin/elevatorFitment');
@@ -279,12 +294,28 @@ class ElevatorController extends Controller
                 //$actions->disableDelete();
             });
             $grid->paginate(100);
+            $grid->footer(function ($query) {
+                $js=<<<JSEND
+<a class='tbf-fitment'></a>
+<script>
+$(function(){
+  var tf=$('.tbf-fitment').parents('.box-footer');
+  var tb=tf.prev();
+  tb.css({height:'300px'});
+  tf.remove();
+})
+</script>
+JSEND;
+
+                return $js;
+            });
         });
         return $show;
     }
-    protected function funGrid($device)
+    protected function funGrid($eid,$device)
     {
         $grid = new Grid(new Funtion);
+        $grid->model()->whereRaw("id not in (select fid from elevator_func where eid='{$eid}')");
         $grid->model()->where(function ($query) use($device){
             $query->where("brand",$device->brand);
             $query->whereRaw("find_in_set('{$device->brand}/{$device->brand_set}',`brand_set`)");
@@ -313,12 +344,28 @@ class ElevatorController extends Controller
         $grid->disableActions();
         $grid->disablePagination();
         $grid->disableTools();
-        $grid->paginate(100);
+        $grid->paginate(200);
+        $grid->footer(function ($query) {
+            $js=<<<JSEND
+<a class='tbf-funGrid'></a>
+<script>
+$(function(){
+  var tf=$('.tbf-funGrid').parents('.box-footer');
+  var tb=tf.prev();
+  tb.css({height:'500px'});
+  tf.remove();
+})
+</script>
+JSEND;
+
+            return $js;
+        });
         return $grid;
     }
-    protected function fitGrid($device)
+    protected function fitGrid($eid,$device)
     {
         $grid = new Grid(new Fitment);
+        $grid->model()->whereRaw("id not in (select fid from elevator_fitment where eid='{$eid}')");
         $grid->model()->where('brand',$device->brand);
         $grid->id('ID');
         $grid->name('装饰项目名称');
@@ -346,7 +393,22 @@ class ElevatorController extends Controller
         $grid->disableActions();
         $grid->disablePagination();
         $grid->disableTools();
-        $grid->paginate(100);
+        $grid->paginate(200);
+        $grid->footer(function ($query) {
+            $js=<<<JSEND
+<a class='tbf-fitGrid'></a>
+<script>
+$(function(){
+  var tf=$('.tbf-fitGrid').parents('.box-footer');
+  var tb=tf.prev();
+  tb.css({height:'500px'});
+  tf.remove();
+})
+</script>
+JSEND;
+
+            return $js;
+        });
         return $grid;
     }
     public function funfit($eid, Content $content){
@@ -357,8 +419,8 @@ class ElevatorController extends Controller
         $content->row('<h3>请从下方选择功能和装修</h3>');
         $content->row(function(Row $row) use($eid) {
             $ele=Elevator::findOrFail($eid);
-            $row->column(6, $this->funGrid($ele->device));
-            $row->column(6, $this->fitGrid($ele->device));
+            $row->column(6, $this->funGrid($eid,$ele->device));
+            $row->column(6, $this->fitGrid($eid,$ele->device));
         });
         return $content;
     }
