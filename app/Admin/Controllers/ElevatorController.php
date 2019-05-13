@@ -96,7 +96,7 @@ class ElevatorController extends Controller
 
         $grid->id('ID');
         $grid->column('project.name','项目名称');
-        $grid->region('区域');
+        $grid->region('梯号');
         $grid->eid('电梯设备')->display(function(){
             return $this->device->brand.$this->device->brand_set;
         });
@@ -175,7 +175,7 @@ class ElevatorController extends Controller
         $arr=Arr::pluck($pj, 'name','id');
         //var_dump($pj,$arr);
         $form->select('pid','项目')->options($arr)->required();
-        $form->text('region','区域');
+        $form->text('region','梯号');
         $form->divide();
         if($hasEdit){
             $form->display('device','已选电梯设备')->with(function ($value) {
@@ -271,9 +271,16 @@ class ElevatorController extends Controller
                 throw new Exception('未找到电梯设备,请核对电梯参数');
             }
         });
-        $form->disableViewCheck();
         $form->tools(function (Form\Tools $tools) {
             $tools->disableView();
+        });
+        $form->footer(function ($footer) {
+            // 去掉`查看`checkbox
+            $footer->disableViewCheck();
+            // 去掉`继续编辑`checkbox
+            $footer->disableEditingCheck();
+            // 去掉`继续创建`checkbox
+            $footer->disableCreatingCheck();
         });
         return $form;
     }

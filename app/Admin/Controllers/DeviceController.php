@@ -163,7 +163,17 @@ class DeviceController extends Controller
         $form->currency('install_price', '安装单价')->symbol('￥');
         $form->slider('device_rate', '设备税率')->options(['max' => 0.17, 'min' => 0, 'step' => 0.01]);
         $form->slider('install_rate', '安装税率')->options(['max' => 0.11, 'min' => 0, 'step' => 0.01]);
-
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableView();
+        });
+        $form->footer(function ($footer) {
+            // 去掉`查看`checkbox
+            $footer->disableViewCheck();
+            // 去掉`继续编辑`checkbox
+            $footer->disableEditingCheck();
+            // 去掉`继续创建`checkbox
+            $footer->disableCreatingCheck();
+        });
         return $form;
     }
     public function brands(){

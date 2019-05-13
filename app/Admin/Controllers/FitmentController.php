@@ -166,6 +166,17 @@ class FitmentController extends Controller
         $form->switch('has_in_base','是否标配/是否在基础价格包含')->states($states);
         $form->text('desc','描述');
 
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableView();
+        });
+        $form->footer(function ($footer) {
+            // 去掉`查看`checkbox
+            $footer->disableViewCheck();
+            // 去掉`继续编辑`checkbox
+            $footer->disableEditingCheck();
+            // 去掉`继续创建`checkbox
+            $footer->disableCreatingCheck();
+        });
         return $form;
     }
 }

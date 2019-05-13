@@ -135,6 +135,18 @@ class DeviceYearlyController extends Controller
         $form->distpicker(['province_id', 'city_id', 'district_id'], '报验地点');
         $form->textarea('explain','费用计算')->rows(8);
         $form->textarea('desc','备注说明')->rows(5);
+
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableView();
+        });
+        $form->footer(function ($footer) {
+            // 去掉`查看`checkbox
+            $footer->disableViewCheck();
+            // 去掉`继续编辑`checkbox
+            $footer->disableEditingCheck();
+            // 去掉`继续创建`checkbox
+            $footer->disableCreatingCheck();
+        });
         return $form;
     }
 }

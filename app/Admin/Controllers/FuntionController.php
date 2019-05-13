@@ -202,6 +202,18 @@ class FuntionController extends Controller
             }
             if($brand) $form->model()->brand=implode(',',$brand);
         });
+
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableView();
+        });
+        $form->footer(function ($footer) {
+            // 去掉`查看`checkbox
+            $footer->disableViewCheck();
+            // 去掉`继续编辑`checkbox
+            $footer->disableEditingCheck();
+            // 去掉`继续创建`checkbox
+            $footer->disableCreatingCheck();
+        });
         return $form;
     }
 }
