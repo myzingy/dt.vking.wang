@@ -94,7 +94,7 @@ class ElevatorSuperController extends Controller
 
         $grid->id('ID');
         $grid->column('project.name','项目名称')->style('min-width:100px');
-        $grid->region('区域')->style('min-width:60px');
+        $grid->region('梯号')->style('min-width:60px');
         $grid->eid('电梯设备')->display(function(){
             return $this->device->brand.$this->device->brand_set;
         })->style('min-width:80px');

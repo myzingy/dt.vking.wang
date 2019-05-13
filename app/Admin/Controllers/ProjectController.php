@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Device;
 use App\Models\Elevator;
 use App\Models\Project;
 use App\Http\Controllers\Controller;
@@ -267,6 +268,11 @@ class ProjectController extends Controller
         $form->text('first_party','甲方名称');
         $form->text('artisan_man','技术负责人');
         $form->text('price_man','成本负责人');
+        $dsArr=[];
+        foreach(Device::groupBy('brand')->get() as $d){
+            $dsArr[$d->brand]=$d->brand;
+        }
+        $form->select('brand','电梯品牌')->options($dsArr)->required();
         $form->text('desc','项目简介');
         $form->checkbox('orientation','项目定位')->options(Project::GABC);
 
