@@ -296,67 +296,44 @@ class ElevatorController extends Controller
                 $tools->disableList();
                 $tools->disableDelete();
             });
-        $show->func('已配备功能', function ($grid) use($eid) {
-            $grid->resource('/admin/elevatorFunc');
-            $grid->id('ID');
-            $grid->name('功能名称');
-            $grid->unit('功能单位');
-            $grid->desc('功能描述');
-            $grid->num('数量')->editable();
-            //$grid->elevator()->limit(50);
-            //$grid->disableActions();
-            $grid->disablePagination();
-            $grid->disableCreateButton();
-            $grid->disableFilter();
-            $grid->disableRowSelector();
-            $grid->disableTools();
-            $grid->disableExport();
-            $grid->actions(function (Grid\Displayers\Actions $actions) {
-                $actions->disableView();
-                $actions->disableEdit();
-                //$actions->disableDelete();
-            });
-            $grid->paginate(100);
-            $grid->footer(function ($query) {
-                $js=<<<JSEND
-<a class='tbf-func'></a>
-<script>
-$(function(){
-  var tf=$('.tbf-func').parents('.box-footer');
-  var tb=tf.prev();
-  tb.css({height:'300px'});
-  tf.remove();
-})
-</script>
-JSEND;
+        return $show;
+    }
+    protected function fitGridChecked($eid,$device){
+        $grid = new Grid(new ElevatorFitment);
 
-                return $js;
-            });
+        $grid->resource('/admin/elevatorFitment');
+
+        $grid->model()->join('fitment', 'fitment.id', '=', 'elevator_fitment.fid');
+        $grid->model()->where('fitment.has_in_base',0);
+        $grid->model()->where('eid',$eid);
+        $grid->model()->orderby('elevator_fitment.id','desc');
+        $select="elevator_fitment.id as id,elevator_fitment.num"
+            .",fitment.name as `name`,fitment.stuff as stuff,fitment.desc as `desc`"
+            .",fitment.spec as `spec`";
+        $grid->model()->select(DB::raw($select));
+
+        $grid->id('ID');
+        $grid->name('装饰项目名称');
+        $grid->stuff('材料');
+        $grid->spec('规格编号');
+        $grid->desc('描述');
+        $grid->num('数量')->editable();
+        //$grid->elevator()->limit(50);
+        //$grid->disableActions();
+        $grid->disablePagination();
+        $grid->disableCreateButton();
+        $grid->disableFilter();
+        $grid->disableRowSelector();
+        $grid->disableTools();
+        $grid->disableExport();
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->disableView();
+            $actions->disableEdit();
+            //$actions->disableDelete();
         });
-        $show->fitment('已配备装修', function ($grid) use($eid) {
-            $grid->resource('/admin/elevatorFitment');
-            $grid->id('ID');
-            $grid->name('装饰项目名称');
-            $grid->stuff('材料');
-            $grid->spec('规格编号');
-            $grid->desc('描述');
-            $grid->num('数量')->editable();
-            //$grid->elevator()->limit(50);
-            //$grid->disableActions();
-            $grid->disablePagination();
-            $grid->disableCreateButton();
-            $grid->disableFilter();
-            $grid->disableRowSelector();
-            $grid->disableTools();
-            $grid->disableExport();
-            $grid->actions(function (Grid\Displayers\Actions $actions) {
-                $actions->disableView();
-                $actions->disableEdit();
-                //$actions->disableDelete();
-            });
-            $grid->paginate(100);
-            $grid->footer(function ($query) {
-                $js=<<<JSEND
+        $grid->paginate(100);
+        $grid->footer(function ($query) {
+            $js=<<<JSEND
 <a class='tbf-fitment'></a>
 <script>
 $(function(){
@@ -368,10 +345,56 @@ $(function(){
 </script>
 JSEND;
 
-                return $js;
-            });
+            return $js;
         });
-        return $show;
+        return $grid;
+    }
+    protected function funGridChecked($eid,$device){
+        $grid = new Grid(new elevatorFunc);
+
+        $grid->resource('/admin/elevatorFunc');
+        $grid->model()->join('funtion', 'funtion.id', '=', 'elevator_func.fid');
+        $grid->model()->where('funtion.has_in_base',0);
+        $grid->model()->where('eid',$eid);
+        $grid->model()->orderby('elevator_func.id','desc');
+        $select="elevator_func.id as id,elevator_func.num"
+            .",funtion.name as `name`,funtion.unit as unit,funtion.desc as `desc`";
+        $grid->model()->select(DB::raw($select));
+        $grid->column('id','ID');
+        $grid->column('name','功能名称');
+        $grid->column('unit','功能单位');
+        $grid->column('desc','功能描述');
+        $grid->num('数量')->editable();
+        //$grid->elevator()->limit(50);
+        //$grid->disableActions();
+        $grid->disablePagination();
+        $grid->disableCreateButton();
+        $grid->disableFilter();
+        $grid->disableRowSelector();
+        $grid->disableTools();
+        $grid->disableExport();
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->disableView();
+            $actions->disableEdit();
+            //$actions->disableDelete();
+        });
+        $grid->paginate(100);
+        $grid->footer(function ($query) {
+            $js=<<<JSEND
+<a class='tbf-func'></a>
+<script>
+$(function(){
+  var tf=$('.tbf-func').parents('.box-footer');
+  var tb=tf.prev();
+  tb.css({height:'300px'});
+  tf.remove();
+})
+</script>
+JSEND;
+
+            return $js;
+        });
+        return $grid;
     }
     protected function funGrid($eid,$device)
     {
@@ -477,10 +500,15 @@ JSEND;
             ->header('电梯报备')
             ->description('选功能、选装修')
             ->body($this->detail_sm($eid,$content));
-        $content->row('<h3>请从下方选择功能和装修</h3>');
+
         $content->row(function(Row $row) use($eid) {
             $ele=Elevator::findOrFail($eid);
+            $row->column(6, $this->funGridChecked($eid,$ele->device));
             $row->column(6, $this->funGrid($eid,$ele->device));
+        });
+        $content->row(function(Row $row) use($eid) {
+            $ele=Elevator::findOrFail($eid);
+            $row->column(6, $this->fitGridChecked($eid,$ele->device));
             $row->column(6, $this->fitGrid($eid,$ele->device));
         });
         return $content;
