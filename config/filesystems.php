@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'cloud' => env('FILESYSTEM_CLOUD', 's3'),
+    'cloud' => env('FILESYSTEM_CLOUD', 'qiniu'),
 
     /*
     |--------------------------------------------------------------------------
@@ -63,7 +63,20 @@ return [
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
         ],
-
+        'qiniu' => [
+            'driver'  => 'qiniu',
+            'domains' => [
+                'default'   => '009-img.vking.wang', //你的七牛域名
+                'https'     => '',         //你的HTTPS域名
+                'custom'    => '',                //Useless 没啥用，请直接使用上面的 default 项
+            ],
+            'access_key'=> 'ZUHvYeKtuiwWK7sLy2ABvrRWnYXjNLcdxoqvOihe',  //AccessKey
+            'secret_key'=> 'xsw0f3qRAEQluUhvJW4QN5nwHCYjjLKi1A9iSoyO',  //SecretKey
+            'bucket'    => 'linligo',  //Bucket名字
+            'notify_url'=> '',  //持久化处理回调地址
+            //'access'    => 'private',  //空间访问控制 public 或 private
+            'url' => 'http://009-img.vking.wang/',
+        ],
     ],
 
 ];

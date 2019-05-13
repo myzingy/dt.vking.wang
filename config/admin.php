@@ -133,11 +133,12 @@ return [
 
         // Disk in `config/filesystem.php`.
         'disks' => 'admin',
+        'disk' => 'qiniu',
 
         // Image and file upload path under the disk above.
         'directory' => [
             'image' => 'images',
-            'file'  => 'files',
+            'file'  => 'files/'.date('Y-m-d',time()),
         ],
     ],
 

@@ -21,6 +21,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
+use Mockery\Exception;
 
 class ElevatorController extends Controller
 {
@@ -180,19 +181,29 @@ class ElevatorController extends Controller
             $form->display('device','已选电梯设备')->with(function ($value) {
                 return 'ID:'.implode('|',json_decode(json_encode($value), true));
             });
-            $form->select('_brand','电梯品牌')->options('/admin/device/brands')
-                ->load('did', '/admin/device/brandsDetail');
-            $form->select('did','电梯设备');
-        }else{
-            $form->select('_brand','电梯品牌')->options('/admin/device/brands')
-                ->load('did', '/admin/device/brandsDetail');
-            $form->select('did','电梯设备')->required();
         }
+        $dsArr=[];
+        foreach(Device::groupBy('brand','brand_set')->get() as $d){
+            $dsArr[$d->brand.'/'.$d->brand_set]=$d->brand.'/'.$d->brand_set;
+        }
+        $form->select('q_brand_set','品牌系列')->options($dsArr)->required();
+
+        $dsArr=[];
+        foreach(Device::groupBy('dload')->get() as $d){
+            $dsArr[$d->dload]=$d->dload;
+        }
+        $form->select('q_dload','载重')->options($dsArr)->required();
+        $dsArr=[];
+        foreach(Device::groupBy('speedup')->get() as $d){
+            $dsArr[$d->speedup]=$d->speedup;
+        }
+        $form->select('q_speedup','速度')->options($dsArr)->required();
+        $form->number('layer_number','层站')->min(1)->required()->default(2);
         $form->divide();
 
         $form->number('num','电梯数量')->min(1)->required();
         $form->number('height','提升高度（m）')->min(1)->required()->help('总爬升高度');
-        $form->number('layer_number','层数')->min(1)->required();
+        //$form->number('layer_number','层数')->min(1)->required();
         $form->number('layer_number_site','站数')->min(1)->required();
         $form->number('layer_number_door','门数')->min(1)->required();
         $form->number('pit_depth','底坑深度（mm）');
@@ -212,10 +223,53 @@ class ElevatorController extends Controller
         $form->switch('has_through_door','是否有贯通门')->states($states);
         $form->text('desc','电梯说明');
 
+        $form->divide();
+        $form->file('file_1','附件1');
+        $form->html(function (){
+            if($this->file_1){
+                return '<a href="'.(config('filesystems.disks.qiniu.url').$this->file_1).'" target="_blank">附件1: '.$this->file_1.'</a>';
+            }
+        }, $label = '');
+        $form->file('file_2','附件2');
+        $form->html(function (){
+            if($this->file_2){
+                return '<a href="'.(config('filesystems.disks.qiniu.url').$this->file_2).'" target="_blank">附件2: '.$this->file_2.'</a>';
+            }
+        }, $label = '');
+        $form->file('file_3','附件3');
+        $form->html(function (){
+            if($this->file_3){
+                return '<a href="'.(config('filesystems.disks.qiniu.url').$this->file_3).'" target="_blank">附件3: '.$this->file_3.'</a>';
+            }
+        }, $label = '');
+
         //忽略字段
-        $form->ignore(['_brand']);
+        //$form->ignore(['_brand']);
         $form->saving(function (Form $form){
-            $form->did=$form->did>0?$form->did:$form->model()->did;
+            //$form->did=$form->did>0?$form->did:$form->model()->did;
+            $form->did='';
+            if($form->q_brand_set && $form->q_dload && $form->q_speedup && $form->layer_number){
+                $q_brand_set=explode('/',$form->q_brand_set);
+                $query=[
+                    'brand'=>array_shift($q_brand_set),
+                    'brand_set'=>implode('/',$q_brand_set),
+                    'dload'=>$form->q_dload,
+                    'speedup'=>$form->q_speedup,
+                    'floor'=>$form->layer_number,
+                ];
+                //DB::connection()->enableQueryLog();
+                $did=Device::where($query)->value('id');
+                //dd($did,DB::getQueryLog());
+                //throw new Exception(DB::getQueryLog());
+                if($did){
+                    $form->did=$did;
+                }
+            }else{
+                throw new Exception('请完善电梯参数');
+            }
+            if(!$form->did){
+                throw new Exception('未找到电梯设备,请核对电梯参数');
+            }
         });
         $form->disableViewCheck();
         $form->tools(function (Form\Tools $tools) {

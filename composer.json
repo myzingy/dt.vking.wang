@@ -15,7 +15,8 @@
         "laravel-admin-ext/china-distpicker": "^1.1",
         "laravel-admin-ext/helpers": "^1.1",
         "laravel/framework": "5.8.*",
-        "laravel/tinker": "^1.0"
+        "laravel/tinker": "^1.0",
+        "zgldh/qiniu-laravel-storage": "^0.10.1"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
