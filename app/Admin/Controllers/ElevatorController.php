@@ -303,14 +303,9 @@ class ElevatorController extends Controller
 
         $grid->resource('/admin/elevatorFitment');
 
-        $grid->model()->join('fitment', 'fitment.id', '=', 'elevator_fitment.fid');
-        $grid->model()->where('fitment.has_in_base',0);
+        $grid->model()->where('has_in_base',0);
         $grid->model()->where('eid',$eid);
-        $grid->model()->orderby('elevator_fitment.id','desc');
-        $select="elevator_fitment.id as id,elevator_fitment.num"
-            .",fitment.name as `name`,fitment.stuff as stuff,fitment.desc as `desc`"
-            .",fitment.spec as `spec`";
-        $grid->model()->select(DB::raw($select));
+        $grid->model()->orderby('id','desc');
 
         $grid->id('ID');
         $grid->name('装饰项目名称');
@@ -353,13 +348,9 @@ JSEND;
         $grid = new Grid(new elevatorFunc);
 
         $grid->resource('/admin/elevatorFunc');
-        $grid->model()->join('funtion', 'funtion.id', '=', 'elevator_func.fid');
-        $grid->model()->where('funtion.has_in_base',0);
+        $grid->model()->where('has_in_base',0);
         $grid->model()->where('eid',$eid);
-        $grid->model()->orderby('elevator_func.id','desc');
-        $select="elevator_func.id as id,elevator_func.num"
-            .",funtion.name as `name`,funtion.unit as unit,funtion.desc as `desc`";
-        $grid->model()->select(DB::raw($select));
+        $grid->model()->orderby('id','desc');
         $grid->column('id','ID');
         $grid->column('name','功能名称');
         $grid->column('unit','功能单位');
