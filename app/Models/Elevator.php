@@ -32,11 +32,13 @@ class Elevator extends Model
     }
     public function func()
     {
-        return $this->belongsToMany(Funtion::class, 'elevator_func','eid','fid')->withPivot('num');
+        //return $this->belongsToMany(Funtion::class, 'elevator_func','eid','fid')->withPivot('num');
+        return $this->hasMany(ElevatorFunc::class, 'eid');
     }
     public function fitment()
     {
-        return $this->belongsToMany(Fitment::class, 'elevator_fitment','eid','fid')->withPivot('num');
+        //return $this->belongsToMany(Fitment::class, 'elevator_fitment','eid','fid')->withPivot('num');
+        return $this->hasMany(ElevatorFitment::class, 'eid');
     }
     public function expe(){
         return $this->hasOne(ElevatorPrice::class,'eid');

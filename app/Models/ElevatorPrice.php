@@ -64,11 +64,12 @@ class ElevatorPrice extends Model
         }
         //计算功能
         $expe['设备功能加价']=0;
+
         foreach ($ele->func as $func){
             if($func->has_in_base!=1){
-                $expe['设备功能加价']+=$func->price*$func->pivot->num;
+                $expe['设备功能加价']+=$func->price*$func->num;
                 if($func->unit=='项目'){
-                    $expe['功能按项目计价']+=$func->price*$func->pivot->num;
+                    $expe['功能按项目计价']+=$func->price*$func->num;
                 }
             }
         }
@@ -76,7 +77,7 @@ class ElevatorPrice extends Model
         $expe['设备装修选项']=0;
         foreach ($ele->fitment as $fitment){
             if($fitment->has_in_base!=1){
-                $expe['设备装修选项']+=$fitment->price*$fitment->pivot->num;
+                $expe['设备装修选项']+=$fitment->price*$fitment->num;
             }
         }
         //设备税率计算

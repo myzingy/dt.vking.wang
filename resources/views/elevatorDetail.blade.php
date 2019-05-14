@@ -176,7 +176,7 @@ $i=0;
                         <td>{{$func->id}}</td>
                         <td>{{$func->name}}</td>
                         <td>{{$func->price}} 元/{{$func->unit}}</td>
-                        <td>{{$func->pivot->num}}{{$func->unit}}</td>
+                        <td>{{$func->num}}{{$func->unit}}</td>
                         <td>{{$func->has_in_base}}</td>
                         <td>{{$func->desc}}</td>
                     </tr>
@@ -214,7 +214,7 @@ $i=0;
                         <td>{{$fitment->id}}</td>
                         <td>{{$fitment->name}}</td>
                         <td>{{$fitment->price}} 元/{{$fitment->unit}}</td>
-                        <td>{{$fitment->pivot->num}}{{$fitment->unit}}</td>
+                        <td>{{$fitment->num}}{{$fitment->unit}}</td>
                         <td>{{$fitment->stuff}}</td>
                         <td>{{$fitment->spec}}</td>
                         <td>{{$fitment->has_in_base}}</td>
