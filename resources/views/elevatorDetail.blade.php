@@ -409,9 +409,9 @@ $i=0;
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="inputPassword3" class="col-sm-2 control-label">政府验收费</label>
+                                        <label for="inputPassword3" class="col-sm-2 control-label">政府验收费公式</label>
                                         <div class="col-sm-10">
-                                            <input type="number" name="政府验收费" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->政府验收费?>">
+                                            <input type="text" name="政府验收费公式" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->政府验收费公式?>">
                                             <span id="helpBlock2" class="help-block">
                                                 <?php
                                                 $zf=\App\Models\DeviceYearly::where([
@@ -425,6 +425,12 @@ $i=0;
                                                     }
                                                 ?>
                                             </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword3" class="col-sm-2 control-label">政府验收费</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" name="政府验收费" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->政府验收费?>">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -477,5 +483,14 @@ $i=0;
             var $form=$(this).parents('.modal-footer').prev().find('form');
             $form.trigger('submit');
         })
+      $('input[name="政府验收费公式"]').keyup(function(e){
+        let val=0;
+        let gs=$(this).val()
+        gs=gs.replace('（','(').replace('）',')');
+        $('input[name="政府验收费公式"]').val(gs);
+        eval('val='+gs);
+        console.log($(this).val(),val);
+        $('input[name="政府验收费"]').val(val);
+      })
     })
 </script>
