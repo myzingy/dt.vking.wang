@@ -296,9 +296,12 @@ $i=0;
                                 <h4 class="modal-title" id="exampleModalLabel">New message</h4>
                             </div>
                             <div class="modal-body">
-                                <form class="form-horizontal" action="" method="POST">
+                                <form class="form-horizontal" action="<?php echo url()->full()?>" method="post"
+                                      accept-charset="UTF-8" enctype="multipart/form-data">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                                     <input type="hidden" name="_act" value="device" />
+                                    <input type="hidden" name="_method" value="put" />
+                                    <input type="hidden" name="_previous_" value="<?php echo url()->full()?>" />
                                     <div class="form-group">
                                         <label for="inputEmail3" class="col-sm-2 control-label">税率</label>
                                         <div class="col-sm-10">
@@ -315,6 +318,17 @@ $i=0;
                                         <label for="inputPassword3" class="col-sm-2 control-label">临时用梯费</label>
                                         <div class="col-sm-10">
                                             <input type="number" name="设备临时用梯费" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->设备临时用梯费?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword3" class="col-sm-2 control-label">附件</label>
+                                        <div class="col-sm-10">
+                                            <input type="file" name="file" class="form-control" id="file" placeholder="" value="<?php print $ele->expe->file?>">
+                                            <span id="helpBlock2" class="help-block">
+                                                <a href="<?php echo Illuminate\Support\Facades\Storage::url($ele->expe->file);?>" target="_blank">
+                                                    附件：<?php echo $ele->expe->file?>
+                                                </a>
+                                            </span>
                                         </div>
                                     </div>
                                 </form>

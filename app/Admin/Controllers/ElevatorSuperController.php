@@ -66,7 +66,7 @@ class ElevatorSuperController extends Controller
         return $content
             ->header('电梯审批')
             ->description('修改')
-            ->body($this->form(true)->edit($id));
+            ->body($this->form()->edit($id));
     }
 
     /**
@@ -80,7 +80,7 @@ class ElevatorSuperController extends Controller
         return $content
             ->header('电梯审批')
             ->description('新增')
-            ->body($this->form(false));
+            ->body($this->form());
     }
 
     /**
@@ -91,7 +91,6 @@ class ElevatorSuperController extends Controller
     protected function grid()
     {
         $grid = new Grid(new Elevator);
-
         $grid->id('ID');
         $grid->column('project.name','项目名称')->style('min-width:100px');
         $grid->region('梯号')->style('min-width:60px');
@@ -198,59 +197,11 @@ class ElevatorSuperController extends Controller
      */
     protected function form($hasEdit=false)
     {
-        $form = new Form(new Elevator);
-
-        $pj=Project::where('status','=',0)->get();
-        $arr=Arr::pluck($pj, 'name','id');
-        //var_dump($pj,$arr);
-        $form->select('pid','项目')->options($arr)->required();
-        $form->divide();
-        if($hasEdit){
-            $form->display('device','已选电梯设备')->with(function ($value) {
-                return 'ID:'.implode('|',json_decode(json_encode($value), true));
-            });
-            $form->select('_brand','电梯品牌')->options('/admin/device/brands')
-                ->load('did', '/admin/device/brandsDetail');
-            $form->select('did','电梯设备');
-        }else{
-            $form->select('_brand','电梯品牌')->options('/admin/device/brands')
-                ->load('did', '/admin/device/brandsDetail');
-            $form->select('did','电梯设备')->required();
-        }
-        $form->divide();
-
-        $form->number('num','电梯数量')->min(1)->required();
-        $form->number('height','提升高度')->min(1)->required();
-        $form->text('layer_number','层/站/门数');
-        $form->number('pit_depth','底坑深度mm');
-        $form->number('top_height','顶层高度mm');
-
-        $form->number('hall_width','厅门尺寸（mm）宽');
-        $form->number('hall_height','厅门尺寸（mm）高');
-
-        $form->number('car_width','轿厢尺寸（mm）宽');
-        $form->number('car_height','轿厢尺寸（mm）高');
-        $form->number('car_depth','轿厢尺寸（mm）深');
-
-        $form->text('desc','电梯说明');
-
-        //忽略字段
-        $form->ignore(['_brand']);
-        $form->saving(function (Form $form){
-            $form->did=$form->did>0?$form->did:$form->model()->did;
-        });
-
-        $form->tools(function (Form\Tools $tools) {
-            $tools->disableView();
-        });
-        $form->footer(function ($footer) {
-            // 去掉`查看`checkbox
-            $footer->disableViewCheck();
-            // 去掉`继续编辑`checkbox
-            $footer->disableEditingCheck();
-            // 去掉`继续创建`checkbox
-            $footer->disableCreatingCheck();
-        });
+        $form = new Form(new ElevatorPrice);
+        $form->file('file');
+        $form->text('设备税率');
+        $form->text('设备非标单价');
+        $form->text('设备临时用梯费');
         return $form;
     }
     public function elevatorDetail($eid){
@@ -261,6 +212,8 @@ class ElevatorSuperController extends Controller
         return $view;
     }
     public function setPrice($eid){
+        $form = new Form(new ElevatorPrice);
+        $form->file('file');
         $ele=Elevator::findOrFail($eid);
         if(!$ele){
             return Redirect::to("/admin/elevatorSuper");
@@ -281,6 +234,6 @@ class ElevatorSuperController extends Controller
         $expe=new ElevatorPrice(['eid'=>$eid]);
         $expe->runExpe(true);
         //return Redirect::back(302);
-        return Redirect::refresh(302);
+        return $form;
     }
 }

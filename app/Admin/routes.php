@@ -11,7 +11,7 @@ Route::group([
 ], function (Router $router) {
     Route::get('/device/brands', 'DeviceController@brands');
     Route::get('/device/brandsDetail', 'DeviceController@brandsDetail');
-    Route::post('/elevatorSuper/{eid}', 'ElevatorSuperController@setPrice');//审核动作
+    //Route::post('/elevatorSuper/{eid}', 'ElevatorSuperController@setPrice');//审核动作
     //$router->get('/', 'HomeController@index');
     $router->get('/',function (){
         return Redirect::to("/admin/project");
