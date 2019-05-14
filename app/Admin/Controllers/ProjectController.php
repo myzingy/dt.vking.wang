@@ -146,7 +146,7 @@ class ProjectController extends Controller
         $grid->orientation('项目定位')->display(function($c){
             return implode(',',$c);
         });
-        $grid->status('状态');
+        $grid->status('状态')->pjStatus();
         $grid->elevator('电梯')->display(function($elevators){
             $html='';
             foreach ($this->elevator as $ele ){
