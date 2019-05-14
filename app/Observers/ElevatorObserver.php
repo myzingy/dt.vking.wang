@@ -24,7 +24,14 @@ class ElevatorObserver
             foreach ($res as $r){
                 array_push($data,[
                     'eid'=>$elevator->id,
-                    'fid'=>$r->id
+                    'fid'=>$r->id,
+                    'has_in_base'=>$r->has_in_base,
+                    'name'=>$r->name,
+                    'stuff'=>$r->stuff,
+                    'spec'=>$r->spec,
+                    'unit'=>$r->unit,
+                    'price'=>$r->price,
+                    'desc'=>$r->desc,
                 ]);
             }
             DB::table('elevator_fitment')->insert($data);
@@ -36,7 +43,12 @@ class ElevatorObserver
             foreach ($res as $r){
                 array_push($data,[
                     'eid'=>$elevator->id,
-                    'fid'=>$r->id
+                    'fid'=>$r->id,
+                    'has_in_base'=>$r->has_in_base,
+                    'price'=>$r->price,
+                    'unit'=>$r->unit,
+                    'desc'=>$r->desc,
+                    'name'=>$r->name,
                 ]);
             }
             DB::table('elevator_func')->insert($data);

@@ -517,9 +517,23 @@ JSEND;
         $type=Input::get('type');
         $data=['fid'=>$fid,'eid'=>$eid];
         if($type=='fun'){
+            $func=Funtion::find($fid);
+            $data['name']=$func->name;
+            $data['has_in_base']=$func->has_in_base;
+            $data['price']=$func->price;
+            $data['unit']=$func->unit;
+            $data['desc']=$func->desc;
             ElevatorFunc::create($data);
         }
         if($type=='fit'){
+            $func=Fitment::find($fid);
+            $data['name']=$func->name;
+            $data['has_in_base']=$func->has_in_base;
+            $data['price']=$func->price;
+            $data['unit']=$func->unit;
+            $data['desc']=$func->desc;
+            $data['stuff']=$func->stuff;
+            $data['spec']=$func->spec;
             ElevatorFitment::create($data);
         }
         return $data;
