@@ -8,6 +8,7 @@ use App\Models\Project;
 use App\Http\Controllers\Controller;
 use App\Models\ProjectElevator;
 use Encore\Admin\Controllers\HasResourceActions;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
@@ -46,7 +47,7 @@ class ProjectController extends Controller
         $content
             ->header('项目管理')
             ->description('详情');
-        $content->body($this->projectDetail($id,$content));
+        $content->body($this->detail($id));
         //$content->body($this->projectElevatorDetail($id));
         return $content;
     }
@@ -193,23 +194,20 @@ class ProjectController extends Controller
      */
     protected function detail($id)
     {
-        $show = new Show(Project::findOrFail($id));
+        $ele=Project::findOrFail($id);
+        $status=0;
+        if($ele->status<Elevator::STATUS_YTJ){
+            $status=Elevator::STATUS_YTJ;
+        }else{
+            $status=Elevator::STATUS_JD_JT;
+        }
+        $ele->status=$status;
+        $ele->save();
 
-        $show->id('ID');
-        $show->name('项目名称');
-        $show->addr('详细地址')->as(function($addr){
-            return $this->province_id.$this->city_id.$this->district_id.$addr;
-        });
-        $show->first_party('甲方名称');
-        $show->artisan_man('技术负责人');
-        $show->price_man('成本负责人');
-        $show->desc('项目简介');
-        $show->orientation('项目定位')->as(function($c){
-            return implode(',',$c);
-        });
-        $show->status('状态');
-
-        return $show;
+        Elevator::where('pid',$id)
+            //->where('status','<',Elevator::STATUS_YTJ)
+            ->update(['status'=>$status]);
+        return "200";
     }
     protected function detail_sm($id)
     {

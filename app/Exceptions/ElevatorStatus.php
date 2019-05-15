@@ -58,7 +58,7 @@ $('.paylog-refund').unbind('click').click(function() {
 });
 SCRIPT;
         Admin::script($script);
-        if($status==0){
+        if($status==0 && false){
 $html=<<<EOT
 <button type="button"
     class="btn btn-danger paylog-refund"

@@ -29,7 +29,7 @@ class ElevatorPrice extends Model
     function runExpe($fouce=false){//重新计算填入
         $ele=$this->elevator;
         $ep=$ele->expe;
-        if($ele->status==Elevator::STATUS_ANS && !$fouce){
+        if($ele->status==Elevator::STATUS_JJ_ANS && !$fouce){
             //已审非强制计算直接返回
             return;
         }

@@ -7,15 +7,25 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Elevator extends Model
 {
-    const STATUS_NEW=0;    //未提交
-    const STATUS_YTJ=1;    //已提交
-    const STATUS_SBS=2;    //设备已审
-    const STATUS_ANS=3;    //安装已审
+    const STATUS_NEW=0;         //未提交
+    const STATUS_YTJ=10;         //乙方地方提审
+    const STATUS_SBS=20;         //甲方地方设计审核
+    const STATUS_ANS=30;         //甲方地方成本审核
+    const STATUS_YJ_SBS=40;      //乙方集团设计审核
+    const STATUS_YJ_ANS=50;      //乙方集团成本审核
+    const STATUS_JD_JT=60;       //甲方地方提审项目到集团
+    const STATUS_JJ_SBS=70;      //甲方集团设计审核
+    const STATUS_JJ_ANS=80;      //甲方集团成本审核
     const STATUS=[
         self::STATUS_NEW=>'未提交',
-        self::STATUS_YTJ=>'已提交',
-        self::STATUS_SBS=>'设备已审',
-        self::STATUS_ANS=>'安装已审',
+        self::STATUS_YTJ=>'乙方地方提审',
+        self::STATUS_SBS=>'甲方地方设计审核',
+        self::STATUS_ANS=>'甲方地方成本审核',
+        self::STATUS_YJ_SBS=>'乙方集团设计审核',
+        self::STATUS_YJ_ANS=>'乙方集团成本审核',
+        self::STATUS_JD_JT=>'甲方地方提审项目到集团',
+        self::STATUS_JJ_SBS=>'甲方集团设计审核',
+        self::STATUS_JJ_ANS=>'甲方集团成本审核'
     ];
 
     use SoftDeletes;
