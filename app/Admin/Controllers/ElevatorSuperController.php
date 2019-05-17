@@ -166,9 +166,10 @@ class ElevatorSuperController extends Controller
         $grid->disableExport();
         $grid->disableCreateButton();
         $grid->actions(function (Grid\Displayers\Actions $actions) {
-            //$actions->disableView();
+            $actions->disableView();
             $actions->disableEdit();
             $actions->disableDelete();
+            $actions->append('<a href="'.(admin_url('elevator/'.$actions->getKey().'/funfit?hasSuper=1')).'"><i class="fa fa-eye"></i></a>');
         });
         return $grid;
     }

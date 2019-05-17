@@ -502,6 +502,27 @@ JSEND;
             $row->column(6, $this->fitGridChecked($eid,$ele->device));
             $row->column(6, $this->fitGrid($eid,$ele->device));
         });
+        if(Input::get('hasSuper')==1){
+            $url=admin_url('elevatorSuper',$eid);
+            $but=<<<BUT
+<button type="button" id="myButton" 
+    style="width:100%;"
+    class="btn btn-primary btn-lg" autocomplete="off">
+  审核价格
+</button>
+
+<script>
+$(function(){
+  $('#myButton').on('click', function () {
+    location.href='$url';
+  })
+})
+  
+</script>
+BUT;
+
+            $content->row($but);
+        }
         return $content;
     }
     public function fitout($eid,$fid){
