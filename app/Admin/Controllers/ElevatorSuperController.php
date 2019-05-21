@@ -203,6 +203,36 @@ class ElevatorSuperController extends Controller
         $form->text('设备税率');
         $form->text('设备非标单价');
         $form->text('设备临时用梯费');
+        $form->saved(function(Form $form){
+            $ele=Elevator::findOrFail($form->model()->id);
+            if(!$ele){
+                return Redirect::to("/admin/elevatorSuper");
+            }
+            $data=Input::get();
+            $act=$data['_act'];
+            if($act=='device'){
+                if($ele->status<Elevator::STATUS_SBS) {
+                    $ele->status = Elevator::STATUS_SBS;
+                }elseif($ele->status<Elevator::STATUS_YJ_SBS){
+                    $ele->status = Elevator::STATUS_YJ_SBS;
+                }elseif($ele->status<Elevator::STATUS_JJ_SBS){
+                    $ele->status = Elevator::STATUS_JJ_SBS;
+                }
+            }
+            if($act=='install'){
+                if($ele->status<Elevator::STATUS_ANS){
+                    $ele->status=Elevator::STATUS_ANS;
+                }elseif($ele->status<Elevator::STATUS_YJ_ANS){
+                    $ele->status = Elevator::STATUS_YJ_ANS;
+                }elseif($ele->status<Elevator::STATUS_JJ_ANS){
+                    $ele->status = Elevator::STATUS_JJ_ANS;
+                }
+
+            }
+            $ele->save();
+            //$ep=ElevatorPrice::where('eid',$ele->id);
+            $form->model()->runExpe(true);
+        });
         return $form;
     }
     public function elevatorDetail($eid){

@@ -392,6 +392,8 @@ $i=0;
                                 <form class="form-horizontal" action="" method="POST">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                                     <input type="hidden" name="_act" value="install" />
+                                    <input type="hidden" name="_method" value="put" />
+                                    <input type="hidden" name="_previous_" value="<?php echo url()->full()?>" />
                                     <div class="form-group">
                                         <label for="inputEmail3" class="col-sm-2 control-label">税率</label>
                                         <div class="col-sm-10">
