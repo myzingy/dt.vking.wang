@@ -116,7 +116,7 @@ class ElevatorController extends Controller
         $grid->desc('电梯说明');
 
         $grid->status1('功能/装修')->display(function(){
-            if(Admin::user()->isRole('localcom') && $this->status>Elevator::STATUS_YTJ){
+            if($this->status>=Elevator::STATUS_JD_JT){
                 return Elevator::getStatusStr($this->status);
             }
             return '<a href="/admin/elevator/'.$this->id.'/funfit">查看&配置</a>';
@@ -140,7 +140,7 @@ class ElevatorController extends Controller
         $grid->disableExport();
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableView();
-            if(Admin::user()->isRole('localcom') && $actions->row->status>Elevator::STATUS_YTJ){
+            if($actions->row->status>=Elevator::STATUS_JD_JT){
                 $actions->disableDelete();
                 $actions->disableEdit();
             }

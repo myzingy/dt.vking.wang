@@ -224,11 +224,24 @@ class ElevatorSuperController extends Controller
         $data=Arr::except($data,['_token','_act','_url']);
 
         $ep=ElevatorPrice::where('eid',$eid);
-        if($act=='device' && $ele->status<Elevator::STATUS_SBS){
-            $ele->status=Elevator::STATUS_SBS;
+        if($act=='device'){
+            if($ele->status<Elevator::STATUS_SBS) {
+                $ele->status = Elevator::STATUS_SBS;
+            }elseif($ele->status<Elevator::STATUS_YJ_SBS){
+                $ele->status = Elevator::STATUS_YJ_SBS;
+            }elseif($ele->status<Elevator::STATUS_JJ_SBS){
+                $ele->status = Elevator::STATUS_JJ_SBS;
+            }
         }
-        if($act=='install'&& $ele->status<Elevator::STATUS_ANS){
-            $ele->status=Elevator::STATUS_ANS;
+        if($act=='install'){
+            if($ele->status<Elevator::STATUS_ANS){
+                $ele->status=Elevator::STATUS_ANS;
+            }elseif($ele->status<Elevator::STATUS_YJ_ANS){
+                $ele->status = Elevator::STATUS_YJ_ANS;
+            }elseif($ele->status<Elevator::STATUS_JJ_ANS){
+                $ele->status = Elevator::STATUS_JJ_ANS;
+            }
+
         }
         $ele->save();
         $ep->update($data);
