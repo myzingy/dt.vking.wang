@@ -13,7 +13,15 @@ $i=0;
     .rote90{
         transform:rotate(-90deg);
     }
+    .flexbut{
+        position: fixed;
+        left: 50px;
+        top: 35%;
+        height: 100px;
+        border-radius: 0 50%;
+    }
 </style>
+<script src="/js/jquery.form.js"></script>
 <div class="project" id="project">
     <h1 class="text-center">{{$pj->name}}</h1>
     <div class="project container-fluid">
@@ -323,10 +331,10 @@ $i=0;
                                     <div class="form-group">
                                         <label for="inputPassword3" class="col-sm-2 control-label">附件</label>
                                         <div class="col-sm-10">
-                                            <input type="file" name="file" class="form-control" id="file" placeholder="" value="<?php print $ele->expe->file?>">
+                                            <input type="file" name="设备非标文件" class="form-control" id="file" placeholder="" value="<?php print $ele->expe->file?>">
                                             <span id="helpBlock2" class="help-block">
-                                                <a href="<?php echo Illuminate\Support\Facades\Storage::url($ele->expe->file);?>" target="_blank">
-                                                    附件：<?php echo $ele->expe->file?>
+                                                <a href="<?php echo Illuminate\Support\Facades\Storage::url($ele->expe->设备非标文件);?>" target="_blank">
+                                                    附件：<?php echo $ele->expe->设备非标文件?>
                                                 </a>
                                             </span>
                                         </div>
@@ -492,21 +500,36 @@ $i=0;
         </tr>
     </table>
 </div>
+<button type="button" id="myButton"
+        class="btn btn-success btn-lg flexbut" autocomplete="off">
+    调整配置
+</button>
 <script>
     $(function(){
+        $("form").submit(function(){
+            $(this).ajaxSubmit({
+                success:function(data){ //提交成功的回调函数
+                    location.reload();
+                }
+            });
+            return false; //不刷新页面
+        });
         $('.btn-submit').click(function(){
             var action=$(this).attr('data-action');
             var $form=$(this).parents('.modal-footer').prev().find('form');
             $form.trigger('submit');
         })
-      $('input[name="政府验收费公式"]').keyup(function(e){
-        let val=0;
-        let gs=$(this).val()
-        gs=gs.replace('（','(').replace('）',')');
-        $('input[name="政府验收费公式"]').val(gs);
-        eval('val='+gs);
-        console.log($(this).val(),val);
-        $('input[name="政府验收费"]').val(val);
-      })
+        $('input[name="政府验收费公式"]').keyup(function(e){
+            let val=0;
+            let gs=$(this).val()
+            gs=gs.replace('（','(').replace('）',')');
+            $('input[name="政府验收费公式"]').val(gs);
+            eval('val='+gs);
+            console.log($(this).val(),val);
+            $('input[name="政府验收费"]').val(val);
+        })
+        $('#myButton').on('click', function () {
+            history.back()
+        })
     })
 </script>

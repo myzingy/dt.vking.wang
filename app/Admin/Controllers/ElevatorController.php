@@ -505,9 +505,18 @@ JSEND;
         if(Input::get('hasSuper')==1){
             $url=admin_url('elevatorSuper',$eid);
             $but=<<<BUT
-<button type="button" id="myButton" 
-    style="width:100%;"
-    class="btn btn-primary btn-lg" autocomplete="off">
+<style>
+.flexbut{
+position: fixed;
+    right: 0;
+    top: 35%;
+    height: 100px;
+    border-radius: 0 50%;
+}
+</style>
+<button type="button" id="myButton"
+    class="btn btn-success btn-lg flexbut" autocomplete="off">
+  核对无误<br>
   审核价格
 </button>
 
