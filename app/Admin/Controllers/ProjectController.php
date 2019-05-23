@@ -29,6 +29,7 @@ class ProjectController extends Controller
      */
     public function index(Content $content)
     {
+        getBrand();
         return $content
             ->header('项目管理')
             ->description('列表')
