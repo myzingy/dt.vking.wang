@@ -29,5 +29,10 @@ class AppServiceProvider extends ServiceProvider
         //
         Schema::defaultStringLength(191);
         Elevator::observe(ElevatorObserver::class);
+        \Illuminate\Database\Query\Builder::macro('sql', function () {
+            $bindings = $this->getBindings();
+            $sql = str_replace('?', '"%s"', $this->toSql());
+            return sprintf($sql, ...$bindings);
+        });
     }
 }

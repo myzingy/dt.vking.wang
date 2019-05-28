@@ -94,12 +94,12 @@ class ElevatorSuperController extends Controller
 
         $city=getCity();$brand=getBrand();
         if($city!='*'){
-            $subsql=DB::table('project')->whereIn('city_id', $city)->select('id')->toSql();
-            $grid->model()->where(DB::raw('pid in ('.$subsql.')'));
+            $subsql=DB::table('project')->whereIn('city_id', $city)->select('id')->sql();
+            $grid->model()->whereRaw(DB::raw('pid in ('.$subsql.')'));
         }
         if($brand!='*'){
-            $subsql=DB::table('project')->whereIn('brand', $brand)->select('id')->toSql();
-            $grid->model()->where(DB::raw('pid in ('.$subsql.')'));
+            $subsql=DB::table('project')->whereIn('brand', $brand)->select('id')->sql();
+            $grid->model()->whereRaw(DB::raw('pid in ('.$subsql.')'));
         }
 
         $grid->id('ID');
