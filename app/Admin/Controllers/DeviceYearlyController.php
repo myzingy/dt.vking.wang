@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Device;
 use App\Models\DeviceYearly;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
