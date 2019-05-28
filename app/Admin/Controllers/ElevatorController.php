@@ -95,6 +95,15 @@ class ElevatorController extends Controller
         $grid = new Grid(new Elevator);
 
         $grid->id('ID');
+        $city=getCity();$brand=getBrand();
+        if($city!='*'){
+            $subsql=DB::table('project')->whereIn('city_id', $city)->select('id')->toSql();
+            $grid->model()->where(DB::raw('pid in ('.$subsql.')'));
+        }
+        if($brand!='*'){
+            $subsql=DB::table('project')->whereIn('brand', $brand)->select('id')->toSql();
+            $grid->model()->where(DB::raw('pid in ('.$subsql.')'));
+        }
         $grid->column('project.name','项目名称');
         $grid->region('梯号');
         $grid->eid('电梯设备')->display(function(){
@@ -170,8 +179,15 @@ class ElevatorController extends Controller
     protected function form($hasEdit=false)
     {
         $form = new Form(new Elevator);
-
-        $pj=Project::where('status','=',0)->get();
+        $pj=Project::where('status','>=',0);
+        $city=getCity();$brand=getBrand();
+        if($city!='*'){
+            $pj->whereIn('city_id',$city);
+        }
+        if($brand!='*'){
+            $pj->model()->whereIn('brand',$brand);
+        }
+        $pj=$pj->get();
         $arr=Arr::pluck($pj, 'name','id');
         //var_dump($pj,$arr);
         $form->select('pid','项目')->options($arr)->required();

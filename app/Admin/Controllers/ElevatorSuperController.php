@@ -91,6 +91,17 @@ class ElevatorSuperController extends Controller
     protected function grid()
     {
         $grid = new Grid(new Elevator);
+
+        $city=getCity();$brand=getBrand();
+        if($city!='*'){
+            $subsql=DB::table('project')->whereIn('city_id', $city)->select('id')->toSql();
+            $grid->model()->where(DB::raw('pid in ('.$subsql.')'));
+        }
+        if($brand!='*'){
+            $subsql=DB::table('project')->whereIn('brand', $brand)->select('id')->toSql();
+            $grid->model()->where(DB::raw('pid in ('.$subsql.')'));
+        }
+
         $grid->id('ID');
         $grid->column('project.name','项目名称')->style('min-width:100px');
         $grid->region('梯号')->style('min-width:60px');
