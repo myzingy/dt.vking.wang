@@ -135,6 +135,13 @@ class ProjectController extends Controller
     protected function grid()
     {
         $grid = new Grid(new Project);
+        $city=getCity();$brand=getBrand();
+        if($city!='*'){
+            $grid->model()->whereIn('city_id',$city);
+        }
+        if($brand!='*'){
+            $grid->model()->whereIn('brand',$brand);
+        }
         $grid->id('ID');
         $grid->name('项目名称');
         $grid->addr('详细地址')->display(function($addr){

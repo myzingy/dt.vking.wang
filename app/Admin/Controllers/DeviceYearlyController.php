@@ -132,6 +132,11 @@ class DeviceYearlyController extends Controller
     protected function form()
     {
         $form = new Form(new DeviceYearly);
+        $dsArr=[];
+        foreach(Device::groupBy('brand')->get() as $d){
+            $dsArr[$d->brand]=$d->brand;
+        }
+        $form->multipleSelect('brand','品牌')->options($dsArr)->required();
         $form->distpicker(['province_id', 'city_id', 'district_id'], '报验地点');
         $form->textarea('explain','费用计算')->rows(8);
         $form->textarea('desc','备注说明')->rows(5);
