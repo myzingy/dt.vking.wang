@@ -10,6 +10,7 @@ use App\Models\ElevatorFunc;
 use App\Models\ElevatorPrice;
 use App\Models\Project;
 use Encore\Admin\Controllers\HasResourceActions;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
@@ -177,10 +178,12 @@ class ElevatorSuperController extends Controller
         $grid->disableExport();
         $grid->disableCreateButton();
         $grid->actions(function (Grid\Displayers\Actions $actions) {
-            $actions->disableView();
             $actions->disableEdit();
             $actions->disableDelete();
-            $actions->append('<a href="'.(admin_url('elevator/'.$actions->getKey().'/funfit?hasSuper=1')).'"><i class="fa fa-eye"></i></a>');
+            if($actions->row->status<\App\Models\Elevator::STATUS_JD_JT || Admin::user()->can('甲方集团')){
+                $actions->disableView();
+                $actions->append('<a href="'.(admin_url('elevator/'.$actions->getKey().'/funfit?hasSuper=1')).'"><i class="fa fa-eye"></i></a>');
+            }
         });
         return $grid;
     }
