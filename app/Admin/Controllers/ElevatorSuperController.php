@@ -223,6 +223,8 @@ class ElevatorSuperController extends Controller
             }
             $data=Input::get();
             $act=$data['_act'];
+            $ele->status=getStatus($ele->status,$act);
+            /*
             if($act=='device'){
                 if($ele->status<Elevator::STATUS_SBS) {
                     $ele->status = Elevator::STATUS_SBS;
@@ -242,6 +244,7 @@ class ElevatorSuperController extends Controller
                 }
 
             }
+            */
             $ele->save();
             //$ep=ElevatorPrice::where('eid',$ele->id);
             $form->model()->runExpe(true);
