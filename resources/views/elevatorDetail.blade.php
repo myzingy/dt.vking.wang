@@ -293,9 +293,12 @@ $i=0;
             </td>
             <?php else:?>
             <td width="120">
-                <button type="button" class="btn <?php print $ele->status<2?'btn-primary':'btn-link'?>" data-toggle="modal" data-target="#exampleModal">
-                    <?php print $ele->status<2?'审核设备':'修改审核设备'?>
+                <span class="label label-info"><?php print \App\Models\Elevator::getStatusStr($ele->status)?></span>
+                <?php if($ele->status<\App\Models\Elevator::STATUS_JD_JT || \Encore\Admin\Facades\Admin::user()->can('甲方集团')):?>
+                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#exampleModal">
+                    审核/修改设备
                 </button>
+                <?php endif;?>
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -386,9 +389,12 @@ $i=0;
             </td>
             <?php else:?>
             <td width="100">
-                <button type="button" class="btn <?php print $ele->status<3?'btn-primary':'btn-link'?>" data-toggle="modal" data-target="#exampleModalInstall">
-                    <?php print $ele->status<3?'审核安装':'修改审核安装'?>
+                <span class="label label-info"><?php print \App\Models\Elevator::getStatusStr($ele->status)?></span>
+                <?php if($ele->status<\App\Models\Elevator::STATUS_JD_JT || \Encore\Admin\Facades\Admin::user()->can('甲方集团')):?>
+                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#exampleModalInstall">
+                    审核/修改安装
                 </button>
+                <?php endif;?>
                 <div class="modal fade" id="exampleModalInstall" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">

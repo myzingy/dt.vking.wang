@@ -96,13 +96,14 @@ class ElevatorController extends Controller
 
         $grid->id('ID');
         $city=getCity();$brand=getBrand();
+
         if($city!='*'){
-            $subsql=DB::table('project')->whereIn('city_id', $city)->select('id')->toSql();
-            $grid->model()->where(DB::raw('pid in ('.$subsql.')'));
+            $subsql=DB::table('project')->whereIn('city_id', $city)->select('id')->sql();
+            $grid->model()->whereRaw(DB::raw('pid in ('.$subsql.')'));
         }
         if($brand!='*'){
-            $subsql=DB::table('project')->whereIn('brand', $brand)->select('id')->toSql();
-            $grid->model()->where(DB::raw('pid in ('.$subsql.')'));
+            $subsql=DB::table('project')->whereIn('brand', $brand)->select('id')->sql();
+            $grid->model()->whereRaw(DB::raw('pid in ('.$subsql.')'));
         }
         $grid->column('project.name','项目名称');
         $grid->region('梯号');

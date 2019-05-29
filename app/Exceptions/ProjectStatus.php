@@ -58,7 +58,19 @@ $('.paylog-refund').unbind('click').click(function() {
 });
 SCRIPT;
         Admin::script($script);
-        if($status<Elevator::STATUS_JJ_SBS){
+        $flag=\Encore\Admin\Facades\Admin::user()->isAdministrator();
+        if(!$flag){
+            if($status==Elevator::STATUS_NEW && \Encore\Admin\Facades\Admin::user()->can('乙方地方')){
+                $flag=true;
+            }
+        }
+        if(!$flag){
+            if($status<Elevator::STATUS_JJ_SBS && \Encore\Admin\Facades\Admin::user()->can('甲方地方')){
+                $flag=true;
+            }
+        }
+
+        if($flag){
 $html=<<<EOT
 <button type="button"
     class="btn btn-danger paylog-refund"
