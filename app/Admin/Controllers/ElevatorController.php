@@ -107,7 +107,10 @@ class ElevatorController extends Controller
         $grid->column('project.name','项目名称');
         $grid->region('梯号');
         $grid->eid('电梯设备')->display(function(){
-            return $this->device->brand.$this->device->brand_set;
+            if($this->device){
+                return $this->device->brand.$this->device->brand_set;
+            }
+            return '未找到电梯设备';
         });
         $grid->num('电梯数量');
         $grid->height('提升高度(m)');
