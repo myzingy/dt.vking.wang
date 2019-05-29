@@ -158,8 +158,13 @@ class ProjectController extends Controller
         $grid->elevator('电梯')->display(function($elevators){
             $html='';
             foreach ($this->elevator as $ele ){
-                $device=$ele->device->brand.$ele->device->brand_set;
-                $html.="<p>({$device}){$ele->desc}<font color='red'>（{$ele->num}部）</font></p>";
+                if($ele->device){
+                    $device=$ele->device->brand.$ele->device->brand_set;
+                    $html.="<p>({$device}){$ele->desc}<font color='red'>（{$ele->num}部）</font></p>";
+                }else{
+                    $html.="<p>(未找到设备){$ele->desc}<font color='red'>（{$ele->num}部）</font></p>";
+                }
+
             }
             return $html;
         });
