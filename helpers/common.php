@@ -55,3 +55,11 @@ function getStatus($nowStatus=0,$type='device'){
     }
     return $nowStatus+10>$maxStatus?$nowStatus:$nowStatus+10;
 }
+function deviceName($device){
+    $device=json_decode(json_encode($device), true);
+    return '[ID:'.$device['id'].']'
+        .' 品牌:'.$device['brand'].'/'.$device['brand_set']
+        .'，载重:'.$device['dload']
+        .'，速度:'.$device['speedup']
+        .'，层站:'.$device['floor'];
+}

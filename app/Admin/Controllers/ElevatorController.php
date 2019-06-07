@@ -199,26 +199,47 @@ class ElevatorController extends Controller
         $form->divide();
         if($hasEdit){
             $form->display('device','已选电梯设备')->with(function ($value) {
-                return 'ID:'.implode('|',json_decode(json_encode($value), true));
+                $text=deviceName($value).' <a id="device">点击修改</a>';
+$html=<<<HTML
+$text
+<script>
+$(function(){
+    var device=$('#device').parents('.form-group');
+    console.log(device);
+    device.next().hide().next().hide().next().hide().next().hide();
+    device.on('click',function(){
+        $('select[name="q_brand_set"]').trigger('change');
+        device.next().show().next().show().next().show().next().show();
+    })
+});
+</script>
+HTML;
+
+
+                return $html;
             });
         }
         $dsArr=[];
         foreach(Device::groupBy('brand','brand_set')->get() as $d){
             $dsArr[$d->brand.'/'.$d->brand_set]=$d->brand.'/'.$d->brand_set;
         }
-        $form->select('q_brand_set','品牌系列')->options($dsArr)->required();
+        if($hasEdit){
+            $form->select('q_brand_set','品牌系列')->options($dsArr)
+                ->load('q_dload', '/admin/device/options/dload');
 
-        $dsArr=[];
-        foreach(Device::groupBy('dload')->get() as $d){
-            $dsArr[$d->dload]=$d->dload;
+            $form->select('q_dload','载重')->load('q_speedup', '/admin/device/options/speedup');
+            $form->select('q_speedup','速度')->load('layer_number', '/admin/device/options/floor');
+            $form->select('layer_number','层站');
+        }else{
+            $form->select('q_brand_set','品牌系列')->options($dsArr)->required()
+                ->load('q_dload', '/admin/device/options/dload');
+
+            $form->select('q_dload','载重')->required()->load('q_speedup', '/admin/device/options/speedup');
+            $form->select('q_speedup','速度')->required()->load('layer_number', '/admin/device/options/floor');
+            $form->select('layer_number','层站')->required();
         }
-        $form->select('q_dload','载重')->options($dsArr)->required();
-        $dsArr=[];
-        foreach(Device::groupBy('speedup')->get() as $d){
-            $dsArr[$d->speedup]=$d->speedup;
-        }
-        $form->select('q_speedup','速度')->options($dsArr)->required();
-        $form->number('layer_number','层站')->min(1)->required()->default(2);
+
+        //$form->number('layer_number','层站')->min(1)->required()->default(2);
         $form->divide();
 
         $form->number('num','电梯数量')->min(1)->required();
@@ -268,24 +289,33 @@ class ElevatorController extends Controller
         $form->saving(function (Form $form){
             //$form->did=$form->did>0?$form->did:$form->model()->did;
             $form->did='';
-            if($form->q_brand_set && $form->q_dload && $form->q_speedup && $form->layer_number){
-                $q_brand_set=explode('/',$form->q_brand_set);
-                $query=[
-                    'brand'=>array_shift($q_brand_set),
-                    'brand_set'=>implode('/',$q_brand_set),
-                    'dload'=>$form->q_dload,
-                    'speedup'=>$form->q_speedup,
-                    'floor'=>$form->layer_number,
-                ];
-                //DB::connection()->enableQueryLog();
-                $did=Device::where($query)->value('id');
-                //dd($did,DB::getQueryLog());
-                //throw new Exception(DB::getQueryLog());
-                if($did){
-                    $form->did=$did;
+            if($form->layer_number){
+                list($form->q_brand_set,$form->q_dload,$form->q_speedup,$form->layer_number)=explode('@',$form->layer_number);
+                if($form->q_brand_set && $form->q_dload && $form->q_speedup && $form->layer_number){
+                    $q_brand_set=explode('/',$form->q_brand_set);
+                    $query=[
+                        'brand'=>array_shift($q_brand_set),
+                        'brand_set'=>implode('/',$q_brand_set),
+                        'dload'=>$form->q_dload,
+                        'speedup'=>$form->q_speedup,
+                        'floor'=>$form->layer_number,
+                    ];
+                    //DB::connection()->enableQueryLog();
+                    $did=Device::where($query)->value('id');
+                    //dd($did,DB::getQueryLog());
+                    //throw new Exception(DB::getQueryLog());
+                    if($did){
+                        $form->did=$did;
+                    }
+                }else{
+                    throw new Exception('请完善电梯参数');
                 }
             }else{
-                throw new Exception('请完善电梯参数');
+                $form->did=$form->model()->did;
+                $form->q_brand_set=$form->model()->q_brand_set;
+                $form->q_dload=$form->model()->q_dload;
+                $form->q_speedup=$form->model()->q_speedup;
+                $form->layer_number=$form->model()->layer_number;
             }
             if(!$form->did){
                 throw new Exception('未找到电梯设备,请核对电梯参数');
@@ -310,7 +340,7 @@ class ElevatorController extends Controller
         $show->desc('描述');
         $model=$show->getModel();
         $show->panel()
-            ->title('ID:'.implode('|',json_decode(json_encode($model->device), true)))
+            ->title(deviceName($model->device))
             ->tools(function ($tools) {
                 $tools->disableEdit();
                 $tools->disableList();

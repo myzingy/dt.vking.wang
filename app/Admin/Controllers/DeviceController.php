@@ -195,4 +195,43 @@ class DeviceController extends Controller
         }
         return $arr;
     }
+    public function options($type){
+        $keyword=Input::get('q');
+        switch($type){
+            case 'dload':
+                $where=[
+                    'brand'=>'',
+                    'brand_set'=>'',
+                ];
+                list($where['brand'],$where['brand_set'])=explode('/',$keyword);
+                $res=Device::select('dload')->where($where)->groupBy('dload')->get();
+                break;
+            case 'speedup':
+                $where=[
+                    'brand'=>'',
+                    'brand_set'=>'',
+                    'dload'=>'',
+                ];
+                list($brand,$where['dload'])=explode('@',$keyword);
+                list($where['brand'],$where['brand_set'])=explode('/',$brand);
+                $res=Device::select('speedup')->where($where)->groupBy('speedup')->get();
+                break;
+            case 'floor':
+                $where=[
+                    'brand'=>'',
+                    'brand_set'=>'',
+                    'dload'=>'',
+                    'speedup'=>'',
+                ];
+                list($brand,$where['dload'],$where['speedup'])=explode('@',$keyword);
+                list($where['brand'],$where['brand_set'])=explode('/',$brand);
+                $res=Device::select('floor')->where($where)->groupBy('floor')->get();
+                break;
+        }
+        $arr=[];
+        foreach($res as $d){
+            array_push($arr,['id'=>$keyword.'@'.$d->$type,'text'=>$d->$type]);
+        }
+        return $arr;
+    }
 }

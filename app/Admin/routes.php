@@ -11,6 +11,7 @@ Route::group([
 ], function (Router $router) {
     Route::get('/device/brands', 'DeviceController@brands');
     Route::get('/device/brandsDetail', 'DeviceController@brandsDetail');
+    Route::get('/device/options/{type}', 'DeviceController@options');
     //Route::post('/elevatorSuper/{eid}', 'ElevatorSuperController@setPrice');//审核动作
     //$router->get('/', 'HomeController@index');
     $router->get('/',function (){
