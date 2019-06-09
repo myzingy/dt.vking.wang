@@ -64,6 +64,18 @@ class ElevatorObserver
     public function updated(Elevator $elevator)
     {
         //
+        if($elevator->did_old!=$elevator->did){//更换了电梯设备
+            $where=['has_in_base'=>1,'eid'=>$elevator->id];
+            DB::beginTransaction();
+            try{
+                DB::table('elevator_fitment')->where($where)->delete();
+                DB::table('elevator_func')->where($where)->delete();
+                $this->created($elevator);
+                DB::commit();
+            }catch (\Exception $e){
+                DB::rollBack();
+            }
+        }
     }
 
     /**
