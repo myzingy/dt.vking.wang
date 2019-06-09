@@ -157,7 +157,7 @@ class ElevatorSuperController extends Controller
             })
             ->style('min-width:50px');
 
-        $grid->status('状态')->using(Elevator::STATUS)->style("min-width:50px;");
+        $grid->status('状态')->using(Elevator::STATUS)->style("min-width:100px;");
         $grid->column('expe.desc','备注')->style("min-width:50px;");
 
         $grid->filter(function($filter){
