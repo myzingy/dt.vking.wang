@@ -197,6 +197,7 @@ class ElevatorController extends Controller
         $form->select('pid','项目')->options($arr)->required();
         $form->text('region','梯号');
         $form->divide();
+        $form->hidden('did','DID');
         if($hasEdit){
             $form->display('device','已选电梯设备')->with(function ($value) {
                 $text=deviceName($value).' <a id="device">点击修改</a>';
@@ -306,6 +307,8 @@ HTML;
                     //throw new Exception(DB::getQueryLog());
                     if($did){
                         $form->did=$did;
+                    }else{
+                        throw new Exception('未找到电梯设备,请核对电梯参数');
                     }
                 }else{
                     throw new Exception('请完善电梯参数');
