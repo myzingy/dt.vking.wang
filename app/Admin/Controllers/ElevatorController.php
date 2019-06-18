@@ -189,7 +189,7 @@ class ElevatorController extends Controller
             $pj->whereIn('city_id',$city);
         }
         if($brand!='*'){
-            $pj->model()->whereIn('brand',$brand);
+            $pj->whereIn('brand',$brand);
         }
         $pj=$pj->get();
         $arr=Arr::pluck($pj, 'name','id');
@@ -222,9 +222,16 @@ HTML;
             });
         }
         $dsArr=[];
-        foreach(Device::groupBy('brand','brand_set')->get() as $d){
-            $dsArr[$d->brand.'/'.$d->brand_set]=$d->brand.'/'.$d->brand_set;
+        if($brand!='*'){
+            foreach(Device::whereIn('brand',$brand)->groupBy('brand','brand_set')->get() as $d){
+                $dsArr[$d->brand.'/'.$d->brand_set]=$d->brand.'/'.$d->brand_set;
+            }
+        }else{
+            foreach(Device::groupBy('brand','brand_set')->get() as $d){
+                $dsArr[$d->brand.'/'.$d->brand_set]=$d->brand.'/'.$d->brand_set;
+            }
         }
+
         if($hasEdit){
             $form->select('q_brand_set','品牌系列')->options($dsArr)
                 ->load('q_dload', '/admin/device/options/dload');
