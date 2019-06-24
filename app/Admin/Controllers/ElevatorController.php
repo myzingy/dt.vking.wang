@@ -135,11 +135,18 @@ class ElevatorController extends Controller
             return '<a href="/admin/elevator/'.$this->id.'/funfit">查看&配置</a>';
         });
         $grid->status('状态')->eleStatus();
-        $grid->filter(function($filter){
+        $grid->filter(function($filter) use($city,$brand){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
             // 在这里添加字段过滤器
-            $pj=Project::where('status','=',0)->get();
+            $pj=Project::select('*');
+            if($city!='*'){
+                $pj->whereIn('city_id', $city);
+            }
+            if($brand!='*'){
+                $pj->where('brand', $brand);
+            }
+            $pj=$pj->get();
             $arr=Arr::pluck($pj, 'name','id');
             //var_dump($pj,$arr);
             $filter->equal('pid','项目')->select($arr);
@@ -199,6 +206,7 @@ class ElevatorController extends Controller
         $form->divide();
         $form->hidden('did','DID');
         $form->hidden('did_old','DID');
+        $form->hidden('status','status');
         if($hasEdit){
             $form->display('device','已选电梯设备')->with(function ($value) {
                 $text=deviceName($value).' <a id="device">点击修改</a>';
@@ -399,7 +407,7 @@ HTML;
 $(function(){
   var tf=$('.tbf-fitment').parents('.box-footer');
   var tb=tf.prev();
-  tb.css({height:'300px'});
+  tb.css({height:'500px'});
   tf.remove();
 })
 </script>
@@ -442,7 +450,7 @@ JSEND;
 $(function(){
   var tf=$('.tbf-func').parents('.box-footer');
   var tb=tf.prev();
-  tb.css({height:'300px'});
+  tb.css({height:'500px'});
   tf.remove();
 })
 </script>
@@ -556,7 +564,7 @@ JSEND;
             ->header('电梯报备')
             ->description('选功能、选装修')
             ->body($this->detail_sm($eid,$content));
-
+        $ele=Elevator::findOrFail($eid);
         $content->row(function(Row $row) use($eid) {
             $ele=Elevator::findOrFail($eid);
             $row->column(6, $this->funGridChecked($eid,$ele->device));
@@ -568,11 +576,63 @@ JSEND;
             $row->column(6, $this->fitGrid($eid,$ele->device));
         });
         if(Input::get('hasSuper')==1){
-            $url=admin_url('elevatorSuper',$eid);
-            $but=<<<BUT
+            if(Admin::user()->can('甲方地方')){
+                $url=admin_url('elevator',$eid);
+                $nextStatus=Elevator::STATUS_ANS;
+                $but=<<<BUT
+<style>
+.gotoNext{
+    width:100%;
+}
+</style>
+<button type="button" id="gotoNext"
+    class="btn btn-success btn-lg gotoNext" autocomplete="off">
+  核对无误，提审给乙方集团
+</button>
+<script>
+$(function(){
+  $('#gotoNext').on('click', function () {
+    swal({
+          title: "确认提审吗？",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: "提 审",
+          cancelButtonText: "取 消"
+        }).then(function(isConfirm){
+            $.ajax({
+                method: 'post',
+                url: '{$url}',
+                data: {
+                    _method:'put',
+                    _token:LA.token,
+                    status:'{$nextStatus}',
+                },
+                success: function (data) {
+                    $.pjax.reload('#pjax-container');
+                    swal('操作成功', '', 'success');
+                },
+                error: function(x, e) {
+                    if (x.status == 500) {
+                        swal(x.responseJSON.message, '', 'error');
+                    }
+                },
+            });
+        });
+  })
+})
+
+</script>
+BUT;
+                if($ele->status>Elevator::STATUS_YTJ){
+                    $but='';
+                }
+            }else{
+                $url=admin_url('elevatorSuper',$eid);
+                $but=<<<BUT
 <style>
 .flexbut{
-position: fixed;
+    position: fixed;
     right: 0;
     top: 35%;
     height: 100px;
@@ -591,10 +651,10 @@ $(function(){
     location.href='$url';
   })
 })
-  
+
 </script>
 BUT;
-
+            }
             $content->row($but);
         }
         return $content;

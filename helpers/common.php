@@ -33,6 +33,13 @@ function getCity(){
     }
     return $p;
 }
+//是否乙方公司（集团或地方）
+function hasPartyB(){
+    if(Admin::user()->can('已方集团') || Admin::user()->can('乙方地方')){
+        return true;
+    }
+    return false;
+}
 
 function getStatus($nowStatus=0,$type='device'){
     $maxStatus=0;

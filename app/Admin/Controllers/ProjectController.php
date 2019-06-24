@@ -191,10 +191,19 @@ class ProjectController extends Controller
             });
         });
         $grid->disableExport();
+        if(hasPartyB()){
+            $grid->disableCreateButton();
+            $grid->disableActions();
+        }else{
+            $grid->actions(function($action){
+                $action->disableView();
+                if($action->row->status>=Elevator::STATUS_JD_JT){
+                    $action->disableDelete();
+                    $action->disableEdit();
+                }
+            });
+        }
 
-        $grid->actions(function($action){
-            $action->disableView();
-        });
         return $grid;
     }
 

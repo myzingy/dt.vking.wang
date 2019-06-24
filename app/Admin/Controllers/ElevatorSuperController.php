@@ -160,11 +160,18 @@ class ElevatorSuperController extends Controller
         $grid->status('状态')->using(Elevator::STATUS)->style("min-width:100px;");
         $grid->column('expe.desc','备注')->style("min-width:50px;");
 
-        $grid->filter(function($filter){
+        $grid->filter(function($filter)use($city,$brand){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
             // 在这里添加字段过滤器
-            $pj=Project::where('status','=',0)->get();
+            $pj=Project::select('*');
+            if($city!='*'){
+                $pj->whereIn('city_id', $city);
+            }
+            if($brand!='*'){
+                $pj->where('brand', $brand);
+            }
+            $pj=$pj->get();
             $arr=Arr::pluck($pj, 'name','id');
             //var_dump($pj,$arr);
             $filter->equal('pid','项目')->select($arr);
