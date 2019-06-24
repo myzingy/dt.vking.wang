@@ -226,35 +226,24 @@ class ElevatorSuperController extends Controller
         $form->text('设备税率');
         $form->text('设备非标单价');
         $form->text('设备临时用梯费');
+
+        $form->text('安装税率');
+        $form->text('安装非标单价');
+        $form->text('安装临时用梯费');
+        $form->text('贯通门增加安装价');
+        $form->text('二次验收费用');
+        $form->text('政府验收费公式');
+        $form->text('政府验收费');
+        $form->text('desc');
+
         $form->saved(function(Form $form){
-            $ele=Elevator::findOrFail($form->model()->id);
+            $ele=Elevator::findOrFail($form->model()->eid);
             if(!$ele){
                 return Redirect::to("/admin/elevatorSuper");
             }
             $data=Input::get();
             $act=$data['_act'];
             $ele->status=getStatus($ele->status,$act);
-            /*
-            if($act=='device'){
-                if($ele->status<Elevator::STATUS_SBS) {
-                    $ele->status = Elevator::STATUS_SBS;
-                }elseif($ele->status<Elevator::STATUS_YJ_SBS){
-                    $ele->status = Elevator::STATUS_YJ_SBS;
-                }elseif($ele->status<Elevator::STATUS_JJ_SBS){
-                    $ele->status = Elevator::STATUS_JJ_SBS;
-                }
-            }
-            if($act=='install'){
-                if($ele->status<Elevator::STATUS_ANS){
-                    $ele->status=Elevator::STATUS_ANS;
-                }elseif($ele->status<Elevator::STATUS_YJ_ANS){
-                    $ele->status = Elevator::STATUS_YJ_ANS;
-                }elseif($ele->status<Elevator::STATUS_JJ_ANS){
-                    $ele->status = Elevator::STATUS_JJ_ANS;
-                }
-
-            }
-            */
             $ele->save();
             //$ep=ElevatorPrice::where('eid',$ele->id);
             $form->model()->runExpe(true);

@@ -308,7 +308,7 @@ $i=0;
                                 <h4 class="modal-title" id="exampleModalLabel">New message</h4>
                             </div>
                             <div class="modal-body">
-                                <form class="form-horizontal" action="<?php echo url()->full()?>" method="post"
+                                <form class="form-horizontal" action="<?php echo admin_url('elevatorSuper',$ele->expe->id);?>" method="post"
                                       accept-charset="UTF-8" enctype="multipart/form-data">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                                     <input type="hidden" name="_act" value="device" />
@@ -404,7 +404,7 @@ $i=0;
                                 <h4 class="modal-title" id="exampleModalLabel">New message</h4>
                             </div>
                             <div class="modal-body">
-                                <form class="form-horizontal" action="" method="POST">
+                                <form class="form-horizontal" action="<?php echo admin_url('elevatorSuper',$ele->expe->id);?>" method="POST">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                                     <input type="hidden" name="_act" value="install" />
                                     <input type="hidden" name="_method" value="put" />

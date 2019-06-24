@@ -35,7 +35,7 @@ class ElevatorPrice extends Model
         }
         $pj=$ele->project;
         $dev=$ele->device;
-        $chaomi=$ele->height-$dev->hoisting_height*$dev->floor;
+        $chaomi=$ele->height-$dev->hoisting_height*($dev->floor-1);
         $expe=[
             'eid'=>$this->eid,
             '设备基价'=>$dev->device_price,
