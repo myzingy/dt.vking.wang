@@ -19,6 +19,7 @@ $i=0;
         top: 35%;
         height: 100px;
         border-radius: 0 50%;
+        z-index: 99;
     }
 </style>
 <script src="/js/jquery.form.js"></script>
@@ -537,5 +538,9 @@ $i=0;
         $('#myButton').on('click', function () {
             history.back()
         })
+        setInterval(function(){
+            var width=$('.main-sidebar').css('width');
+            $('.flexbut').css({left:parseInt(width)+'px'});
+        },300)
     })
 </script>
