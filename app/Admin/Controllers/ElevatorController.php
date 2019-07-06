@@ -292,13 +292,13 @@ HTML;
         $form->largefile('file_2','附件2');
         $form->html(function (){
             if($this->file_2){
-                return '<a href="'.(str_replace('//dt.','//dtfile.',url($this->file_1))).'" target="_blank">附件2: '.$this->file_2.'</a>';
+                return '<a href="'.(str_replace('//dt.','//dtfile.',url($this->file_2))).'" target="_blank">附件2: '.$this->file_2.'</a>';
             }
         }, $label = '');
         $form->largefile('file_3','附件3');
         $form->html(function (){
             if($this->file_3){
-                return '<a href="'.(str_replace('//dt.','//dtfile.',url($this->file_1))).'" target="_blank">附件3: '.$this->file_3.'</a>';
+                return '<a href="'.(str_replace('//dt.','//dtfile.',url($this->file_3))).'" target="_blank">附件3: '.$this->file_3.'</a>';
             }
         }, $label = '');
 
