@@ -467,7 +467,7 @@ $i=0;
                                     <div class="form-group">
                                         <label for="inputPassword3" class="col-sm-2 control-label">备注</label>
                                         <div class="col-sm-10">
-                                            <input type="number" name="desc" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->desc?>">
+                                            <input name="desc" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->desc?>">
                                         </div>
                                     </div>
                                 </form>
