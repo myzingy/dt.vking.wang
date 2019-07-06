@@ -282,19 +282,20 @@ HTML;
         $form->text('desc','电梯说明');
 
         $form->divide();
-        $form->file('file_1','附件1');
+        //$form->file('file_1','附件1');
+        $form->largefile('file_1', '附件1');
         $form->html(function (){
             if($this->file_1){
                 return '<a href="'.(config('filesystems.disks.qiniu.url').$this->file_1).'" target="_blank">附件1: '.$this->file_1.'</a>';
             }
         }, $label = '');
-        $form->file('file_2','附件2');
+        $form->largefile('file_2','附件2');
         $form->html(function (){
             if($this->file_2){
                 return '<a href="'.(config('filesystems.disks.qiniu.url').$this->file_2).'" target="_blank">附件2: '.$this->file_2.'</a>';
             }
         }, $label = '');
-        $form->file('file_3','附件3');
+        $form->largefile('file_3','附件3');
         $form->html(function (){
             if($this->file_3){
                 return '<a href="'.(config('filesystems.disks.qiniu.url').$this->file_3).'" target="_blank">附件3: '.$this->file_3.'</a>';

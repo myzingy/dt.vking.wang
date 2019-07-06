@@ -20,6 +20,7 @@
 use \Encore\Admin\Grid\Column;
 use \App\Exceptions\Fitout;
 Encore\Admin\Form::forget(['map', 'editor']);
+Encore\Admin\Form::extend('largefile', \Encore\LargeFileUpload\LargeFileField::class);
 Column::extend('fitout', Fitout::class);
 Column::extend('eleStatus', \App\Exceptions\ElevatorStatus::class);
 Column::extend('pjStatus', \App\Exceptions\ProjectStatus::class);

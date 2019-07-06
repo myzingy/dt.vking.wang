@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.1.3",
         "caouecs/laravel-lang": "dev-laravel58",
+        "dianwoung/large-file-upload": "^0.0.2",
         "encore/laravel-admin": "^1.6",
         "fideloper/proxy": "^4.0",
         "laravel-admin-ext/china-distpicker": "^1.1",
