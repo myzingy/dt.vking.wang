@@ -315,7 +315,7 @@ $i=0;
                                 $form->hidden('_act')->default('device');
                                 $form->hidden('_method')->default('put');
 
-                                $form->number('设备税率')->default($ele->expe->设备税率);
+                                $form->number('设备税率')->default($ele->expe->设备税率)->min(0)->max(1)->help('例如，13%请输入0.13');
                                 $form->currency('设备非标单价','非标单价')->symbol('￥')->default($ele->expe->设备非标单价);
                                 $form->currency('设备临时用梯费','临时用梯费')->symbol('￥')->default($ele->expe->设备临时用梯费);
                                 $form->largefile('设备非标文件','非标文件')->default($ele->expe->设备非标文件);
@@ -402,7 +402,7 @@ $i=0;
                                 $form->hidden('_act')->default('install');
                                 $form->hidden('_method')->default('put');
 
-                                $form->number('安装税率')->default($ele->expe->安装税率);
+                                $form->number('安装税率')->default($ele->expe->安装税率)->min(0)->max(1)->help('例如，13%请输入0.13');
                                 $form->currency('安装非标单价','非标单价')->symbol('￥')->default($ele->expe->安装非标单价);
                                 $form->currency('安装临时用梯费','临时用梯费')->symbol('￥')->default($ele->expe->安装临时用梯费);
                                 $form->currency('贯通门增加安装价','贯通门增加安装价')->symbol('￥')->default($ele->expe->贯通门增加安装价);
