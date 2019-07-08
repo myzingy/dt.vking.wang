@@ -220,12 +220,11 @@ class ElevatorSuperController extends Controller
     protected function form($hasEdit=false)
     {
         $form = new Form(new ElevatorPrice);
-        if($_FILES){
-            $form->file('设备非标文件','设备非标文件');
-        }
+
         $form->text('设备税率');
         $form->text('设备非标单价');
         $form->text('设备临时用梯费');
+        $form->text('设备非标文件');
 
         $form->text('安装税率');
         $form->text('安装非标单价');

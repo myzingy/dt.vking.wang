@@ -305,49 +305,40 @@ $i=0;
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+                                <h4 class="modal-title" id="exampleModalLabel">审核设备</h4>
                             </div>
                             <div class="modal-body">
-                                <form class="form-horizontal" action="<?php echo admin_url('elevatorSuper',$ele->expe->id);?>" method="post"
-                                      accept-charset="UTF-8" enctype="multipart/form-data">
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                                    <input type="hidden" name="_act" value="device" />
-                                    <input type="hidden" name="_method" value="put" />
-                                    <input type="hidden" name="_previous_" value="<?php echo url()->full()?>" />
-                                    <div class="form-group">
-                                        <label for="inputEmail3" class="col-sm-2 control-label">税率</label>
-                                        <div class="col-sm-10">
-                                            <input type="number" name="设备税率" class="form-control" id="inputEmail3" placeholder="0 到 0.17 之间的数字" value="<?php print $ele->expe->设备税率?$ele->expe->设备税率:$device->device_rate?>">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputPassword3" class="col-sm-2 control-label">非标单价</label>
-                                        <div class="col-sm-10">
-                                            <input type="number" name="设备非标单价" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->设备非标单价?>">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputPassword3" class="col-sm-2 control-label">临时用梯费</label>
-                                        <div class="col-sm-10">
-                                            <input type="number" name="设备临时用梯费" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->设备临时用梯费?>">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputPassword3" class="col-sm-2 control-label">附件</label>
-                                        <div class="col-sm-10">
-                                            <input type="file" name="设备非标文件" class="form-control" id="file" placeholder="" value="<?php print $ele->expe->file?>">
-                                            <span id="helpBlock2" class="help-block">
-                                                <a href="<?php echo Illuminate\Support\Facades\Storage::url($ele->expe->设备非标文件);?>" target="_blank">
-                                                    附件：<?php echo $ele->expe->设备非标文件?>
-                                                </a>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default btn-close" data-dismiss="modal">关闭</button>
-                                <button type="button" class="btn btn-primary btn-submit" data-action="device">审核通过</button>
+                                <?php
+                                //$form = new \Encore\Admin\Form(new \App\Models\ElevatorPrice);
+                                $form = new \Encore\Admin\Form($ele->expe);
+
+                                $form->hidden('_act')->default('device');
+                                $form->hidden('_method')->default('put');
+
+                                $form->number('设备税率')->default($ele->expe->设备税率);
+                                $form->currency('设备非标单价','非标单价')->symbol('￥')->default($ele->expe->设备非标单价);
+                                $form->currency('设备临时用梯费','临时用梯费')->symbol('￥')->default($ele->expe->设备临时用梯费);
+                                $form->largefile('设备非标文件','非标文件')->default($ele->expe->设备非标文件);
+                                $form->html(function (){
+                                    if($this->设备非标文件){
+                                        return '<a href="'.(str_replace('//dt.','//dtfile.',url($this->设备非标文件))).'" target="_blank">非标文件: '.$this->设备非标文件.'</a>';
+                                    }
+                                }, $label = '');
+
+                                $form->disableReset();
+                                $form->disableEditingCheck();
+                                $form->disableCreatingCheck();
+                                $form->disableViewCheck();
+                                $form->tools(function (\Encore\Admin\Form\Tools $tools) {
+                                    $tools->disableDelete();
+                                    $tools->disableView();
+                                    $tools->disableList();
+                                });
+                                //$form->setWidth(7, 3);
+                                $form->setAction('/admin/elevatorSuper/'.$ele->expe->id);
+
+                                echo $form->render();
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -401,80 +392,51 @@ $i=0;
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+                                <h4 class="modal-title" id="exampleModalLabel">审核安装</h4>
                             </div>
                             <div class="modal-body">
-                                <form class="form-horizontal" action="<?php echo admin_url('elevatorSuper',$ele->expe->id);?>" method="POST">
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                                    <input type="hidden" name="_act" value="install" />
-                                    <input type="hidden" name="_method" value="put" />
-                                    <input type="hidden" name="_previous_" value="<?php echo url()->full()?>" />
-                                    <div class="form-group">
-                                        <label for="inputEmail3" class="col-sm-2 control-label">税率</label>
-                                        <div class="col-sm-10">
-                                            <input type="number" name="安装税率" class="form-control" id="inputEmail3" placeholder="0 到 0.17 之间的数字" value="<?php print $ele->expe->安装税率?$ele->expe->安装税率:$device->install_rate?>">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputPassword3" class="col-sm-2 control-label">非标单价</label>
-                                        <div class="col-sm-10">
-                                            <input type="number" name="安装非标单价" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->安装非标单价?>">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputPassword3" class="col-sm-2 control-label">临时用梯费</label>
-                                        <div class="col-sm-10">
-                                            <input type="number" name="安装临时用梯费" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->安装临时用梯费?>">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputPassword3" class="col-sm-2 control-label">贯通门增加安装价</label>
-                                        <div class="col-sm-10">
-                                            <input type="number" name="贯通门增加安装价" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->贯通门增加安装价?>">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputPassword3" class="col-sm-2 control-label">二次验收费用</label>
-                                        <div class="col-sm-10">
-                                            <input type="number" name="二次验收费用" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->二次验收费用?>">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputPassword3" class="col-sm-2 control-label">政府验收费公式</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" name="政府验收费公式" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->政府验收费公式?>">
-                                            <span id="helpBlock2" class="help-block">
-                                                <?php
-                                                $zf=\App\Models\DeviceYearly::where([
-                                                    'brand'=>$device->brand,
-                                                    'city_id'=>$pj->city_id
-                                                ])->first();
-                                                    if($zf){
-                                                        print "<textarea disabled rows=5 style='width:100%;'>{$pj->city_id}:\n\n{$zf->explain}\n\n{$zf->desc}</textarea>";
-                                                    }else{
-                                                        print '未查到 政府验收费';
-                                                    }
-                                                ?>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputPassword3" class="col-sm-2 control-label">政府验收费</label>
-                                        <div class="col-sm-10">
-                                            <input type="number" name="政府验收费" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->政府验收费?>">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputPassword3" class="col-sm-2 control-label">备注</label>
-                                        <div class="col-sm-10">
-                                            <input name="desc" class="form-control" id="inputPassword3" placeholder="" value="<?php print $ele->expe->desc?>">
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default btn-close" data-dismiss="modal">关闭</button>
-                                <button type="button" class="btn btn-primary btn-submit" data-action="device">审核通过</button>
+                                <?php
+                                //$form = new \Encore\Admin\Form(new \App\Models\ElevatorPrice);
+                                $form = new \Encore\Admin\Form($ele->expe);
+
+                                $form->hidden('_act')->default('install');
+                                $form->hidden('_method')->default('put');
+
+                                $form->number('安装税率')->default($ele->expe->安装税率);
+                                $form->currency('安装非标单价','非标单价')->symbol('￥')->default($ele->expe->安装非标单价);
+                                $form->currency('安装临时用梯费','临时用梯费')->symbol('￥')->default($ele->expe->安装临时用梯费);
+                                $form->currency('贯通门增加安装价','贯通门增加安装价')->symbol('￥')->default($ele->expe->贯通门增加安装价);
+                                $form->currency('二次验收费用','二次验收费用')->symbol('￥')->default($ele->expe->二次验收费用);
+                                $form->text('政府验收费公式','政府验收费公式')->default($ele->expe->政府验收费公式);
+                                $zf=\App\Models\DeviceYearly::where([
+                                    'brand'=>$device->brand,
+                                    'city_id'=>$pj->city_id
+                                ])->first();
+                                $form->html(function () use($zf){
+                                    if($zf){
+                                        print "<textarea disabled rows=5 style='width:100%;'>{$pj->city_id}:\n\n{$zf->explain}\n\n{$zf->desc}</textarea>";
+                                    }else{
+                                        print '未查到 政府验收费';
+                                    }
+                                });
+
+                                $form->currency('政府验收费','政府验收费')->symbol('￥')->default($ele->expe->政府验收费);
+                                $form->text('desc','备注')->default($ele->expe->desc);
+
+                                $form->disableReset();
+                                $form->disableEditingCheck();
+                                $form->disableCreatingCheck();
+                                $form->disableViewCheck();
+                                $form->tools(function (\Encore\Admin\Form\Tools $tools) {
+                                    $tools->disableDelete();
+                                    $tools->disableView();
+                                    $tools->disableList();
+                                });
+                                $form->setWidth(7, 3);
+                                $form->setAction('/admin/elevatorSuper/'.$ele->expe->id);
+
+                                echo $form->render();
+                                ?>
                             </div>
                         </div>
                     </div>
